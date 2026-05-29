@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -29,6 +30,8 @@ export interface StreakState {
 
 export interface UserState {
   hydrated: boolean;
+  /** When Supabase is configured, true once the DB session has been resolved. */
+  remoteResolved: boolean;
   authenticated: boolean;
   name: string;
   email: string;
@@ -53,6 +56,7 @@ const STORAGE_KEY = "admitflow:user";
 
 const SERVER_STATE: UserState = {
   hydrated: false,
+  remoteResolved: false,
   authenticated: false,
   name: "",
   email: "",
@@ -74,10 +78,13 @@ function emit() {
 }
 
 function persist() {
-  if (typeof window === "undefined") return;
+  // When Supabase is configured, Postgres is the source of truth — do NOT
+  // persist auth/user data to localStorage.
+  if (typeof window === "undefined" || isSupabaseConfigured()) return;
   try {
-    const { hydrated: _hydrated, ...rest } = state;
+    const { hydrated: _hydrated, remoteResolved: _remoteResolved, ...rest } = state;
     void _hydrated;
+    void _remoteResolved;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(rest));
   } catch {
     /* storage unavailable — ignore */
@@ -86,6 +93,15 @@ function persist() {
 
 function ensureHydrated() {
   if (state.hydrated || typeof window === "undefined") return;
+
+  // Supabase mode: start empty; SessionSync hydrates from the database and
+  // flips remoteResolved. No localStorage is read or written.
+  if (isSupabaseConfigured()) {
+    state = { ...SERVER_STATE, hydrated: true, remoteResolved: false };
+    return;
+  }
+
+  // Local fallback (dev only): localStorage is the persistence layer.
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -95,12 +111,13 @@ function ensureHydrated() {
         ...parsed,
         streak: { ...SERVER_STATE.streak, ...(parsed.streak ?? {}) },
         hydrated: true,
+        remoteResolved: true,
       };
     } else {
-      state = { ...SERVER_STATE, hydrated: true };
+      state = { ...SERVER_STATE, hydrated: true, remoteResolved: true };
     }
   } catch {
-    state = { ...SERVER_STATE, hydrated: true };
+    state = { ...SERVER_STATE, hydrated: true, remoteResolved: true };
   }
 }
 
@@ -237,11 +254,17 @@ export function setPlan(plan: Plan) {
  */
 export function hydrateFromRemote(patch: Partial<Omit<UserState, "hydrated">>) {
   ensureHydrated();
-  setState({ authenticated: true, ...patch });
+  setState({ authenticated: true, ...patch, remoteResolved: true });
+}
+
+/** Marks the remote (Supabase) session as resolved — e.g. when no user is signed in. */
+export function markRemoteResolved() {
+  ensureHydrated();
+  setState({ remoteResolved: true });
 }
 
 export function signOut() {
-  state = { ...SERVER_STATE, hydrated: true };
+  state = { ...SERVER_STATE, hydrated: true, remoteResolved: true };
   if (typeof window !== "undefined") {
     try {
       window.localStorage.removeItem(STORAGE_KEY);

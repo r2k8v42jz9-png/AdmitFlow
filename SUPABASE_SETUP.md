@@ -1,57 +1,94 @@
-# Supabase setup (real authentication & data)
+# AdmitFlow — Supabase setup (real auth + database)
 
-AdmitFlow ships with a **complete, production-ready** Supabase integration. It
-activates automatically once you provide credentials. Until then the app runs
-on a clearly-labeled local fallback session (dev only — not real auth).
+Real Supabase Auth + Postgres activate automatically once the anon key is set.
+This project's URL is already wired in `.env.local`:
 
-> **Status:** the integration code is written and type-checks, but it has **not
-> been verified against a live Supabase project in this environment** (no
-> credentials available here). Treat "verified" as pending until you complete
-> the steps below. This is the single remaining production blocker for auth.
-
-## 1. Create the project
-1. Create a project at https://supabase.com.
-2. Project → **Settings → API**: copy the **Project URL** and **anon public key**.
-
-## 2. Add environment variables
-Create `.env.local` (see `.env.example`):
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR-ANON-KEY
+```
+NEXT_PUBLIC_SUPABASE_URL=https://upzxgxmjfzqrmcnjjorv.supabase.co
 ```
 
-Restart `npm run dev`.
+You only need to (1) add the anon key, (2) run the migration, (3) flip on email
++ Google in the dashboard.
 
-## 3. Run the database migration
-Open **SQL Editor** in Supabase and run `supabase/migrations/0001_profiles.sql`
-(or `supabase db push` with the CLI). This creates the `profiles` table with Row
-Level Security and an auto-create-profile trigger.
+---
 
-## 4. Enable email verification
+## 1. Environment variables
+
+### Local development (`.env.local`)
+| Variable | Required | Value |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | `https://upzxgxmjfzqrmcnjjorv.supabase.co` (already set) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Dashboard → Settings → API → **anon public** |
+| `AI_PROVIDER` | optional | `mock` \| `openai` \| `anthropic` \| `gemini` |
+| `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` / `GEMINI_API_KEY` | optional | for the AI Mentor |
+| `PAYMENT_PROVIDER` | optional | `mock` \| `stripe` \| `payme` \| `click` \| `octo` \| `payze` |
+
+After editing `.env.local`, restart `npm run dev`.
+
+### Vercel production (Project → Settings → Environment Variables)
+Set the **same** variables for the **Production** (and Preview) environments:
+
+| Variable | Required |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | ✅ |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ |
+| `AI_PROVIDER` + the matching `*_API_KEY` | optional |
+| `PAYMENT_PROVIDER` + provider keys | optional |
+
+> `NEXT_PUBLIC_*` vars are exposed to the browser (safe for the anon key — it's
+> protected by Row Level Security). **Never** put the `service_role` key in a
+> `NEXT_PUBLIC_*` var or in client code.
+
+---
+
+## 2. Database migration
+
+Open **SQL Editor** in Supabase and run `supabase/migrations/0001_init.sql`
+(or `supabase db push` with the CLI). It creates five RLS-protected tables:
+
+| Table | Holds |
+|---|---|
+| `profiles` | identity + language (RU default) |
+| `onboarding_data` | GPA, IELTS, SAT, major, budget, countries, strengths, dream universities, intake, career goals |
+| `subscriptions` | plan + billing status |
+| `user_progress` | roadmap task progress |
+| `streaks` | daily-return streak |
+
+A trigger (`handle_new_user`) auto-creates all five rows for every new account.
+
+---
+
+## 3. Authentication — email verification
 **Authentication → Providers → Email**: enable **Confirm email**. New sign-ups
-then receive a verification link and cannot reach the dashboard until confirmed
-(`proxy.ts` enforces this server-side).
+then receive a verification link and **cannot reach the dashboard until they
+confirm** (`src/proxy.ts` enforces this server-side, and the client flow routes
+unverified users to `/verify-email`).
 
-## 5. Enable Google OAuth
-1. **Authentication → Providers → Google**: enable it, add your Google OAuth
-   client ID + secret (from Google Cloud Console).
-2. **Authentication → URL Configuration**: add redirect URL
-   `http://localhost:3000/auth/callback` (and your production equivalent).
+---
 
-## 6. Verify the flow
-- Register → receive email → confirm → land on `/onboarding`.
-- Sign in unverified → redirected to `/verify-email`.
-- Visit `/dashboard` while signed out → redirected to `/login`.
+## 4. Google OAuth
+1. In **Google Cloud Console** create an OAuth 2.0 Client (Web). Authorized
+   redirect URI: `https://upzxgxmjfzqrmcnjjorv.supabase.co/auth/v1/callback`.
+2. **Supabase → Authentication → Providers → Google**: enable, paste the Google
+   client ID + secret.
+3. **Supabase → Authentication → URL Configuration → Redirect URLs**: add
+   `http://localhost:3000/auth/callback` and `https://YOUR-DOMAIN/auth/callback`.
 
-## How it's wired
+---
+
+## 5. Verify the flow
+Register → **Verify Email** → Login → Onboarding → Pricing → Dashboard.
+- Visit `/dashboard` signed out → redirected to `/login`.
+- Sign in before confirming → redirected to `/verify-email`.
+
+## Where it lives
 | Concern | File |
 |---|---|
 | Config / feature flag | `src/lib/supabase/config.ts` |
-| Browser client | `src/lib/supabase/client.ts` |
-| Server client | `src/lib/supabase/server.ts` |
+| Browser / server clients | `src/lib/supabase/client.ts`, `server.ts` |
 | Session refresh + route protection | `src/proxy.ts`, `src/lib/supabase/proxy-session.ts` |
-| Auth flows (email/Google/verify) | `src/lib/supabase/auth.ts` |
-| Profile read/write | `src/lib/supabase/profiles.ts` |
+| Global session hydration | `src/components/providers/session-sync.tsx` |
+| Auth flows (email / Google / verify) | `src/lib/supabase/auth.ts` |
+| Data layer (5 tables) | `src/lib/supabase/data.ts` |
 | OAuth / email callback | `src/app/auth/callback/route.ts` |
-| Schema + RLS | `supabase/migrations/0001_profiles.sql` |
+| Schema + RLS | `supabase/migrations/0001_init.sql` |

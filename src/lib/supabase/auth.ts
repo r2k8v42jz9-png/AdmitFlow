@@ -1,8 +1,8 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import { getProfile, saveProfile } from "@/lib/supabase/profiles";
-import { hydrateFromRemote, signOut as signOutLocal, type Plan } from "@/lib/user-store";
+import { loadUserState } from "@/lib/supabase/data";
+import { hydrateFromRemote, signOut as signOutLocal } from "@/lib/user-store";
 
 const callbackUrl = (next: string) =>
   typeof window !== "undefined" ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}` : next;
@@ -34,7 +34,13 @@ export async function signUpWithEmail(name: string, email: string, password: str
 export async function signInWithEmail(email: string, password: string): Promise<AuthResult> {
   const supabase = createClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { ok: false, error: error.message };
+  if (error) {
+    // Unverified accounts can't sign in while "Confirm email" is on → send to verify page.
+    if (error.code === "email_not_confirmed" || /not confirmed/i.test(error.message)) {
+      return { ok: true, needsVerification: true };
+    }
+    return { ok: false, error: error.message };
+  }
 
   const verified = Boolean(data.user?.email_confirmed_at ?? data.user?.confirmed_at);
   if (!verified) return { ok: true, needsVerification: true };
@@ -61,33 +67,12 @@ export async function signOutSupabase(): Promise<void> {
 }
 
 /**
- * Reads the user's profile from Supabase and mirrors it into the local store
- * so existing components (dashboard, profile, roadmap) render immediately.
- * Creates an empty profile row on first login.
+ * Reads the user's data from Supabase (profiles + onboarding_data +
+ * subscriptions + streaks) and mirrors it into the local store so existing
+ * components (dashboard, profile, roadmap, mentor) render immediately.
+ * The per-user rows are auto-provisioned by the `handle_new_user` DB trigger.
  */
 export async function hydrateLocalFromProfile(): Promise<void> {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return;
-
-  let profile = await getProfile();
-  if (!profile) {
-    const fullName = (user.user_metadata?.full_name as string | undefined) ?? "";
-    await saveProfile({ full_name: fullName });
-    profile = await getProfile();
-  }
-
-  hydrateFromRemote({
-    name: profile?.full_name ?? (user.user_metadata?.full_name as string | undefined) ?? "",
-    email: user.email ?? "",
-    onboarded: profile?.onboarded ?? false,
-    plan: (profile?.plan as Plan | null) ?? null,
-    onboarding: profile?.onboarding ?? null,
-    streak: {
-      count: profile?.streak_count ?? 0,
-      lastVisit: profile?.streak_last_visit ?? null,
-    },
-  });
+  const state = await loadUserState();
+  if (state) hydrateFromRemote(state);
 }

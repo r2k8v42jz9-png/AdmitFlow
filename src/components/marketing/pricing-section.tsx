@@ -26,7 +26,7 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
     // is implemented in the billing batch; this currently grants access directly.
     import("@/lib/supabase/config").then(({ isSupabaseConfigured }) => {
       if (isSupabaseConfigured()) {
-        import("@/lib/supabase/profiles").then(({ persistPlan }) => persistPlan(tierId as Plan, true));
+        import("@/lib/supabase/data").then(({ savePlan }) => savePlan(tierId as Plan, "active"));
       }
     });
     router.push("/dashboard");

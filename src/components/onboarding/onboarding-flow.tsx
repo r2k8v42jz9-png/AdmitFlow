@@ -30,7 +30,7 @@ import { cn, formatCurrency } from "@/lib/utils";
 /** Persist onboarding to the database when Supabase is configured (fire-and-forget). */
 function persistOnboardingRemote(data: OnboardingData) {
   if (!isSupabaseConfigured()) return;
-  import("@/lib/supabase/profiles").then(({ persistOnboarding }) => persistOnboarding(data));
+  import("@/lib/supabase/data").then(({ saveOnboarding: save }) => save(data));
 }
 
 function parseNum(value: string): number | null {
@@ -95,7 +95,8 @@ const steps = [
 
 export function OnboardingFlow() {
   const router = useRouter();
-  const { hydrated, authenticated, onboarded, plan, onboarding } = useUser();
+  const { hydrated, remoteResolved, authenticated, onboarded, plan, onboarding } = useUser();
+  const ready = hydrated && (remoteResolved || !isSupabaseConfigured());
   const [step, setStep] = useState(0);
   const [phase, setPhase] = useState<"form" | "generating" | "result">("form");
   const [data, setData] = useState<Data>({
@@ -114,14 +115,14 @@ export function OnboardingFlow() {
 
   // Gate: must be authenticated; never show onboarding twice unless explicitly editing.
   useEffect(() => {
-    if (!hydrated) return;
+    if (!ready) return;
     const editing = new URLSearchParams(window.location.search).get("edit") === "1";
     if (!authenticated) {
       router.replace("/signup");
     } else if (onboarded && !editing) {
       router.replace(plan ? "/dashboard" : "/pricing");
     }
-  }, [hydrated, authenticated, onboarded, plan, router]);
+  }, [ready, authenticated, onboarded, plan, router]);
 
   // When editing, pre-fill the form with the saved profile.
   useEffect(() => {
@@ -187,7 +188,7 @@ export function OnboardingFlow() {
 
   const Current = steps[step];
 
-  if (!hydrated || !authenticated) {
+  if (!ready || !authenticated) {
     return (
       <div className="grid min-h-dvh place-items-center">
         <Logo />
