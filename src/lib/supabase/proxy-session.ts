@@ -3,9 +3,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/lib/supabase/config";
 
 /**
- * Refreshes the Supabase session on each request and returns the current user.
- * Called from `proxy.ts`. Keeps auth cookies fresh so server components and
- * route handlers see a valid session.
+ * Refreshes the Supabase session on each request and returns the user plus the
+ * bound server client (so the proxy can run DB-backed guard checks). Keeps auth
+ * cookies fresh so server components and route handlers see a valid session.
  */
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -23,12 +23,12 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // IMPORTANT: getUser() revalidates the token with Supabase (do not trust getSession alone).
+  // getUser() revalidates the token with Supabase (never trust getSession alone).
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   const emailVerified = Boolean(user?.email_confirmed_at ?? user?.confirmed_at);
 
-  return { response, user, emailVerified };
+  return { response, supabase, user, emailVerified };
 }

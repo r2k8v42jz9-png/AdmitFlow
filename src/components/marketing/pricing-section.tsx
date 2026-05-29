@@ -8,7 +8,7 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { StaggerContainer, StaggerItem } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
 import { pricingTiers } from "@/lib/data/marketing";
-import { getUserState, setPlan, type Plan } from "@/lib/user-store";
+import { getUserState, setSubscription, type Plan } from "@/lib/user-store";
 import { cn } from "@/lib/utils";
 
 export function PricingSection({ withHeading = true }: { withHeading?: boolean }) {
@@ -17,13 +17,13 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
 
   const onSelect = (tierId: string) => {
     if (!getUserState().authenticated) {
-      router.push("/signup");
+      router.push("/login");
       return;
     }
-    setPlan(tierId as Plan);
-    // Persist plan selection to the database when Supabase is configured.
+    // Mark the subscription active (the DB write is the source of truth).
     // NOTE: real checkout (Pricing → Checkout → Payment → Success → Dashboard)
-    // is implemented in the billing batch; this currently grants access directly.
+    // is a separate billing batch; selecting a plan currently activates directly.
+    setSubscription(tierId as Plan, true);
     import("@/lib/supabase/config").then(({ isSupabaseConfigured }) => {
       if (isSupabaseConfigured()) {
         import("@/lib/supabase/data").then(({ savePlan }) => savePlan(tierId as Plan, "active"));

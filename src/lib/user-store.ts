@@ -1,7 +1,6 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 /* -------------------------------------------------------------------------- */
 /*  Types                                                                     */
@@ -30,13 +29,15 @@ export interface StreakState {
 
 export interface UserState {
   hydrated: boolean;
-  /** When Supabase is configured, true once the DB session has been resolved. */
+  /** True once the Supabase session has been resolved by SessionSync. */
   remoteResolved: boolean;
   authenticated: boolean;
+  emailVerified: boolean;
   name: string;
   email: string;
   onboarded: boolean;
   plan: Plan | null;
+  subscriptionActive: boolean;
   onboarding: OnboardingData | null;
   streak: StreakState;
 }
@@ -52,16 +53,16 @@ export interface DerivedProfile {
 /*  Constants                                                                 */
 /* -------------------------------------------------------------------------- */
 
-const STORAGE_KEY = "admitflow:user";
-
 const SERVER_STATE: UserState = {
   hydrated: false,
   remoteResolved: false,
   authenticated: false,
+  emailVerified: false,
   name: "",
   email: "",
   onboarded: false,
   plan: null,
+  subscriptionActive: false,
   onboarding: null,
   streak: { count: 0, lastVisit: null },
 };
@@ -77,65 +78,21 @@ function emit() {
   for (const listener of listeners) listener();
 }
 
-function persist() {
-  // When Supabase is configured, Postgres is the source of truth — do NOT
-  // persist auth/user data to localStorage.
-  if (typeof window === "undefined" || isSupabaseConfigured()) return;
-  try {
-    const { hydrated: _hydrated, remoteResolved: _remoteResolved, ...rest } = state;
-    void _hydrated;
-    void _remoteResolved;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(rest));
-  } catch {
-    /* storage unavailable — ignore */
-  }
-}
-
 function ensureHydrated() {
   if (state.hydrated || typeof window === "undefined") return;
-
-  // Supabase mode: start empty; SessionSync hydrates from the database and
-  // flips remoteResolved. No localStorage is read or written.
-  if (isSupabaseConfigured()) {
-    state = { ...SERVER_STATE, hydrated: true, remoteResolved: false };
-    return;
-  }
-
-  // Local fallback (dev only): localStorage is the persistence layer.
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Partial<UserState>;
-      state = {
-        ...SERVER_STATE,
-        ...parsed,
-        streak: { ...SERVER_STATE.streak, ...(parsed.streak ?? {}) },
-        hydrated: true,
-        remoteResolved: true,
-      };
-    } else {
-      state = { ...SERVER_STATE, hydrated: true, remoteResolved: true };
-    }
-  } catch {
-    state = { ...SERVER_STATE, hydrated: true, remoteResolved: true };
-  }
+  // In-memory only. There is NO localStorage persistence: the source of truth is
+  // Supabase. SessionSync hydrates this cache from the database and flips
+  // remoteResolved once the session is known.
+  state = { ...SERVER_STATE, hydrated: true, remoteResolved: false };
 }
 
 function setState(patch: Partial<UserState>) {
   state = { ...state, ...patch };
-  persist();
   emit();
 }
 
 if (typeof window !== "undefined") {
   ensureHydrated();
-  // Keep tabs in sync.
-  window.addEventListener("storage", (e) => {
-    if (e.key !== STORAGE_KEY) return;
-    state = { ...state, hydrated: false };
-    ensureHydrated();
-    emit();
-  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -207,32 +164,6 @@ export function planLabel(plan: Plan | null): string {
 /*  Actions                                                                   */
 /* -------------------------------------------------------------------------- */
 
-export function registerUser(name: string, email: string) {
-  ensureHydrated();
-  setState({
-    authenticated: true,
-    name: name.trim() || nameFromEmail(email),
-    email: email.trim(),
-    onboarded: false,
-    plan: null,
-    onboarding: null,
-  });
-}
-
-export function loginUser(email: string, name?: string) {
-  ensureHydrated();
-  const sameUser = state.email === email.trim();
-  setState({
-    authenticated: true,
-    email: email.trim(),
-    name: (name?.trim() || (sameUser ? state.name : "") || nameFromEmail(email)),
-    // Preserve onboarding & plan if we recognize this account.
-    onboarded: sameUser ? state.onboarded : false,
-    plan: sameUser ? state.plan : null,
-    onboarding: sameUser ? state.onboarding : null,
-  });
-}
-
 export function saveOnboarding(data: OnboardingData, name?: string) {
   ensureHydrated();
   setState({
@@ -242,9 +173,10 @@ export function saveOnboarding(data: OnboardingData, name?: string) {
   });
 }
 
-export function setPlan(plan: Plan) {
+/** Marks a plan selected + (mock) active in the UI cache; the DB write is the source of truth. */
+export function setSubscription(plan: Plan, active: boolean) {
   ensureHydrated();
-  setState({ plan });
+  setState({ plan, subscriptionActive: active });
 }
 
 /**
@@ -265,13 +197,6 @@ export function markRemoteResolved() {
 
 export function signOut() {
   state = { ...SERVER_STATE, hydrated: true, remoteResolved: true };
-  if (typeof window !== "undefined") {
-    try {
-      window.localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* ignore */
-    }
-  }
   emit();
 }
 

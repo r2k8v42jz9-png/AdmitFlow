@@ -23,7 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { universities, countries } from "@/lib/data/universities";
-import { useUser, saveOnboarding, getUserState, type OnboardingData } from "@/lib/user-store";
+import { useUser, saveOnboarding, type OnboardingData } from "@/lib/user-store";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { cn, formatCurrency } from "@/lib/utils";
 
@@ -95,7 +95,7 @@ const steps = [
 
 export function OnboardingFlow() {
   const router = useRouter();
-  const { hydrated, remoteResolved, authenticated, onboarded, plan, onboarding } = useUser();
+  const { hydrated, remoteResolved, authenticated, emailVerified, onboarded, onboarding } = useUser();
   const ready = hydrated && (remoteResolved || !isSupabaseConfigured());
   const [step, setStep] = useState(0);
   const [phase, setPhase] = useState<"form" | "generating" | "result">("form");
@@ -113,16 +113,19 @@ export function OnboardingFlow() {
     dreams: [],
   });
 
-  // Gate: must be authenticated; never show onboarding twice unless explicitly editing.
+  // Gate: must be a signed-in, verified user; never show onboarding twice unless editing.
   useEffect(() => {
     if (!ready) return;
     const editing = new URLSearchParams(window.location.search).get("edit") === "1";
     if (!authenticated) {
-      router.replace("/signup");
+      router.replace("/login");
+    } else if (!emailVerified) {
+      router.replace("/verify-email");
     } else if (onboarded && !editing) {
-      router.replace(plan ? "/dashboard" : "/pricing");
+      // Already onboarded → let the proxy/AppGate cascade to pricing or dashboard.
+      router.replace("/dashboard");
     }
-  }, [ready, authenticated, onboarded, plan, router]);
+  }, [ready, authenticated, emailVerified, onboarded, router]);
 
   // When editing, pre-fill the form with the saved profile.
   useEffect(() => {
@@ -172,13 +175,12 @@ export function OnboardingFlow() {
     const mapped = toOnboarding(data);
     saveOnboarding(mapped);
     persistOnboardingRemote(mapped);
-    const s = getUserState();
-    router.replace(s.plan ? "/dashboard" : "/pricing");
+    // Onboarding done but no active subscription yet → choose a plan.
+    router.replace("/pricing");
   };
 
   const finish = () => {
-    const s = getUserState();
-    router.replace(s.plan ? "/dashboard" : "/pricing");
+    router.replace("/pricing");
   };
 
   const recommendations = [...universities]
@@ -257,7 +259,7 @@ export function OnboardingFlow() {
           {phase === "generating" && <Generating key="gen" />}
 
           {phase === "result" && (
-            <Result key="res" data={data} recommendations={recommendations} hasPlan={!!plan} onContinue={finish} />
+            <Result key="res" data={data} recommendations={recommendations} onContinue={finish} />
           )}
         </AnimatePresence>
       </div>
@@ -536,12 +538,10 @@ function Generating() {
 function Result({
   data,
   recommendations,
-  hasPlan,
   onContinue,
 }: {
   data: Data;
   recommendations: typeof universities;
-  hasPlan: boolean;
   onContinue: () => void;
 }) {
   return (
@@ -592,7 +592,7 @@ function Result({
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
         <Button variant="gradient" size="lg" onClick={onContinue}>
-          {hasPlan ? "Go to my dashboard" : "Continue to plans"} <ArrowRight className="size-4" />
+          Continue to plans <ArrowRight className="size-4" />
         </Button>
       </div>
     </motion.div>

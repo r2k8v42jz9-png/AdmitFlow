@@ -18,34 +18,34 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
  * waits for that resolution before deciding, then mirrors the same rules.
  */
 export function AppGate({ children }: { children: ReactNode }) {
-  const { hydrated, remoteResolved, authenticated, onboarded, plan } = useUser();
+  const { hydrated, remoteResolved, authenticated, emailVerified, onboarded, subscriptionActive } = useUser();
   const router = useRouter();
 
   const configured = isSupabaseConfigured();
   const ready = hydrated && (remoteResolved || !configured);
-  const allowed = authenticated && onboarded && !!plan;
+  const allowed = authenticated && emailVerified && onboarded && subscriptionActive;
 
   useEffect(() => {
     if (!ready) return;
 
     if (!authenticated) {
       router.replace("/login");
+    } else if (!emailVerified) {
+      router.replace("/verify-email");
     } else if (!onboarded) {
       router.replace("/onboarding");
-    } else if (!plan) {
+    } else if (!subscriptionActive) {
       router.replace("/pricing");
     } else {
       recordVisit();
-      if (configured) {
-        const s = getUserState();
-        if (s.streak.lastVisit) {
-          import("@/lib/supabase/data").then(({ saveStreak }) =>
-            saveStreak(s.streak.count, s.streak.lastVisit as string),
-          );
-        }
+      const s = getUserState();
+      if (s.streak.lastVisit) {
+        import("@/lib/supabase/data").then(({ saveStreak }) =>
+          saveStreak(s.streak.count, s.streak.lastVisit as string),
+        );
       }
     }
-  }, [ready, authenticated, onboarded, plan, configured, router]);
+  }, [ready, authenticated, emailVerified, onboarded, subscriptionActive, router]);
 
   if (!ready || !allowed) {
     return (

@@ -8,7 +8,6 @@ import { Eye, EyeOff, Loader2, Mail, Lock, User, ArrowRight, Check } from "lucid
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { registerUser, loginUser, getUserState } from "@/lib/user-store";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { signUpWithEmail, signInWithEmail, signInWithGoogle } from "@/lib/supabase/auth";
 import { cn } from "@/lib/utils";
@@ -37,72 +36,61 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const routeAfterLogin = () => {
-    const s = getUserState();
-    router.replace(!s.onboarded ? "/onboarding" : !s.plan ? "/pricing" : "/dashboard");
-  };
-
   const handleSubmit = (provider: "email" | "google" | "apple") => async (e?: React.FormEvent) => {
     e?.preventDefault();
     setError(null);
+
+    // Real Supabase auth only — no mock/localStorage fallback.
+    if (!isSupabaseConfigured()) {
+      setError("Authentication isn't configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+      return;
+    }
+
     setLoading(provider);
     const resolvedEmail = email.trim();
 
-    // ---- Real Supabase auth (when configured) ----
-    if (isSupabaseConfigured()) {
-      try {
-        if (provider === "google") {
-          const r = await signInWithGoogle();
-          if (!r.ok) {
-            setError(r.error ?? "Google sign-in failed");
-            setLoading(null);
-          }
-          return; // browser redirects to Google
-        }
-        if (provider === "apple") {
-          setError("Apple sign-in isn't enabled yet — use Google or email.");
-          setLoading(null);
-          return;
-        }
-        if (isSignup) {
-          const r = await signUpWithEmail(name, resolvedEmail, password);
-          if (!r.ok) {
-            setError(r.error ?? "Sign-up failed");
-            setLoading(null);
-            return;
-          }
-          router.replace("/verify-email");
-          return;
-        }
-        const r = await signInWithEmail(resolvedEmail, password);
+    try {
+      if (provider === "google") {
+        const r = await signInWithGoogle();
         if (!r.ok) {
-          setError(r.error ?? "Sign-in failed");
+          setError(r.error ?? "Google sign-in failed");
           setLoading(null);
-          return;
         }
-        if (r.needsVerification) {
-          router.replace("/verify-email");
-          return;
-        }
-        routeAfterLogin();
-        return;
-      } catch {
-        setError("Something went wrong. Please try again.");
+        return; // browser redirects to Google
+      }
+      if (provider === "apple") {
+        setError("Apple sign-in isn't enabled yet — use Google or email.");
         setLoading(null);
         return;
       }
+      if (isSignup) {
+        const r = await signUpWithEmail(name, resolvedEmail, password);
+        if (!r.ok) {
+          setError(r.error ?? "Sign-up failed");
+          setLoading(null);
+          return;
+        }
+        // Verification is required — never go straight to the app.
+        router.replace("/verify-email");
+        return;
+      }
+      const r = await signInWithEmail(resolvedEmail, password);
+      if (!r.ok) {
+        setError(r.error ?? "Sign-in failed");
+        setLoading(null);
+        return;
+      }
+      if (r.needsVerification) {
+        router.replace("/verify-email");
+        return;
+      }
+      // Verified login: head to the app; the proxy/AppGate cascade routes to the
+      // correct next step (onboarding → pricing → dashboard) from real DB state.
+      router.replace("/dashboard");
+    } catch {
+      setError("Something went wrong. Please try again.");
+      setLoading(null);
     }
-
-    // ---- Local fallback (Supabase not configured — dev only) ----
-    await new Promise((r) => setTimeout(r, 1100));
-    const fallbackEmail = resolvedEmail || (provider === "google" ? "you@gmail.com" : "you@icloud.com");
-    if (isSignup) {
-      registerUser(name, fallbackEmail);
-      router.replace("/onboarding");
-      return;
-    }
-    loginUser(fallbackEmail, name);
-    routeAfterLogin();
   };
 
   return (

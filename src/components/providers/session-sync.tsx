@@ -12,7 +12,12 @@ import { markRemoteResolved } from "@/lib/user-store";
  */
 export function SessionSync() {
   useEffect(() => {
-    if (!isSupabaseConfigured()) return;
+    if (!isSupabaseConfigured()) {
+      // Auth unavailable — resolve the session as "no user" so gates fall through
+      // to /login instead of hanging on a loader.
+      markRemoteResolved();
+      return;
+    }
     let active = true;
     let unsubscribe: (() => void) | undefined;
 
