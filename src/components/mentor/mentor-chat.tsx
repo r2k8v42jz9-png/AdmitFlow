@@ -17,6 +17,7 @@ import { Markdown } from "@/components/mentor/markdown";
 import { chatThreads, suggestionChips } from "@/lib/data/mentor";
 import { useUser, nameFromEmail } from "@/lib/user-store";
 import { generateMentorReply, buildWelcome, type MentorProfile } from "@/lib/mentor-engine";
+import { useT } from "@/lib/i18n";
 import { initials, cn } from "@/lib/utils";
 import type { ChatMessage } from "@/lib/types";
 
@@ -24,6 +25,7 @@ let idSeq = 0;
 const newId = () => `msg-${++idSeq}-${Date.now()}`;
 
 export function MentorChat() {
+  const { t } = useT();
   const { name, email, onboarding } = useUser();
 
   const profile = useMemo<MentorProfile>(
@@ -121,11 +123,11 @@ export function MentorChat() {
             <div className="flex h-full w-72 flex-col">
               <div className="p-3">
                 <Button variant="gradient" className="w-full" onClick={newChat}>
-                  <Plus className="size-4" /> New conversation
+                  <Plus className="size-4" /> {t("mentor.newConversation")}
                 </Button>
               </div>
               <p className="px-4 pb-2 pt-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Recent
+                {t("mentor.recent")}
               </p>
               <div className="flex-1 space-y-1 overflow-y-auto px-2 pb-3">
                 {chatThreads.map((t) => (
@@ -169,16 +171,16 @@ export function MentorChat() {
             </span>
             <div>
               <p className="flex items-center gap-2 text-sm font-semibold">
-                AdmitFlow Mentor
+                {t("mentor.title")}
                 <span className="inline-flex items-center gap-1 text-xs font-normal text-success">
-                  <span className="size-1.5 rounded-full bg-success" /> Online
+                  <span className="size-1.5 rounded-full bg-success" /> {t("mentor.online")}
                 </span>
               </p>
-              <p className="text-xs text-muted-foreground">Personalized to your profile</p>
+              <p className="text-xs text-muted-foreground">{t("mentor.personalized")}</p>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={newChat} className="md:hidden">
-            <Plus className="size-4" /> New
+            <Plus className="size-4" /> {t("mentor.new")}
           </Button>
         </div>
 
@@ -202,7 +204,7 @@ export function MentorChat() {
                 className="pl-11"
               >
                 <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                  Try asking
+                  {t("mentor.tryAsking")}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {suggestionChips.map((chip) => (
@@ -234,7 +236,7 @@ export function MentorChat() {
                   e.target.style.height = `${Math.min(e.target.scrollHeight, 160)}px`;
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask your mentor anything…"
+                placeholder={t("mentor.placeholder")}
                 className="max-h-40 flex-1 resize-none bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground"
               />
               {streaming ? (
@@ -254,7 +256,7 @@ export function MentorChat() {
               )}
             </div>
             <p className="mt-2 px-1 text-center text-[11px] text-muted-foreground">
-              AdmitFlow Mentor can make mistakes. Verify important deadlines and requirements.
+              {t("mentor.disclaimer")}
             </p>
           </div>
         </div>

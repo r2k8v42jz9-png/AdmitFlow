@@ -27,6 +27,7 @@ import { ScoreRing } from "@/components/shared/score-ring";
 import { ProfileRadarChart } from "@/components/dashboard/charts";
 import { universities } from "@/lib/data/universities";
 import { useUser, deriveProfile, nameFromEmail } from "@/lib/user-store";
+import { useT } from "@/lib/i18n";
 import { formatCurrency, initials } from "@/lib/utils";
 
 const checklistMeta = {
@@ -39,6 +40,7 @@ const NOT_SET = "—";
 
 export function ProfileView() {
   const user = useUser();
+  const { t } = useT();
   const { admissionScore, profileCompletion, planLabel } = deriveProfile(user);
   const o = user.onboarding;
 
@@ -63,12 +65,12 @@ export function ProfileView() {
   return (
     <PageContainer>
       <PageHeader
-        title="Profile"
-        description="Your academic snapshot powers every AI recommendation, fit score and admission estimate."
+        title={t("profile.title")}
+        description={t("profile.description")}
         actions={
           <Button asChild variant="outline">
             <Link href="/onboarding?edit=1">
-              <Pencil className="size-4" /> Edit academic profile
+              <Pencil className="size-4" /> {t("profile.edit")}
             </Link>
           </Button>
         }

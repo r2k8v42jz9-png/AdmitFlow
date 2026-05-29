@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, Quote, Star, Sparkles, ShieldCheck } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { AuroraBackground } from "@/components/shared/aurora-background";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -66,6 +67,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
 
       {/* Form panel */}
       <main className="relative flex min-h-dvh items-center justify-center overflow-hidden px-6 py-10">
+        <div className="absolute right-5 top-5 z-20">
+          <LanguageSwitcher />
+        </div>
         <AuroraBackground variant="subtle" className="lg:hidden" />
         <div className="relative z-10 w-full max-w-md">
           <div className="mb-8 flex items-center justify-between lg:hidden">

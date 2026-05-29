@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { signUpWithEmail, signInWithEmail, signInWithGoogle } from "@/lib/supabase/auth";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const GoogleIcon = () => (
@@ -28,6 +29,7 @@ const AppleIcon = () => (
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
+  const { t } = useT();
   const isSignup = mode === "signup";
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState<null | "email" | "google" | "apple">(null);
@@ -101,12 +103,10 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     >
       <div className="mb-7">
         <h1 className="font-display text-3xl font-bold tracking-tight">
-          {isSignup ? "Create your account" : "Welcome back"}
+          {isSignup ? t("auth.signupTitle") : t("auth.loginTitle")}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {isSignup
-            ? "Start your journey to a top university in just two minutes."
-            : "Sign in to continue building your admission plan."}
+          {isSignup ? t("auth.signupSubtitle") : t("auth.loginSubtitle")}
         </p>
       </div>
 
@@ -122,13 +122,13 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
       <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
         <span className="h-px flex-1 bg-border" />
-        or continue with email
+        {t("auth.orEmail")}
         <span className="h-px flex-1 bg-border" />
       </div>
 
       <form onSubmit={handleSubmit("email")} className="space-y-4">
         {isSignup && (
-          <Field label="Full name" htmlFor="name" icon={<User className="size-4" />}>
+          <Field label={t("auth.fullName")} htmlFor="name" icon={<User className="size-4" />}>
             <Input
               id="name"
               placeholder="Aziz Saburov"
@@ -139,7 +139,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
             />
           </Field>
         )}
-        <Field label="Email" htmlFor="email" icon={<Mail className="size-4" />}>
+        <Field label={t("auth.email")} htmlFor="email" icon={<Mail className="size-4" />}>
           <Input
             id="email"
             type="email"
@@ -150,11 +150,11 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
             onChange={(e) => setEmail(e.target.value)}
           />
         </Field>
-        <Field label="Password" htmlFor="password" icon={<Lock className="size-4" />}>
+        <Field label={t("auth.password")} htmlFor="password" icon={<Lock className="size-4" />}>
           <Input
             id="password"
             type={showPw ? "text" : "password"}
-            placeholder={isSignup ? "Create a password" : "Enter your password"}
+            placeholder={isSignup ? t("auth.createPassword") : t("auth.enterPassword")}
             required
             className="px-10"
             value={password}
@@ -177,9 +177,9 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
               <span className="grid size-4 place-items-center rounded border border-border peer-checked:bg-primary peer-checked:border-primary peer-checked:[&_svg]:opacity-100">
                 <Check className="size-3 text-primary-foreground opacity-0" />
               </span>
-              Remember me
+              {t("auth.rememberMe")}
             </label>
-            <Link href="#" className="text-primary hover:underline">Forgot password?</Link>
+            <Link href="#" className="text-primary hover:underline">{t("auth.forgot")}</Link>
           </div>
         )}
 
@@ -194,7 +194,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
             <Loader2 className="size-4 animate-spin" />
           ) : (
             <>
-              {isSignup ? "Create account" : "Sign in"} <ArrowRight className="size-4" />
+              {isSignup ? t("auth.createAccount") : t("common.signIn")} <ArrowRight className="size-4" />
             </>
           )}
         </Button>
@@ -209,9 +209,9 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       )}
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
-        {isSignup ? "Already have an account?" : "New to AdmitFlow?"}{" "}
+        {isSignup ? t("auth.haveAccount") : t("auth.noAccount")}{" "}
         <Link href={isSignup ? "/login" : "/signup"} className="font-medium text-primary hover:underline">
-          {isSignup ? "Sign in" : "Create one"}
+          {isSignup ? t("common.signIn") : t("auth.createOne")}
         </Link>
       </p>
     </motion.div>

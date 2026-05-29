@@ -7,6 +7,7 @@ import { ChevronsLeft, Sparkles, Crown } from "lucide-react";
 import { Logo, LogoMark } from "@/components/shared/logo";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { mainNav, secondaryNav, type NavItem } from "@/components/app/nav-config";
+import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -82,8 +83,10 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 function NavLink({ item, collapsed, onNavigate }: { item: NavItem; collapsed: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
+  const { t } = useT();
   const active = pathname === item.href || pathname.startsWith(item.href + "/");
   const Icon = item.icon;
+  const label = t(item.key);
 
   const link = (
     <Link
@@ -105,7 +108,7 @@ function NavLink({ item, collapsed, onNavigate }: { item: NavItem; collapsed: bo
       <Icon className={cn("size-[18px] shrink-0", active && "text-primary")} />
       {!collapsed && (
         <>
-          <span className="flex-1">{item.label}</span>
+          <span className="flex-1">{label}</span>
           {item.badge && (
             <span className="rounded-md bg-[linear-gradient(110deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] px-1.5 py-0.5 text-[10px] font-semibold text-white">
               {item.badge}
@@ -120,7 +123,7 @@ function NavLink({ item, collapsed, onNavigate }: { item: NavItem; collapsed: bo
     return (
       <Tooltip>
         <TooltipTrigger asChild>{link}</TooltipTrigger>
-        <TooltipContent side="right">{item.label}</TooltipContent>
+        <TooltipContent side="right">{label}</TooltipContent>
       </Tooltip>
     );
   }

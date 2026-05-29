@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { DynamicIcon } from "@/components/shared/icon";
 import { useUser } from "@/lib/user-store";
 import { generateRoadmap } from "@/lib/roadmap-engine";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { RoadmapMilestone } from "@/lib/types";
 
@@ -19,6 +20,7 @@ const statusStyle = {
 } as const;
 
 export function RoadmapTimeline() {
+  const { t } = useT();
   const { onboarding } = useUser();
   const [overrides, setOverrides] = useState<Record<string, boolean>>({});
   const [generating, setGenerating] = useState(false);
@@ -61,17 +63,17 @@ export function RoadmapTimeline() {
     <div className="space-y-6">
       {/* Summary */}
       <div className="grid gap-3 sm:grid-cols-3">
-        <SummaryCard icon={Target} label="Target intake" value={intake} sub={major} />
+        <SummaryCard icon={Target} label={t("roadmap.targetIntake")} value={intake} sub={major} />
         <SummaryCard
           icon={CalendarClock}
-          label="Current phase"
+          label={t("roadmap.currentPhase")}
           value={activeMilestone.title}
           sub={activeMilestone.window}
         />
         <Card className="p-4">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              <ListChecks className="size-4" /> Overall progress
+              <ListChecks className="size-4" /> {t("roadmap.overall")}
             </span>
             <span className="font-display text-sm font-bold tabular-nums">{pct}%</span>
           </div>
@@ -102,7 +104,7 @@ export function RoadmapTimeline() {
             </>
           ) : (
             <>
-              <Sparkles className="size-4" /> Regenerate
+              <Sparkles className="size-4" /> {t("roadmap.regenerate")}
             </>
           )}
         </Button>

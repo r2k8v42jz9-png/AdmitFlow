@@ -16,6 +16,7 @@ import {
   CalendarClock,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -28,6 +29,7 @@ import {
 import { allNav } from "@/components/app/nav-config";
 import { useUser, signOut, nameFromEmail } from "@/lib/user-store";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { useT } from "@/lib/i18n";
 import { initials } from "@/lib/utils";
 
 const labelMap: Record<string, string> = {
@@ -54,6 +56,7 @@ export function AppTopbar({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useT();
   const { name, email, plan } = useUser();
   const displayName = name || nameFromEmail(email) || "You";
   const segments = pathname.split("/").filter(Boolean);
@@ -111,17 +114,18 @@ export function AppTopbar({
           className="hidden items-center gap-2 rounded-lg border border-border/70 bg-card/40 px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-border hover:text-foreground sm:flex"
         >
           <Search className="size-4" />
-          <span>Search…</span>
+          <span>{t("topbar.search")}</span>
           <kbd className="ml-4 rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px]">⌘K</kbd>
         </button>
         <button
           onClick={onOpenCommand}
           className="grid size-9 place-items-center rounded-lg border border-border/70 bg-card/40 text-muted-foreground sm:hidden"
-          aria-label="Search"
+          aria-label={t("topbar.search")}
         >
           <Search className="size-4" />
         </button>
 
+        <LanguageSwitcher className="hidden sm:inline-flex" />
         <ThemeToggle />
 
         {/* Notifications */}
@@ -180,19 +184,19 @@ export function AppTopbar({
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/profile"><User /> Profile</Link>
+              <Link href="/profile"><User /> {t("topbar.profile")}</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/settings"><Settings /> Settings</Link>
+              <Link href="/settings"><Settings /> {t("topbar.settings")}</Link>
             </DropdownMenuItem>
             {plan !== "premium" && (
               <DropdownMenuItem asChild>
-                <Link href="/pricing"><Crown /> Upgrade to Premium</Link>
+                <Link href="/pricing"><Crown /> {t("topbar.upgrade")}</Link>
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
-              <LogOut /> Sign out
+              <LogOut /> {t("topbar.signOut")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

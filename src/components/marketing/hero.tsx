@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { AuroraBackground } from "@/components/shared/aurora-background";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { universityLogos } from "@/lib/data/marketing";
+import { useT } from "@/lib/i18n";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
+  const { t } = useT();
   return (
     <section className="relative overflow-hidden pt-36 pb-20 sm:pt-44 sm:pb-28">
       <AuroraBackground variant="hero" />
@@ -28,7 +30,7 @@ export function Hero() {
                 <Star key={i} className="size-3.5 fill-current" />
               ))}
             </span>
-            <span className="text-muted-foreground">Trusted by 128,000+ students worldwide</span>
+            <span className="text-muted-foreground">{t("hero.rated")}</span>
           </motion.div>
 
           <motion.h1
@@ -37,7 +39,7 @@ export function Hero() {
             transition={{ duration: 0.7, ease, delay: 0.05 }}
             className="mt-6 font-display text-4xl font-bold tracking-tight text-balance sm:text-6xl md:text-7xl md:leading-[1.05]"
           >
-            Your AI mentor to the <span className="text-gradient">world&apos;s best</span> universities
+            {t("hero.titleLead")}<span className="text-gradient">{t("hero.titleAccent")}</span>{t("hero.titleTrail")}
           </motion.h1>
 
           <motion.p
@@ -46,8 +48,7 @@ export function Hero() {
             transition={{ duration: 0.7, ease, delay: 0.12 }}
             className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground text-pretty sm:text-xl"
           >
-            AdmitFlow estimates your admission chances, builds a personalized roadmap, finds
-            scholarships and reviews your essays — so you apply with total confidence.
+            {t("hero.subtitle")}
           </motion.p>
 
           <motion.div
@@ -58,12 +59,12 @@ export function Hero() {
           >
             <Button asChild variant="gradient" size="xl" className="w-full sm:w-auto">
               <Link href="/signup">
-                Build my admission plan <ArrowRight className="size-4" />
+                {t("hero.ctaPrimary")} <ArrowRight className="size-4" />
               </Link>
             </Button>
             <Button asChild variant="glass" size="xl" className="w-full sm:w-auto">
               <Link href="/pricing">
-                <Sparkles className="size-4" /> See plans
+                <Sparkles className="size-4" /> {t("hero.ctaSecondary")}
               </Link>
             </Button>
           </motion.div>
@@ -74,9 +75,9 @@ export function Hero() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground"
           >
-            <span className="inline-flex items-center gap-1.5"><CircleCheckBig className="size-3.5 text-success" /> 2-minute setup</span>
-            <span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-3.5 text-success" /> Cancel anytime</span>
-            <span className="inline-flex items-center gap-1.5"><TrendingUp className="size-3.5 text-success" /> 3.2× better outcomes</span>
+            <span className="inline-flex items-center gap-1.5"><CircleCheckBig className="size-3.5 text-success" /> {t("hero.trust1")}</span>
+            <span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-3.5 text-success" /> {t("hero.trust2")}</span>
+            <span className="inline-flex items-center gap-1.5"><TrendingUp className="size-3.5 text-success" /> {t("hero.trust3")}</span>
           </motion.div>
         </div>
 
@@ -86,7 +87,7 @@ export function Hero() {
       {/* logo strip */}
       <div className="relative mx-auto mt-16 max-w-5xl px-6">
         <p className="text-center text-xs font-medium uppercase tracking-widest text-muted-foreground/70">
-          Students admitted to
+          {t("hero.admittedTo")}
         </p>
         <div className="mask-fade-x mt-5 flex gap-10 overflow-hidden">
           <div className="flex shrink-0 animate-marquee items-center gap-10 pause-on-hover">

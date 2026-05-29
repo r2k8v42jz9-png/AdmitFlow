@@ -6,18 +6,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { label: "Product", href: "/#features" },
-  { label: "Universities", href: "/universities" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Stories", href: "/#testimonials" },
-  { label: "FAQ", href: "/#faq" },
+  { key: "nav.product", href: "/#features" },
+  { key: "nav.universities", href: "/universities" },
+  { key: "nav.pricing", href: "/pricing" },
+  { key: "nav.stories", href: "/#testimonials" },
+  { key: "nav.faq", href: "/#faq" },
 ];
 
 export function SiteHeader() {
+  const { t } = useT();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -43,23 +46,24 @@ export function SiteHeader() {
         <nav className="hidden items-center gap-1 lg:flex">
           {links.map((l) => (
             <Link
-              key={l.label}
+              key={l.key}
               href={l.href}
               className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent/60"
             >
-              {l.label}
+              {t(l.key)}
             </Link>
           ))}
         </nav>
 
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           <ThemeToggle className="hidden sm:grid" />
           <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-            <Link href="/login">Sign in</Link>
+            <Link href="/login">{t("common.signIn")}</Link>
           </Button>
           <Button asChild variant="gradient" size="sm" className="hidden sm:inline-flex">
             <Link href="/signup">
-              Get started <ArrowRight className="size-4" />
+              {t("common.getStarted")} <ArrowRight className="size-4" />
             </Link>
           </Button>
           <button
@@ -85,22 +89,23 @@ export function SiteHeader() {
             <nav className="flex flex-col">
               {links.map((l) => (
                 <Link
-                  key={l.label}
+                  key={l.key}
                   href={l.href}
                   onClick={() => setOpen(false)}
                   className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/90 hover:bg-accent"
                 >
-                  {l.label}
+                  {t(l.key)}
                 </Link>
               ))}
             </nav>
             <div className="mt-2 flex items-center gap-2 border-t border-border pt-3">
               <Button asChild variant="outline" size="sm" className="flex-1">
-                <Link href="/login">Sign in</Link>
+                <Link href="/login">{t("common.signIn")}</Link>
               </Button>
               <Button asChild variant="gradient" size="sm" className="flex-1">
-                <Link href="/signup">Get started</Link>
+                <Link href="/signup">{t("common.getStarted")}</Link>
               </Button>
+              <LanguageSwitcher />
               <ThemeToggle />
             </div>
           </motion.div>

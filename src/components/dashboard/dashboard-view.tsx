@@ -23,6 +23,7 @@ import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { applications, savedUniversityIds } from "@/lib/data/app";
 import { universities } from "@/lib/data/universities";
 import { useUser, deriveProfile } from "@/lib/user-store";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 const recommendations = universities
@@ -32,12 +33,13 @@ const recommendations = universities
 
 export function DashboardView() {
   const user = useUser();
+  const { t } = useT();
   const { firstName, admissionScore, profileCompletion } = deriveProfile(user);
   const o = user.onboarding;
 
   const stats = [
     {
-      label: "Admission score",
+      label: t("dash.stat.admission"),
       value: String(admissionScore),
       delta: admissionScore >= 70 ? "Strong" : admissionScore >= 50 ? "Building" : "Getting started",
       icon: TrendingUp,
@@ -45,7 +47,7 @@ export function DashboardView() {
       accent: "from-success/20 to-transparent",
     },
     {
-      label: "Active applications",
+      label: t("dash.stat.applications"),
       value: String(applications.length),
       delta: "2 due soon",
       icon: Building2,
@@ -53,7 +55,7 @@ export function DashboardView() {
       accent: "from-brand-blue/20 to-transparent",
     },
     {
-      label: "Avg. fit score",
+      label: t("dash.stat.fit"),
       value: "86",
       delta: "Strong",
       icon: Target,
@@ -61,7 +63,7 @@ export function DashboardView() {
       accent: "from-brand-violet/20 to-transparent",
     },
     {
-      label: "Day streak",
+      label: t("dash.stat.streak"),
       value: String(user.streak.count),
       delta: user.streak.count > 1 ? "Keep it up" : "Welcome!",
       icon: Flame,
@@ -83,20 +85,20 @@ export function DashboardView() {
       <PageHeader
         title={
           <>
-            Welcome back, {firstName} <span className="align-middle text-2xl">👋</span>
+            {t("dash.welcome", { name: firstName })} <span className="align-middle text-2xl">👋</span>
           </>
         }
-        description="Here's where your applications stand and what to focus on next."
+        description={t("dash.subtitle")}
         actions={
           <>
             <Button asChild variant="glass">
               <Link href="/universities">
-                <Building2 className="size-4" /> Explore
+                <Building2 className="size-4" /> {t("dash.explore")}
               </Link>
             </Button>
             <Button asChild variant="gradient">
               <Link href="/mentor">
-                <Sparkles className="size-4" /> Ask AI Mentor
+                <Sparkles className="size-4" /> {t("dash.askMentor")}
               </Link>
             </Button>
           </>
@@ -212,7 +214,7 @@ export function DashboardView() {
           {/* Profile completion */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Profile completion</CardTitle>
+              <CardTitle className="text-base">{t("dash.completion")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-4">
@@ -249,7 +251,7 @@ export function DashboardView() {
                 ))}
               </ul>
               <Button asChild variant="outline" size="sm" className="w-full">
-                <Link href="/profile">Complete profile</Link>
+                <Link href="/profile">{t("dash.completeProfile")}</Link>
               </Button>
             </CardContent>
           </Card>

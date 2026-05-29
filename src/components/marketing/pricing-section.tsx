@@ -9,10 +9,12 @@ import { StaggerContainer, StaggerItem } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
 import { pricingTiers } from "@/lib/data/marketing";
 import { getUserState, setSubscription, type Plan } from "@/lib/user-store";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 export function PricingSection({ withHeading = true }: { withHeading?: boolean }) {
   const router = useRouter();
+  const { t } = useT();
   const [yearly, setYearly] = useState(true);
 
   const onSelect = (tierId: string) => {
@@ -37,15 +39,15 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
       <div className="mx-auto max-w-6xl px-6">
         {withHeading && (
           <SectionHeading
-            eyebrow={<><Sparkles className="size-3.5 text-primary" /> Simple, transparent pricing</>}
-            title="Invest in your future, not in stress"
-            description="Pick the plan that matches your timeline. Upgrade or cancel anytime — every plan pays for itself with one scholarship."
+            eyebrow={<><Sparkles className="size-3.5 text-primary" /> {t("pricing.eyebrow")}</>}
+            title={t("pricing.heading")}
+            description={t("pricing.description")}
           />
         )}
 
         <div className="mt-10 flex items-center justify-center gap-3">
           <span className={cn("text-sm transition-colors", !yearly ? "text-foreground" : "text-muted-foreground")}>
-            Monthly
+            {t("pricing.monthly")}
           </span>
           <button
             type="button"
@@ -65,9 +67,9 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
             />
           </button>
           <span className={cn("text-sm transition-colors", yearly ? "text-foreground" : "text-muted-foreground")}>
-            Yearly
+            {t("pricing.yearly")}
           </span>
-          <span className="rounded-full bg-success/15 px-2 py-0.5 text-xs font-medium text-success">Save 20%</span>
+          <span className="rounded-full bg-success/15 px-2 py-0.5 text-xs font-medium text-success">{t("pricing.save")}</span>
         </div>
 
         <StaggerContainer className="mt-12 grid items-stretch gap-5 lg:grid-cols-3">
@@ -89,7 +91,7 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
                     <>
                       <div className="pointer-events-none absolute inset-0 -z-10 rounded-3xl bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.14),transparent_60%)]" />
                       <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[linear-gradient(110deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] px-3 py-1 text-xs font-semibold text-white shadow">
-                        {tier.badge}
+                        {t("pricing.popular")}
                       </span>
                     </>
                   )}
@@ -99,10 +101,10 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
 
                   <div className="mt-5 flex items-end gap-1">
                     <span className="font-display text-4xl font-bold tracking-tight">${price}</span>
-                    <span className="mb-1 text-sm text-muted-foreground">/ month</span>
+                    <span className="mb-1 text-sm text-muted-foreground">{t("pricing.perMonth")}</span>
                   </div>
                   <p className="mt-1 h-4 text-xs text-muted-foreground">
-                    {yearly ? "billed annually" : "billed monthly"}
+                    {yearly ? t("pricing.billedAnnually") : t("pricing.billedMonthly")}
                   </p>
 
                   <Button
@@ -111,7 +113,7 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
                     className="mt-6 w-full"
                     onClick={() => onSelect(tier.id)}
                   >
-                    {tier.cta}
+                    {t(`plan.${tier.id}.cta`)}
                   </Button>
 
                   <ul className="mt-7 space-y-3">
