@@ -8,12 +8,12 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
  * auth + Postgres records, so it cannot be bypassed by client state:
  *
  *   not signed in                         → /login
- *   signed in, email NOT verified         → /verify-email
- *   verified, onboarding NOT complete      → /onboarding
+ *   signed in, onboarding NOT complete     → /onboarding
  *   onboarded, subscription NOT active     → /pricing
- *   verified + onboarded + active sub      → allowed
+ *   onboarded + active sub                 → allowed
  *
- * /onboarding itself requires a signed-in, verified user.
+ * Email verification is intentionally NOT required (disabled for now).
+ * /onboarding itself only requires a signed-in user.
  */
 
 const APP_PREFIXES = ["/dashboard", "/mentor", "/universities", "/roadmap", "/profile", "/settings"];
@@ -40,7 +40,7 @@ export async function proxy(request: NextRequest) {
   }
 
   const { updateSession } = await import("@/lib/supabase/proxy-session");
-  const { response, supabase, user, emailVerified } = await updateSession(request);
+  const { response, supabase, user } = await updateSession(request);
 
   const path = request.nextUrl.pathname;
   const isApp = matches(path, APP_PREFIXES);
@@ -51,13 +51,10 @@ export async function proxy(request: NextRequest) {
   // 1) Must be signed in.
   if (!user) return redirect(request, "/login", true);
 
-  // 2) Must have a verified email.
-  if (!emailVerified) return redirect(request, "/verify-email");
-
-  // /onboarding is allowed for any verified user.
+  // /onboarding is allowed for any signed-in user.
   if (isOnboarding) return response;
 
-  // 3) Onboarding must be complete.
+  // 2) Onboarding must be complete.
   const { data: onboarding } = await supabase
     .from("onboarding_data")
     .select("completed")
@@ -65,7 +62,7 @@ export async function proxy(request: NextRequest) {
     .maybeSingle();
   if (!onboarding?.completed) return redirect(request, "/onboarding");
 
-  // 4) Subscription must be active.
+  // 3) Subscription must be active.
   const { data: subscription } = await supabase
     .from("subscriptions")
     .select("status")

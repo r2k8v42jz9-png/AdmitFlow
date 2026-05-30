@@ -72,8 +72,8 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           setLoading(null);
           return;
         }
-        // Verification is required — never go straight to the app.
-        router.replace("/verify-email");
+        // Email verification is disabled — go straight into onboarding.
+        router.replace("/onboarding");
         return;
       }
       const r = await signInWithEmail(resolvedEmail, password);
@@ -82,12 +82,8 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         setLoading(null);
         return;
       }
-      if (r.needsVerification) {
-        router.replace("/verify-email");
-        return;
-      }
-      // Verified login: head to the app; the proxy/AppGate cascade routes to the
-      // correct next step (onboarding → pricing → dashboard) from real DB state.
+      // Head to the app; the proxy/AppGate cascade routes to the correct next
+      // step (onboarding → pricing → dashboard) from real DB state.
       router.replace("/dashboard");
     } catch {
       setError("Something went wrong. Please try again.");

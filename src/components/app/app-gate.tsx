@@ -18,20 +18,19 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
  * waits for that resolution before deciding, then mirrors the same rules.
  */
 export function AppGate({ children }: { children: ReactNode }) {
-  const { hydrated, remoteResolved, authenticated, emailVerified, onboarded, subscriptionActive } = useUser();
+  const { hydrated, remoteResolved, authenticated, onboarded, subscriptionActive } = useUser();
   const router = useRouter();
 
   const configured = isSupabaseConfigured();
   const ready = hydrated && (remoteResolved || !configured);
-  const allowed = authenticated && emailVerified && onboarded && subscriptionActive;
+  // Email verification is intentionally not required.
+  const allowed = authenticated && onboarded && subscriptionActive;
 
   useEffect(() => {
     if (!ready) return;
 
     if (!authenticated) {
       router.replace("/login");
-    } else if (!emailVerified) {
-      router.replace("/verify-email");
     } else if (!onboarded) {
       router.replace("/onboarding");
     } else if (!subscriptionActive) {
@@ -45,7 +44,7 @@ export function AppGate({ children }: { children: ReactNode }) {
         );
       }
     }
-  }, [ready, authenticated, emailVerified, onboarded, subscriptionActive, router]);
+  }, [ready, authenticated, onboarded, subscriptionActive, router]);
 
   if (!ready || !allowed) {
     return (

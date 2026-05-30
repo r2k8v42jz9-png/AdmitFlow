@@ -95,7 +95,7 @@ const steps = [
 
 export function OnboardingFlow() {
   const router = useRouter();
-  const { hydrated, remoteResolved, authenticated, emailVerified, onboarded, onboarding } = useUser();
+  const { hydrated, remoteResolved, authenticated, onboarded, onboarding } = useUser();
   const ready = hydrated && (remoteResolved || !isSupabaseConfigured());
   const [step, setStep] = useState(0);
   const [phase, setPhase] = useState<"form" | "generating" | "result">("form");
@@ -119,13 +119,11 @@ export function OnboardingFlow() {
     const editing = new URLSearchParams(window.location.search).get("edit") === "1";
     if (!authenticated) {
       router.replace("/login");
-    } else if (!emailVerified) {
-      router.replace("/verify-email");
     } else if (onboarded && !editing) {
       // Already onboarded → let the proxy/AppGate cascade to pricing or dashboard.
       router.replace("/dashboard");
     }
-  }, [ready, authenticated, emailVerified, onboarded, router]);
+  }, [ready, authenticated, onboarded, router]);
 
   // When editing, pre-fill the form with the saved profile.
   useEffect(() => {

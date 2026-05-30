@@ -13,38 +13,28 @@ export interface AuthResult {
   error?: string;
 }
 
-/** Email + password sign-up. Triggers a verification email; user must confirm before dashboard access. */
+/**
+ * Email + password sign-up. Email verification is disabled, so when the
+ * Supabase project has "Confirm email" turned off this returns an active
+ * session immediately and we hydrate the store and continue into onboarding.
+ */
 export async function signUpWithEmail(name: string, email: string, password: string): Promise<AuthResult> {
   const supabase = createClient();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      emailRedirectTo: callbackUrl("/onboarding"),
-      data: { full_name: name },
-    },
+    options: { data: { full_name: name } },
   });
   if (error) return { ok: false, error: error.message };
-  // When email confirmation is enabled, there is no active session yet.
-  const needsVerification = !data.session;
-  return { ok: true, needsVerification };
+  if (data.session) await hydrateLocalFromProfile();
+  return { ok: true };
 }
 
 /** Email + password sign-in. Hydrates the local UI cache from the profile row. */
 export async function signInWithEmail(email: string, password: string): Promise<AuthResult> {
   const supabase = createClient();
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) {
-    // Unverified accounts can't sign in while "Confirm email" is on → send to verify page.
-    if (error.code === "email_not_confirmed" || /not confirmed/i.test(error.message)) {
-      return { ok: true, needsVerification: true };
-    }
-    return { ok: false, error: error.message };
-  }
-
-  const verified = Boolean(data.user?.email_confirmed_at ?? data.user?.confirmed_at);
-  if (!verified) return { ok: true, needsVerification: true };
-
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) return { ok: false, error: error.message };
   await hydrateLocalFromProfile();
   return { ok: true };
 }
