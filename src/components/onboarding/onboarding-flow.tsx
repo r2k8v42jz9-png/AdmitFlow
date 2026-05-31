@@ -387,7 +387,7 @@ function StepBody({
       return (
         <div className="space-y-7">
           <div className="text-center">
-            <span className="font-display text-4xl font-bold text-gradient">{formatCurrency(data.budget)}</span>
+            <span className="text-4xl font-bold tabular-nums text-gradient">{formatCurrency(data.budget)}</span>
             <span className="text-sm text-muted-foreground"> / year</span>
           </div>
           <Slider

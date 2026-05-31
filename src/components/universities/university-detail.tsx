@@ -352,7 +352,7 @@ function QuickStat({
       className="rounded-2xl border border-border/70 bg-card/60 p-4 backdrop-blur-sm"
     >
       <Icon className="size-4 text-muted-foreground" />
-      <p className={cn("mt-2 font-display text-xl font-bold tabular-nums", tone)}>{value}</p>
+      <p className={cn("mt-2 text-xl font-bold tabular-nums tracking-tight", tone)}>{value}</p>
       <p className="text-xs text-muted-foreground">{label}</p>
     </motion.div>
   );
@@ -361,7 +361,7 @@ function QuickStat({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="font-display text-base font-bold tabular-nums">{value}</p>
+      <p className="text-base font-bold tabular-nums">{value}</p>
       <p className="text-xs text-muted-foreground">{label}</p>
     </div>
   );

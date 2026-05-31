@@ -87,11 +87,9 @@ export async function loadUserState(): Promise<Partial<UserState> | null> {
 
   const onboardingRow = onboardingRes.data as OnboardingRow | null;
   const metaName = (user.user_metadata?.full_name as string | undefined) ?? "";
-  const emailVerified = Boolean(user.email_confirmed_at ?? user.confirmed_at);
 
   return {
     authenticated: true,
-    emailVerified,
     name: profileRes.data?.full_name ?? metaName,
     email: user.email ?? "",
     onboarded: onboardingRow?.completed ?? false,

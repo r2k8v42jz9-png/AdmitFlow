@@ -28,7 +28,5 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const emailVerified = Boolean(user?.email_confirmed_at ?? user?.confirmed_at);
-
-  return { response, supabase, user, emailVerified };
+  return { response, supabase, user };
 }

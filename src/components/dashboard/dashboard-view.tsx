@@ -108,16 +108,19 @@ export function DashboardView() {
       {/* Stat cards */}
       <div className="mt-7 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map((s) => (
-          <Card key={s.label} className="relative overflow-hidden">
-            <div className={cn("pointer-events-none absolute inset-0 bg-gradient-to-br opacity-60", s.accent)} />
+          <Card
+            key={s.label}
+            className="group relative overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:shadow-[0_16px_44px_-24px_hsl(230_50%_2%/0.9)]"
+          >
+            <div className={cn("pointer-events-none absolute inset-0 bg-gradient-to-br opacity-50 transition-opacity duration-200 group-hover:opacity-70", s.accent)} />
             <CardContent className="relative p-5">
               <div className="flex items-center justify-between">
-                <span className={cn("grid size-9 place-items-center rounded-lg bg-background/60", s.tone)}>
+                <span className={cn("grid size-9 place-items-center rounded-lg bg-background/60 ring-1 ring-inset ring-border/50", s.tone)}>
                   <s.icon className="size-[18px]" />
                 </span>
-                <span className={cn("text-xs font-medium", s.tone)}>{s.delta}</span>
+                <span className={cn("rounded-full bg-background/50 px-2 py-0.5 text-xs font-medium", s.tone)}>{s.delta}</span>
               </div>
-              <p className="mt-4 font-display text-3xl font-bold tracking-tight">{s.value}</p>
+              <p className="mt-4 text-[1.75rem] font-bold tabular-nums tracking-tight">{s.value}</p>
               <p className="text-sm text-muted-foreground">{s.label}</p>
             </CardContent>
           </Card>

@@ -29,7 +29,7 @@ export function Features() {
                 >
                   <DynamicIcon name={f.icon} className="size-5 text-foreground" />
                 </div>
-                <h3 className="font-display text-lg font-semibold tracking-tight">{f.title}</h3>
+                <h3 className="text-[15px] font-semibold tracking-tight">{f.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.description}</p>
               </SpotlightCard>
             </StaggerItem>

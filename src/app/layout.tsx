@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Sora } from "next/font/google";
+import { Geist, Geist_Mono, Fraunces } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SessionSync } from "@/components/providers/session-sync";
@@ -16,11 +16,13 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const sora = Sora({
+// Academic editorial display face — distinctive, high-contrast serif used for
+// headline moments (hero, section + page headings). Pairs with Geist for body.
+const fraunces = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
-  weight: ["500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -63,7 +65,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background text-foreground">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>

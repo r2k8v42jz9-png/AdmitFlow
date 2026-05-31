@@ -9,9 +9,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary text-primary-foreground shadow-[0_8px_30px_-8px_hsl(var(--primary)/0.6)] hover:shadow-[0_10px_40px_-6px_hsl(var(--primary)/0.7)] hover:brightness-110",
+          "bg-primary text-primary-foreground shadow-[0_6px_24px_-10px_hsl(var(--primary)/0.55)] hover:shadow-[0_10px_32px_-8px_hsl(var(--primary)/0.65)] hover:brightness-105",
         gradient:
-          "text-white shadow-[0_8px_34px_-8px_hsl(var(--brand-violet)/0.7)] bg-[linear-gradient(110deg,hsl(var(--brand-blue)),hsl(var(--brand-violet))_55%,hsl(var(--brand-pink)))] bg-[length:200%_100%] hover:bg-[position:100%_0] hover:shadow-[0_12px_44px_-6px_hsl(var(--brand-violet)/0.8)]",
+          "text-white shadow-[0_6px_26px_-10px_hsl(var(--brand-blue)/0.65)] bg-[linear-gradient(110deg,hsl(var(--brand-indigo)),hsl(var(--brand-blue))_60%,hsl(var(--brand-cyan)))] bg-[length:200%_100%] hover:bg-[position:100%_0] hover:shadow-[0_10px_34px_-8px_hsl(var(--brand-blue)/0.75)]",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-accent border border-border/70",
         outline:

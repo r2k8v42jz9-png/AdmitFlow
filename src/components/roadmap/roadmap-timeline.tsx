@@ -75,7 +75,7 @@ export function RoadmapTimeline() {
             <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
               <ListChecks className="size-4" /> {t("roadmap.overall")}
             </span>
-            <span className="font-display text-sm font-bold tabular-nums">{pct}%</span>
+            <span className="text-sm font-bold tabular-nums">{pct}%</span>
           </div>
           <Progress value={pct} className="mt-3" />
           <p className="mt-2 text-xs text-muted-foreground">
@@ -235,7 +235,7 @@ function SummaryCard({
       <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
         <Icon className="size-4" /> {label}
       </span>
-      <p className="mt-2 font-display text-base font-bold leading-tight">{value}</p>
+      <p className="mt-2 text-base font-bold leading-tight">{value}</p>
       <p className="text-xs text-muted-foreground">{sub}</p>
     </Card>
   );

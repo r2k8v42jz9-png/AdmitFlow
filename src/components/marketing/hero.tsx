@@ -37,9 +37,11 @@ export function Hero() {
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease, delay: 0.05 }}
-            className="mt-6 font-display text-4xl font-bold tracking-tight text-balance sm:text-6xl md:text-7xl md:leading-[1.05]"
+            className="mt-6 font-display text-[2.6rem] font-medium leading-[1.05] tracking-[-0.02em] text-balance sm:text-6xl md:text-7xl"
           >
-            {t("hero.titleLead")}<span className="text-gradient">{t("hero.titleAccent")}</span>{t("hero.titleTrail")}
+            {t("hero.titleLead")}
+            <span className="text-gradient italic">{t("hero.titleAccent")}</span>
+            {t("hero.titleTrail")}
           </motion.h1>
 
           <motion.p
@@ -92,7 +94,7 @@ export function Hero() {
         <div className="mask-fade-x mt-5 flex gap-10 overflow-hidden">
           <div className="flex shrink-0 animate-marquee items-center gap-10 pause-on-hover">
             {[...universityLogos, ...universityLogos].map((name, i) => (
-              <span key={i} className="whitespace-nowrap font-display text-lg font-semibold text-muted-foreground/60">
+              <span key={i} className="whitespace-nowrap font-display text-lg font-medium italic text-muted-foreground/55">
                 {name}
               </span>
             ))}
@@ -166,7 +168,7 @@ function HeroMockup() {
         className="absolute -left-6 top-1/3 hidden rounded-2xl glass-strong px-4 py-3 shadow-card md:block"
       >
         <p className="text-xs text-muted-foreground">Deadline in</p>
-        <p className="font-display text-lg font-bold">12 days</p>
+        <p className="text-lg font-bold tabular-nums">12 days</p>
       </motion.div>
       <motion.div
         animate={{ y: [0, 12, 0] }}

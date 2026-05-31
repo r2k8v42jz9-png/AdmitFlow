@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { signUpWithEmail, signInWithEmail, signInWithGoogle } from "@/lib/supabase/auth";
+import { signUpWithEmail, signInWithEmail, signInWithGoogle, fetchEnabledProviders } from "@/lib/supabase/auth";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -37,6 +37,19 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [providers, setProviders] = useState<{ google: boolean; apple: boolean }>({ google: false, apple: false });
+
+  // Detect which social providers are actually enabled in Supabase so we can
+  // hide unconfigured ones (Apple) and message clearly for others (Google).
+  useEffect(() => {
+    let active = true;
+    fetchEnabledProviders().then((p) => {
+      if (active) setProviders(p);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleSubmit = (provider: "email" | "google" | "apple") => async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -53,15 +66,22 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
     try {
       if (provider === "google") {
+        if (!providers.google) {
+          // Clear message instead of a broken OAuth redirect.
+          setError(t("auth.googleUnavailable"));
+          setLoading(null);
+          return;
+        }
         const r = await signInWithGoogle();
         if (!r.ok) {
-          setError(r.error ?? "Google sign-in failed");
+          setError(r.error ?? t("auth.googleUnavailable"));
           setLoading(null);
         }
         return; // browser redirects to Google
       }
       if (provider === "apple") {
-        setError("Apple sign-in isn't enabled yet — use Google or email.");
+        // Apple button is hidden when unconfigured; guard just in case.
+        setError(t("auth.appleUnavailable"));
         setLoading(null);
         return;
       }
@@ -106,14 +126,16 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         </p>
       </div>
 
-      {/* Social */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Social — Apple is hidden entirely unless enabled in Supabase. */}
+      <div className={cn("grid gap-3", providers.apple ? "grid-cols-2" : "grid-cols-1")}>
         <Button variant="outline" size="lg" onClick={handleSubmit("google")} disabled={!!loading}>
           {loading === "google" ? <Loader2 className="size-4 animate-spin" /> : <GoogleIcon />} Google
         </Button>
-        <Button variant="outline" size="lg" onClick={handleSubmit("apple")} disabled={!!loading}>
-          {loading === "apple" ? <Loader2 className="size-4 animate-spin" /> : <AppleIcon />} Apple
-        </Button>
+        {providers.apple && (
+          <Button variant="outline" size="lg" onClick={handleSubmit("apple")} disabled={!!loading}>
+            {loading === "apple" ? <Loader2 className="size-4 animate-spin" /> : <AppleIcon />} Apple
+          </Button>
+        )}
       </div>
 
       <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">

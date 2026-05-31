@@ -3,14 +3,39 @@
 import { createClient } from "@/lib/supabase/client";
 import { loadUserState } from "@/lib/supabase/data";
 import { hydrateFromRemote, signOut as signOutLocal } from "@/lib/user-store";
+import { SUPABASE_URL, SUPABASE_ANON_KEY, isSupabaseConfigured } from "@/lib/supabase/config";
 
 const callbackUrl = (next: string) =>
   typeof window !== "undefined" ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}` : next;
 
 export interface AuthResult {
   ok: boolean;
-  needsVerification?: boolean;
   error?: string;
+}
+
+export interface EnabledProviders {
+  google: boolean;
+  apple: boolean;
+}
+
+/**
+ * Reads which social providers are actually enabled in the Supabase project
+ * (public, unauthenticated settings endpoint). Lets the UI hide unconfigured
+ * providers and show a clear message instead of a broken OAuth redirect.
+ */
+export async function fetchEnabledProviders(): Promise<EnabledProviders> {
+  if (!isSupabaseConfigured()) return { google: false, apple: false };
+  try {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/settings`, {
+      headers: { apikey: SUPABASE_ANON_KEY },
+    });
+    if (!res.ok) return { google: false, apple: false };
+    const data = await res.json();
+    const ext = (data?.external ?? {}) as Record<string, boolean>;
+    return { google: Boolean(ext.google), apple: Boolean(ext.apple) };
+  } catch {
+    return { google: false, apple: false };
+  }
 }
 
 /**

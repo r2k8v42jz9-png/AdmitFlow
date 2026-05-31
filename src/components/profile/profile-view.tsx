@@ -86,7 +86,7 @@ export function ProfileView() {
             </Avatar>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="font-display text-xl font-bold tracking-tight">{displayName}</h2>
+                <h2 className="font-display text-2xl font-medium tracking-[-0.01em]">{displayName}</h2>
                 <Badge variant="gradient">{planLabel}</Badge>
               </div>
               <p className="text-sm text-muted-foreground">{user.email}</p>
@@ -209,7 +209,7 @@ export function ProfileView() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <h3 className="font-display text-lg font-semibold">Completion</h3>
-              <span className="font-display text-sm font-bold tabular-nums">{profileCompletion}%</span>
+              <span className="text-sm font-bold tabular-nums">{profileCompletion}%</span>
             </div>
             <Progress value={profileCompletion} className="mt-3" />
             <ul className="mt-4 space-y-2.5">
@@ -252,7 +252,7 @@ function DetailTile({
   return (
     <div className="rounded-xl border border-border/50 bg-background/30 p-4">
       <Icon className="size-4 text-muted-foreground" />
-      <p className="mt-2 font-display text-lg font-bold leading-tight">{value}</p>
+      <p className="mt-2 text-lg font-bold leading-tight tabular-nums">{value}</p>
       <p className="text-xs text-muted-foreground">
         {label}
         {sub && <span className="opacity-70"> · {sub}</span>}

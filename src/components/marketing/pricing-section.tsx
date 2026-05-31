@@ -100,7 +100,7 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
                   <p className="mt-1 min-h-[4rem] text-sm text-muted-foreground">{tier.tagline}</p>
 
                   <div className="mt-5 flex items-end gap-1">
-                    <span className="font-display text-4xl font-bold tracking-tight">${price}</span>
+                    <span className="text-4xl font-bold tabular-nums tracking-tight">${price}</span>
                     <span className="mb-1 text-sm text-muted-foreground">{t("pricing.perMonth")}</span>
                   </div>
                   <p className="mt-1 h-4 text-xs text-muted-foreground">
