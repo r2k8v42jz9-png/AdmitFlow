@@ -189,6 +189,10 @@
     color: hsl(var(--foreground));
     font-family: var(--font-sans);
     font-feature-settings: "cv11", "ss01";
+    /* Guard against decorative absolute-positioned glows/blobs creating
+       horizontal scroll on small viewports. clip (not hidden) preserves
+       position:sticky behavior in descendants. */
+    overflow-x: clip;
   }
   /* Editorial serif display: optical sizing + refined tracking so headings
      read as crafted, not default. Applies wherever .font-display is used. */
