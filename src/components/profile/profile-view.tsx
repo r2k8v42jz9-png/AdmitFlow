@@ -26,7 +26,7 @@ import { Progress } from "@/components/ui/progress";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { ProfileRadarChart } from "@/components/dashboard/charts";
 import { universities } from "@/lib/data/universities";
-import { useUser, deriveProfile, nameFromEmail } from "@/lib/user-store";
+import { useUser, deriveProfile, deriveRadar, nameFromEmail } from "@/lib/user-store";
 import { useT } from "@/lib/i18n";
 import { formatCurrency, initials } from "@/lib/utils";
 
@@ -49,17 +49,19 @@ export function ProfileView() {
   const intake = o?.targetIntake || NOT_SET;
   const streak = user.streak.count;
 
+  const radar = deriveRadar(user).map((d) => ({ axis: t(d.axis), value: d.value }));
+
   const dreamNames = (o?.dreamUniversities ?? [])
     .map((id) => universities.find((u) => u.id === id))
     .filter((u): u is (typeof universities)[number] => !!u);
 
   const checklist = [
-    { label: "Academic records & GPA", status: o?.gpa != null ? "done" : "pending" },
-    { label: "Standardized test scores", status: o?.ielts != null || o?.sat != null ? "done" : "pending" },
-    { label: "Extracurricular activities", status: (o?.strengths?.length ?? 0) > 0 ? "done" : "pending" },
-    { label: "Target countries & intake", status: (o?.countries?.length ?? 0) > 0 && o?.targetIntake ? "done" : "progress" },
-    { label: "Personal statement", status: "pending" },
-    { label: "Letters of recommendation", status: "pending" },
+    { label: t("pf.check.academics"), status: o?.gpa != null ? "done" : "pending" },
+    { label: t("pf.check.tests"), status: o?.ielts != null || o?.sat != null ? "done" : "pending" },
+    { label: t("pf.check.extracurriculars"), status: (o?.strengths?.length ?? 0) > 0 ? "done" : "pending" },
+    { label: t("pf.check.countries"), status: (o?.countries?.length ?? 0) > 0 && o?.targetIntake ? "done" : "progress" },
+    { label: t("pf.check.statement"), status: "pending" },
+    { label: t("pf.check.recommendations"), status: "pending" },
   ] as const;
 
   return (
@@ -98,17 +100,17 @@ export function ProfileView() {
                   <GraduationCap className="size-3.5" /> {intake}
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-warning">
-                  <Flame className="size-3.5" /> {streak}-day streak
+                  <Flame className="size-3.5" /> {t("pf.streak", { n: streak })}
                 </span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-6 rounded-2xl border border-border/50 bg-background/40 p-4">
-            <ScoreRing value={admissionScore} size={96} stroke={8} label="Admit score" gradientId="profile-score" />
+            <ScoreRing value={admissionScore} size={96} stroke={8} label={t("pf.admitScore")} gradientId="profile-score" />
             <div className="text-sm">
-              <p className="font-medium">Admission readiness</p>
+              <p className="font-medium">{t("pf.readiness")}</p>
               <p className="mt-0.5 max-w-[16rem] text-xs text-muted-foreground">
-                A composite of your academics, test scores and profile strength.
+                {t("pf.readinessSub")}
               </p>
             </div>
           </div>
@@ -119,32 +121,32 @@ export function ProfileView() {
         {/* Left: details */}
         <div className="space-y-6 lg:col-span-2">
           <Card className="p-6">
-            <h3 className="font-display text-lg font-semibold">Academics & scores</h3>
+            <h3 className="font-display text-lg font-semibold">{t("pf.academics")}</h3>
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
               <DetailTile
                 icon={GraduationCap}
                 label="GPA"
                 value={o?.gpa != null ? o.gpa.toFixed(2) : NOT_SET}
-                sub={o?.gpa != null ? `/ ${o.gpaScale.toFixed(1)} scale` : undefined}
+                sub={o?.gpa != null ? t("pf.gpaScale", { scale: o.gpaScale.toFixed(1) }) : undefined}
               />
-              <DetailTile icon={Languages} label="IELTS" value={o?.ielts != null ? o.ielts.toFixed(1) : NOT_SET} sub="Band score" />
+              <DetailTile icon={Languages} label="IELTS" value={o?.ielts != null ? o.ielts.toFixed(1) : NOT_SET} sub={t("pf.band")} />
               <DetailTile icon={PenLine} label="SAT" value={o?.sat != null ? String(o.sat) : NOT_SET} sub="/ 1600" />
-              <DetailTile icon={Target} label="Intended major" value={major} />
-              <DetailTile icon={GraduationCap} label="Degree level" value={o?.degreeLevel || NOT_SET} />
+              <DetailTile icon={Target} label={t("pf.major")} value={major} />
+              <DetailTile icon={GraduationCap} label={t("pf.degree")} value={o?.degreeLevel || NOT_SET} />
               <DetailTile
                 icon={Wallet}
-                label="Annual budget"
+                label={t("pf.budget")}
                 value={o?.budget != null ? formatCurrency(o.budget).replace(/\.00$/, "") : NOT_SET}
               />
             </div>
           </Card>
 
           <Card className="p-6">
-            <h3 className="font-display text-lg font-semibold">Study preferences</h3>
+            <h3 className="font-display text-lg font-semibold">{t("pf.preferences")}</h3>
             <div className="mt-4 space-y-4">
               <div>
                 <p className="flex items-center gap-2 text-sm font-medium">
-                  <Globe2 className="size-4 text-primary" /> Preferred countries
+                  <Globe2 className="size-4 text-primary" /> {t("pf.countries")}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {o?.countries?.length ? (
@@ -154,14 +156,14 @@ export function ProfileView() {
                       </Badge>
                     ))
                   ) : (
-                    <span className="text-sm text-muted-foreground">No countries selected yet.</span>
+                    <span className="text-sm text-muted-foreground">{t("pf.noCountries")}</span>
                   )}
                 </div>
               </div>
 
               <div>
                 <p className="flex items-center gap-2 text-sm font-medium">
-                  <Trophy className="size-4 text-primary" /> Extracurricular strengths
+                  <Trophy className="size-4 text-primary" /> {t("pf.strengths")}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {o?.strengths?.length ? (
@@ -171,14 +173,14 @@ export function ProfileView() {
                       </Badge>
                     ))
                   ) : (
-                    <span className="text-sm text-muted-foreground">No strengths added yet.</span>
+                    <span className="text-sm text-muted-foreground">{t("pf.noStrengths")}</span>
                   )}
                 </div>
               </div>
 
               <div>
                 <p className="flex items-center gap-2 text-sm font-medium">
-                  <Heart className="size-4 text-primary" /> Dream universities
+                  <Heart className="size-4 text-primary" /> {t("pf.dreams")}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {dreamNames.length ? (
@@ -188,7 +190,7 @@ export function ProfileView() {
                       </Badge>
                     ))
                   ) : (
-                    <span className="text-sm text-muted-foreground">No dream schools picked yet.</span>
+                    <span className="text-sm text-muted-foreground">{t("pf.noDreams")}</span>
                   )}
                 </div>
               </div>
@@ -200,15 +202,15 @@ export function ProfileView() {
         <div className="space-y-6">
           <Card className="p-6">
             <div className="flex items-center justify-between">
-              <h3 className="font-display text-lg font-semibold">Profile strength</h3>
-              <span className="text-xs text-muted-foreground">6 dimensions</span>
+              <h3 className="font-display text-lg font-semibold">{t("pf.strength")}</h3>
+              <span className="text-xs text-muted-foreground">{t("pf.dimensions")}</span>
             </div>
-            <ProfileRadarChart />
+            <ProfileRadarChart data={radar} />
           </Card>
 
           <Card className="p-6">
             <div className="flex items-center justify-between">
-              <h3 className="font-display text-lg font-semibold">Completion</h3>
+              <h3 className="font-display text-lg font-semibold">{t("pf.completion")}</h3>
               <span className="text-sm font-bold tabular-nums">{profileCompletion}%</span>
             </div>
             <Progress value={profileCompletion} className="mt-3" />
@@ -228,7 +230,7 @@ export function ProfileView() {
             </ul>
             <Button variant="gradient" className="mt-5 w-full" asChild>
               <Link href="/mentor">
-                <Sparkles className="size-4" /> Improve with AI Mentor
+                <Sparkles className="size-4" /> {t("pf.improve")}
               </Link>
             </Button>
           </Card>

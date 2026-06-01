@@ -254,3 +254,33 @@ export function deriveProfile(s: UserState): DerivedProfile {
     planLabel: planLabel(s.plan),
   };
 }
+
+/**
+ * Six profile-strength dimensions derived from the user's real onboarding data.
+ * `axis` holds a stable i18n key; the chart component resolves the label.
+ * Values are 0–100.
+ */
+export function deriveRadar(s: UserState): { axis: string; value: number }[] {
+  const o = s.onboarding;
+  const clampPct = (n: number) => Math.max(8, Math.min(100, Math.round(n)));
+
+  const academics = o?.gpa != null && o.gpaScale ? (o.gpa / o.gpaScale) * 100 : 0;
+  const tests =
+    o?.ielts != null || o?.sat != null
+      ? ((o?.ielts != null ? (o.ielts / 9) * 100 : 0) + (o?.sat != null ? (o.sat / 1600) * 100 : 0)) /
+        ((o?.ielts != null ? 1 : 0) + (o?.sat != null ? 1 : 0))
+      : 0;
+  const extracurriculars = Math.min(100, (o?.strengths?.length ?? 0) * 28);
+  const ambition = Math.min(100, (o?.dreamUniversities?.length ?? 0) * 30);
+  const focus = o?.intendedMajor && o?.degreeLevel ? 80 : o?.intendedMajor || o?.degreeLevel ? 45 : 0;
+  const readiness = o?.targetIntake && (o?.countries?.length ?? 0) > 0 ? 78 : o?.targetIntake ? 40 : 0;
+
+  return [
+    { axis: "radar.academics", value: clampPct(academics) },
+    { axis: "radar.tests", value: clampPct(tests) },
+    { axis: "radar.extracurriculars", value: clampPct(extracurriculars) },
+    { axis: "radar.ambition", value: clampPct(ambition) },
+    { axis: "radar.focus", value: clampPct(focus) },
+    { axis: "radar.readiness", value: clampPct(readiness) },
+  ];
+}

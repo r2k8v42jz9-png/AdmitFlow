@@ -37,27 +37,33 @@ export function DashboardView() {
   const { firstName, admissionScore, profileCompletion } = deriveProfile(user);
   const o = user.onboarding;
 
+  // Real average fit across the user's dream universities (falls back to "—").
+  const dreamFits = (o?.dreamUniversities ?? [])
+    .map((id) => universities.find((u) => u.id === id)?.fitScore)
+    .filter((v): v is number => typeof v === "number");
+  const avgFit = dreamFits.length ? Math.round(dreamFits.reduce((a, b) => a + b, 0) / dreamFits.length) : null;
+
   const stats = [
     {
       label: t("dash.stat.admission"),
       value: String(admissionScore),
-      delta: admissionScore >= 70 ? "Strong" : admissionScore >= 50 ? "Building" : "Getting started",
+      delta: t(admissionScore >= 70 ? "dash.delta.strong" : admissionScore >= 50 ? "dash.delta.building" : "dash.delta.start"),
       icon: TrendingUp,
       tone: "text-success",
       accent: "from-success/20 to-transparent",
     },
     {
       label: t("dash.stat.applications"),
-      value: String(applications.length),
-      delta: "2 due soon",
+      value: String(dreamFits.length),
+      delta: t("dash.delta.tracked"),
       icon: Building2,
       tone: "text-brand-blue",
       accent: "from-brand-blue/20 to-transparent",
     },
     {
       label: t("dash.stat.fit"),
-      value: "86",
-      delta: "Strong",
+      value: avgFit != null ? String(avgFit) : "—",
+      delta: t(avgFit != null && avgFit >= 80 ? "dash.delta.strong" : "dash.delta.building"),
       icon: Target,
       tone: "text-brand-violet",
       accent: "from-brand-violet/20 to-transparent",
@@ -65,7 +71,7 @@ export function DashboardView() {
     {
       label: t("dash.stat.streak"),
       value: String(user.streak.count),
-      delta: user.streak.count > 1 ? "Keep it up" : "Welcome!",
+      delta: t(user.streak.count > 1 ? "dash.delta.keepUp" : "dash.delta.welcome"),
       icon: Flame,
       tone: "text-warning",
       accent: "from-warning/20 to-transparent",
@@ -73,11 +79,11 @@ export function DashboardView() {
   ];
 
   const profileChecklist = [
-    { label: "Academic stats", done: o?.gpa != null },
-    { label: "Test scores", done: o?.ielts != null || o?.sat != null },
-    { label: "Extracurriculars", done: (o?.strengths?.length ?? 0) > 0 },
-    { label: "Personal statement", done: false },
-    { label: "Recommendation letters", done: false },
+    { label: t("pf.check.academics"), done: o?.gpa != null },
+    { label: t("pf.check.tests"), done: o?.ielts != null || o?.sat != null },
+    { label: t("pf.check.extracurriculars"), done: (o?.strengths?.length ?? 0) > 0 },
+    { label: t("pf.check.statement"), done: false },
+    { label: t("pf.check.recommendations"), done: false },
   ];
 
   return (
@@ -134,16 +140,16 @@ export function DashboardView() {
           <Card>
             <CardContent className="grid gap-6 p-6 sm:grid-cols-[auto_1fr] sm:items-center">
               <div className="flex flex-col items-center gap-2">
-                <ScoreRing value={admissionScore} label="Admission" gradientId="dash-ring" />
+                <ScoreRing value={admissionScore} label={t("onb.admission")} gradientId="dash-ring" />
                 <Badge variant="success" className="gap-1">
-                  <TrendingUp className="size-3" /> Trending up
+                  <TrendingUp className="size-3" /> {t("dash.trendingUp")}
                 </Badge>
               </div>
               <div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-display font-semibold">Your admission score</h3>
-                    <p className="text-sm text-muted-foreground">Based on your GPA, IELTS and SAT</p>
+                    <h3 className="font-display font-semibold">{t("dash.scoreTitle")}</h3>
+                    <p className="text-sm text-muted-foreground">{t("dash.scoreSub")}</p>
                   </div>
                 </div>
                 <div className="mt-3">
@@ -152,8 +158,7 @@ export function DashboardView() {
                 <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-primary/20 bg-primary/5 px-3.5 py-2.5">
                   <Lightbulb className="mt-0.5 size-4 shrink-0 text-primary" />
                   <p className="text-xs text-foreground/85">
-                    <span className="font-medium">AI tip:</span> Draft your personal statement to unlock the next
-                    +8 points. It&apos;s your biggest remaining lever.
+                    <span className="font-medium">{t("dash.tipLabel")}</span> {t("dash.tipBody")}
                   </p>
                 </div>
               </div>
@@ -164,12 +169,12 @@ export function DashboardView() {
           <Card>
             <CardHeader className="flex-row items-center justify-between space-y-0">
               <div>
-                <CardTitle>Application tracker</CardTitle>
-                <CardDescription>{applications.length} applications in progress</CardDescription>
+                <CardTitle>{t("dash.tracker")}</CardTitle>
+                <CardDescription>{t("dash.trackerSub", { n: applications.length })}</CardDescription>
               </div>
               <Button asChild variant="ghost" size="sm">
                 <Link href="/universities">
-                  View all <ChevronRight className="size-4" />
+                  {t("dash.viewAll")} <ChevronRight className="size-4" />
                 </Link>
               </Button>
             </CardHeader>
@@ -183,9 +188,9 @@ export function DashboardView() {
             <CardHeader className="flex-row items-center justify-between space-y-0">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="size-4 text-primary" /> Recommended for you
+                  <Sparkles className="size-4 text-primary" /> {t("dash.recommended")}
                 </CardTitle>
-                <CardDescription>High-fit universities you haven&apos;t added yet</CardDescription>
+                <CardDescription>{t("dash.recommendedSub")}</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="grid gap-3 sm:grid-cols-3">
@@ -204,7 +209,7 @@ export function DashboardView() {
                   <p className="mt-3 text-sm font-semibold">{u.shortName}</p>
                   <p className="text-xs text-muted-foreground">{u.city}</p>
                   <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                    View details <ArrowRight className="size-3" />
+                    {t("dash.viewDetails")} <ArrowRight className="size-3" />
                   </span>
                 </Link>
               ))}
@@ -233,7 +238,7 @@ export function DashboardView() {
                   <span className="absolute text-sm font-bold">{profileCompletion}%</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Complete your profile to improve recommendation accuracy.
+                  {t("dash.completionSub")}
                 </p>
               </div>
               <ul className="space-y-2">
@@ -262,10 +267,10 @@ export function DashboardView() {
           {/* Deadlines */}
           <Card>
             <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-base">Upcoming deadlines</CardTitle>
+              <CardTitle className="text-base">{t("dash.deadlines")}</CardTitle>
               <Button asChild variant="ghost" size="sm">
                 <Link href="/roadmap">
-                  All <ChevronRight className="size-4" />
+                  {t("dash.all")} <ChevronRight className="size-4" />
                 </Link>
               </Button>
             </CardHeader>
@@ -277,7 +282,7 @@ export function DashboardView() {
           {/* Activity */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Recent activity</CardTitle>
+              <CardTitle className="text-base">{t("dash.activity")}</CardTitle>
             </CardHeader>
             <CardContent>
               <ActivityFeed />
@@ -285,8 +290,8 @@ export function DashboardView() {
           </Card>
 
           <div className="text-center text-xs text-muted-foreground">
-            Saved {savedUniversityIds.length} universities ·{" "}
-            <Link href="/universities" className="text-primary hover:underline">explore more</Link>
+            {t("dash.saved", { n: savedUniversityIds.length })}{" "}
+            <Link href="/universities" className="text-primary hover:underline">{t("dash.exploreMore")}</Link>
           </div>
         </div>
       </div>
