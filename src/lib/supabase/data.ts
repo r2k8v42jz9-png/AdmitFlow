@@ -83,12 +83,18 @@ export async function loadUserState(): Promise<Partial<UserState> | null> {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const [profileRes, onboardingRes, subRes, streakRes] = await Promise.all([
+  // allSettled (not all): one failing query must not reject the whole load and
+  // wedge the session-resolution path. Missing rows simply read as defaults.
+  const [profileR, onboardingR, subR, streakR] = await Promise.allSettled([
     supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
     supabase.from("onboarding_data").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("subscriptions").select("*").eq("user_id", user.id).maybeSingle(),
     supabase.from("streaks").select("*").eq("user_id", user.id).maybeSingle(),
   ]);
+  const profileRes = profileR.status === "fulfilled" ? profileR.value : { data: null };
+  const onboardingRes = onboardingR.status === "fulfilled" ? onboardingR.value : { data: null };
+  const subRes = subR.status === "fulfilled" ? subR.value : { data: null };
+  const streakRes = streakR.status === "fulfilled" ? streakR.value : { data: null };
 
   const onboardingRow = onboardingRes.data as OnboardingRow | null;
   const metaName = (user.user_metadata?.full_name as string | undefined) ?? "";

@@ -21,33 +21,60 @@ export function SessionSync() {
     let active = true;
     let unsubscribe: (() => void) | undefined;
 
+    // Safety net: never leave the app stuck on a loader. If session resolution
+    // hangs (network, slow Supabase), resolve as "no user" after a timeout so
+    // the gates fall through to /login instead of an infinite spinner.
+    const safety = setTimeout(() => {
+      if (active) markRemoteResolved();
+    }, 8000);
+
     (async () => {
-      const [{ createClient }, { hydrateLocalFromProfile }, store] = await Promise.all([
-        import("@/lib/supabase/client"),
-        import("@/lib/supabase/auth"),
-        import("@/lib/user-store"),
-      ]);
-      const supabase = createClient();
+      try {
+        const [{ createClient }, { hydrateLocalFromProfile }, store] = await Promise.all([
+          import("@/lib/supabase/client"),
+          import("@/lib/supabase/auth"),
+          import("@/lib/user-store"),
+        ]);
+        const supabase = createClient();
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!active) return;
-      if (user) await hydrateLocalFromProfile();
-      else markRemoteResolved();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!active) return;
 
-      const { data } = supabase.auth.onAuthStateChange(async (event) => {
-        if (event === "SIGNED_OUT") {
-          store.signOut();
-        } else if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED" || event === "USER_UPDATED") {
-          await hydrateLocalFromProfile();
+        if (user) {
+          try {
+            await hydrateLocalFromProfile();
+          } catch {
+            // Profile read failed — still resolve the session so the gate can
+            // decide (it will route based on whatever loaded, or to /login).
+            markRemoteResolved();
+          }
+        } else {
+          markRemoteResolved();
         }
-      });
-      unsubscribe = () => data.subscription.unsubscribe();
+
+        const { data } = supabase.auth.onAuthStateChange(async (event) => {
+          if (event === "SIGNED_OUT") {
+            store.signOut();
+          } else if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED" || event === "USER_UPDATED") {
+            try {
+              await hydrateLocalFromProfile();
+            } catch {
+              markRemoteResolved();
+            }
+          }
+        });
+        unsubscribe = () => data.subscription.unsubscribe();
+      } catch {
+        // Any failure (dynamic import, getUser) must not wedge the gate.
+        if (active) markRemoteResolved();
+      }
     })();
 
     return () => {
       active = false;
+      clearTimeout(safety);
       unsubscribe?.();
     };
   }, []);

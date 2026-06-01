@@ -64,12 +64,16 @@ export async function signInWithEmail(email: string, password: string): Promise<
   return { ok: true };
 }
 
-/** Google OAuth — redirects to Google, returns via /auth/callback. */
+/**
+ * Google OAuth — redirects to Google, returns via /auth/callback.
+ * Lands on /dashboard so the proxy cascade routes to the correct step
+ * (onboarding → pricing → dashboard) based on the user's real DB state.
+ */
 export async function signInWithGoogle(): Promise<AuthResult> {
   const supabase = createClient();
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: callbackUrl("/onboarding") },
+    options: { redirectTo: callbackUrl("/dashboard") },
   });
   if (error) return { ok: false, error: error.message };
   return { ok: true };
