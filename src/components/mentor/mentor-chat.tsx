@@ -25,7 +25,7 @@ let idSeq = 0;
 const newId = () => `msg-${++idSeq}-${Date.now()}`;
 
 export function MentorChat() {
-  const { t } = useT();
+  const { t, locale } = useT();
   const { name, email, onboarding } = useUser();
 
   const profile = useMemo<MentorProfile>(
@@ -60,31 +60,58 @@ export function MentorChat() {
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
-  const streamReply = async (prompt: string) => {
-    const full = generateMentorReply(prompt, profile);
-    const id = newId();
-    setMessages((m) => [...m, { id, role: "assistant", content: "" }]);
-    setStreaming(true);
-    stopRef.current = false;
-
+  // Animate an assistant reply into view token-by-token (kept identical for both
+  // the real OpenAI response and the local fallback).
+  const animateInto = async (id: string, full: string) => {
     const tokens = full.split(/(\s+)/); // keep whitespace
     for (let i = 0; i < tokens.length; i++) {
       if (stopRef.current) break;
       const snapshot = tokens.slice(0, i + 1).join("");
       setMessages((m) => m.map((msg) => (msg.id === id ? { ...msg, content: snapshot } : msg)));
-      // vary cadence slightly for a natural feel
-      await new Promise((r) => setTimeout(r, tokens[i].trim() ? 18 : 8));
+      await new Promise((r) => setTimeout(r, tokens[i].trim() ? 14 : 6));
     }
+  };
+
+  const streamReply = async (history: { role: "user" | "assistant"; content: string }[], prompt: string) => {
+    const id = newId();
+    setMessages((m) => [...m, { id, role: "assistant", content: "" }]);
+    setStreaming(true);
+    stopRef.current = false;
+
+    // 1) Try the real admissions AI (OpenAI). The route returns { fallback:true }
+    //    when no key is configured or the provider errors — then we use the
+    //    built-in admissions engine so the chat always works.
+    let full: string | null = null;
+    try {
+      const res = await fetch("/api/mentor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history, locale }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.content) full = data.content as string;
+      }
+    } catch {
+      /* network error → fall back below */
+    }
+
+    if (!full) full = generateMentorReply(prompt, profile);
+    await animateInto(id, full);
     setStreaming(false);
   };
 
   const send = (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || streaming) return;
+    const history = messages
+      .filter((m) => m.id !== "welcome")
+      .map((m) => ({ role: m.role, content: m.content }));
+    history.push({ role: "user", content: trimmed });
     setMessages((m) => [...m, { id: newId(), role: "user", content: trimmed }]);
     setInput("");
     setActiveThread(null);
-    void streamReply(trimmed);
+    void streamReply(history, trimmed);
   };
 
   const stop = () => {

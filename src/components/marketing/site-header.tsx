@@ -8,8 +8,10 @@ import { Logo } from "@/components/shared/logo";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useUser, nameFromEmail } from "@/lib/user-store";
 import { useT } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
+import { cn, initials } from "@/lib/utils";
 
 const links = [
   { key: "nav.product", href: "/#features" },
@@ -21,8 +23,14 @@ const links = [
 
 export function SiteHeader() {
   const { t } = useT();
+  const { hydrated, remoteResolved, authenticated, name, email } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  // Only show auth-dependent UI once the session is resolved (avoids flashing
+  // "Sign in" for a logged-in user, or an avatar for a guest).
+  const sessionReady = hydrated && remoteResolved;
+  const displayName = name || nameFromEmail(email) || "You";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -58,14 +66,35 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
           <ThemeToggle className="hidden sm:grid" />
-          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-            <Link href="/login">{t("common.signIn")}</Link>
-          </Button>
-          <Button asChild variant="gradient" size="sm" className="hidden sm:inline-flex">
-            <Link href="/signup">
-              {t("common.getStarted")} <ArrowRight className="size-4" />
-            </Link>
-          </Button>
+          {sessionReady && authenticated ? (
+            <>
+              <Button asChild variant="gradient" size="sm" className="hidden sm:inline-flex">
+                <Link href="/dashboard">
+                  {t("app.dashboard")} <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+              <Link
+                href="/profile"
+                aria-label={t("topbar.profile")}
+                className="hidden rounded-full ring-1 ring-border/70 transition-shadow hover:ring-border sm:block"
+              >
+                <Avatar className="size-9">
+                  <AvatarFallback className="text-xs">{initials(displayName)}</AvatarFallback>
+                </Avatar>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+                <Link href="/login">{t("common.signIn")}</Link>
+              </Button>
+              <Button asChild variant="gradient" size="sm" className="hidden sm:inline-flex">
+                <Link href="/signup">
+                  {t("common.getStarted")} <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            </>
+          )}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -99,12 +128,20 @@ export function SiteHeader() {
               ))}
             </nav>
             <div className="mt-2 flex items-center gap-2 border-t border-border pt-3">
-              <Button asChild variant="outline" size="sm" className="flex-1">
-                <Link href="/login">{t("common.signIn")}</Link>
-              </Button>
-              <Button asChild variant="gradient" size="sm" className="flex-1">
-                <Link href="/signup">{t("common.getStarted")}</Link>
-              </Button>
+              {sessionReady && authenticated ? (
+                <Button asChild variant="gradient" size="sm" className="flex-1">
+                  <Link href="/dashboard" onClick={() => setOpen(false)}>{t("app.dashboard")}</Link>
+                </Button>
+              ) : (
+                <>
+                  <Button asChild variant="outline" size="sm" className="flex-1">
+                    <Link href="/login" onClick={() => setOpen(false)}>{t("common.signIn")}</Link>
+                  </Button>
+                  <Button asChild variant="gradient" size="sm" className="flex-1">
+                    <Link href="/signup" onClick={() => setOpen(false)}>{t("common.getStarted")}</Link>
+                  </Button>
+                </>
+              )}
               <LanguageSwitcher />
               <ThemeToggle />
             </div>

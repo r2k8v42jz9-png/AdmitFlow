@@ -21,37 +21,32 @@ const GoogleIcon = () => (
     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38Z" />
   </svg>
 );
-const AppleIcon = () => (
-  <svg viewBox="0 0 24 24" className="size-4 fill-current" aria-hidden>
-    <path d="M16.36 12.78c.02 2.43 2.13 3.24 2.16 3.25-.02.06-.34 1.16-1.12 2.3-.67.98-1.37 1.96-2.47 1.98-1.08.02-1.43-.64-2.66-.64-1.24 0-1.62.62-2.64.66-1.06.04-1.87-1.06-2.55-2.04-1.39-2-2.45-5.66-1.02-8.13.71-1.23 1.97-2 3.34-2.02 1.04-.02 2.02.7 2.66.7.63 0 1.83-.86 3.08-.74.52.02 1.99.21 2.93 1.59-.08.05-1.75 1.02-1.73 3.04ZM14.4 4.6c.56-.68.94-1.62.84-2.56-.81.03-1.79.54-2.37 1.22-.52.6-.98 1.56-.86 2.48.9.07 1.83-.46 2.39-1.14Z" />
-  </svg>
-);
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
   const { t } = useT();
   const isSignup = mode === "signup";
   const [showPw, setShowPw] = useState(false);
-  const [loading, setLoading] = useState<null | "email" | "google" | "apple">(null);
+  const [loading, setLoading] = useState<null | "email" | "google">(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [providers, setProviders] = useState<{ google: boolean; apple: boolean }>({ google: false, apple: false });
+  const [googleEnabled, setGoogleEnabled] = useState(false);
 
-  // Detect which social providers are actually enabled in Supabase so we can
-  // hide unconfigured ones (Apple) and message clearly for others (Google).
+  // Detect whether Google OAuth is enabled in Supabase so we can show a clear
+  // message instead of a broken redirect. (Apple is intentionally removed.)
   useEffect(() => {
     let active = true;
     fetchEnabledProviders().then((p) => {
-      if (active) setProviders(p);
+      if (active) setGoogleEnabled(p.google);
     });
     return () => {
       active = false;
     };
   }, []);
 
-  const handleSubmit = (provider: "email" | "google" | "apple") => async (e?: React.FormEvent) => {
+  const handleSubmit = (provider: "email" | "google") => async (e?: React.FormEvent) => {
     e?.preventDefault();
     setError(null);
 
@@ -66,7 +61,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
     try {
       if (provider === "google") {
-        if (!providers.google) {
+        if (!googleEnabled) {
           // Clear message instead of a broken OAuth redirect.
           setError(t("auth.googleUnavailable"));
           setLoading(null);
@@ -78,12 +73,6 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           setLoading(null);
         }
         return; // browser redirects to Google
-      }
-      if (provider === "apple") {
-        // Apple button is hidden when unconfigured; guard just in case.
-        setError(t("auth.appleUnavailable"));
-        setLoading(null);
-        return;
       }
       if (isSignup) {
         const r = await signUpWithEmail(name, resolvedEmail, password);
@@ -126,16 +115,11 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         </p>
       </div>
 
-      {/* Social — Apple is hidden entirely unless enabled in Supabase. */}
-      <div className={cn("grid gap-3", providers.apple ? "grid-cols-2" : "grid-cols-1")}>
+      {/* Social — Google only (Apple intentionally removed for demo) */}
+      <div className="grid grid-cols-1 gap-3">
         <Button variant="outline" size="lg" onClick={handleSubmit("google")} disabled={!!loading}>
           {loading === "google" ? <Loader2 className="size-4 animate-spin" /> : <GoogleIcon />} Google
         </Button>
-        {providers.apple && (
-          <Button variant="outline" size="lg" onClick={handleSubmit("apple")} disabled={!!loading}>
-            {loading === "apple" ? <Loader2 className="size-4 animate-spin" /> : <AppleIcon />} Apple
-          </Button>
-        )}
       </div>
 
       <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
