@@ -4,8 +4,8 @@ import { useSyncExternalStore } from "react";
 import { dictionaries, type Locale } from "@/lib/i18n/dictionaries";
 
 export type { Locale } from "@/lib/i18n/dictionaries";
-export const LOCALES: Locale[] = ["en", "ru"];
-export const DEFAULT_LOCALE: Locale = "en";
+export const LOCALES: Locale[] = ["ru", "en"];
+export const DEFAULT_LOCALE: Locale = "ru";
 const STORAGE_KEY = "admitflow:lang";
 
 /* -------------------------------------------------------------------------- */
@@ -29,6 +29,8 @@ function ensureHydrated() {
     /* ignore */
   }
   hydrated = true;
+  // Keep <html lang> in sync with the active locale (default or stored).
+  if (typeof document !== "undefined") document.documentElement.lang = locale;
 }
 
 export function setLocale(next: Locale) {

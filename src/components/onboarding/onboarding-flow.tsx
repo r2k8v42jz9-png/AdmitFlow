@@ -25,6 +25,7 @@ import { ScoreRing } from "@/components/shared/score-ring";
 import { universities, countries } from "@/lib/data/universities";
 import { useUser, saveOnboarding, type OnboardingData } from "@/lib/user-store";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { useT, type TFunction } from "@/lib/i18n";
 import { cn, formatCurrency } from "@/lib/utils";
 
 /** Persist onboarding to the database when Supabase is configured (fire-and-forget). */
@@ -54,17 +55,22 @@ function toOnboarding(d: Data): OnboardingData {
   };
 }
 
-const degrees = ["Bachelor's", "Master's", "PhD"];
+// Stored value stays stable (English, for the DB); only the display label is translated.
+const degrees = [
+  { value: "Bachelor's", key: "degree.bachelor" },
+  { value: "Master's", key: "degree.master" },
+  { value: "PhD", key: "degree.phd" },
+];
 const majors = ["Computer Science", "Engineering", "Business", "Data Science", "Medicine", "Economics", "Design", "Law"];
 const strengthsList = [
-  "Research / publications",
-  "Hackathons & competitions",
-  "Leadership roles",
-  "Sports",
-  "Volunteering",
-  "Internships",
-  "Arts & music",
-  "Entrepreneurship",
+  { value: "Research / publications", key: "strength.research" },
+  { value: "Hackathons & competitions", key: "strength.hackathons" },
+  { value: "Leadership roles", key: "strength.leadership" },
+  { value: "Sports", key: "strength.sports" },
+  { value: "Volunteering", key: "strength.volunteering" },
+  { value: "Internships", key: "strength.internships" },
+  { value: "Arts & music", key: "strength.arts" },
+  { value: "Entrepreneurship", key: "strength.entrepreneurship" },
 ];
 
 interface Data {
@@ -84,17 +90,18 @@ interface Data {
 const intakes = ["Fall 2026", "Spring 2027", "Fall 2027", "Spring 2028", "Fall 2028"];
 
 const steps = [
-  { id: "goal", title: "What are you aiming for?", subtitle: "We'll tailor everything to your degree and field.", icon: Target },
-  { id: "academics", title: "Your academic profile", subtitle: "Be honest — this powers your chance estimates.", icon: GraduationCap },
-  { id: "scores", title: "Test scores", subtitle: "Add what you have. You can update these later.", icon: BookOpen },
-  { id: "countries", title: "Where do you want to study?", subtitle: "Pick all the countries you'd consider.", icon: Globe2 },
-  { id: "budget", title: "What's your yearly budget?", subtitle: "We'll factor in tuition, scholarships and living costs.", icon: Wallet },
-  { id: "strengths", title: "What makes you stand out?", subtitle: "Select your strongest areas.", icon: Trophy },
-  { id: "dreams", title: "Any dream universities?", subtitle: "We'll benchmark your profile against them.", icon: Heart },
+  { id: "goal", icon: Target },
+  { id: "academics", icon: GraduationCap },
+  { id: "scores", icon: BookOpen },
+  { id: "countries", icon: Globe2 },
+  { id: "budget", icon: Wallet },
+  { id: "strengths", icon: Trophy },
+  { id: "dreams", icon: Heart },
 ];
 
 export function OnboardingFlow() {
   const router = useRouter();
+  const { t } = useT();
   const { hydrated, remoteResolved, authenticated, onboarded, onboarding } = useUser();
   const ready = hydrated && (remoteResolved || !isSupabaseConfigured());
   const [step, setStep] = useState(0);
@@ -207,7 +214,7 @@ export function OnboardingFlow() {
             onClick={skip}
             className="text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            Skip for now
+            {t("onb.skip")}
           </button>
         )}
       </div>
@@ -216,7 +223,7 @@ export function OnboardingFlow() {
       <div className="mt-6">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>
-            {phase === "result" ? "Complete" : `Step ${step + 1} of ${total}`}
+            {phase === "result" ? t("onb.complete") : t("onb.step", { n: step + 1, total })}
           </span>
           <span>{Math.round(progress)}%</span>
         </div>
@@ -245,19 +252,19 @@ export function OnboardingFlow() {
                   <Current.icon className="size-6" />
                 </span>
                 <div>
-                  <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">{Current.title}</h1>
-                  <p className="mt-1 text-sm text-muted-foreground">{Current.subtitle}</p>
+                  <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">{t(`onb.step.${Current.id}.title`)}</h1>
+                  <p className="mt-1 text-sm text-muted-foreground">{t(`onb.step.${Current.id}.subtitle`)}</p>
                 </div>
               </div>
 
-              <StepBody data={data} update={update} toggle={toggle} stepId={Current.id} />
+              <StepBody data={data} update={update} toggle={toggle} stepId={Current.id} t={t} />
             </motion.div>
           )}
 
-          {phase === "generating" && <Generating key="gen" />}
+          {phase === "generating" && <Generating key="gen" t={t} />}
 
           {phase === "result" && (
-            <Result key="res" data={data} recommendations={recommendations} onContinue={finish} />
+            <Result key="res" data={data} recommendations={recommendations} onContinue={finish} t={t} />
           )}
         </AnimatePresence>
       </div>
@@ -266,7 +273,7 @@ export function OnboardingFlow() {
       {phase === "form" && (
         <div className="flex items-center justify-between border-t border-border/60 pt-5">
           <Button variant="ghost" onClick={back} disabled={step === 0} className={cn(step === 0 && "opacity-0 pointer-events-none")}>
-            <ArrowLeft className="size-4" /> Back
+            <ArrowLeft className="size-4" /> {t("onb.back")}
           </Button>
           <div className="flex items-center gap-1.5">
             {steps.map((_, i) => (
@@ -280,7 +287,7 @@ export function OnboardingFlow() {
             ))}
           </div>
           <Button variant="gradient" onClick={next}>
-            {step === total - 1 ? "Generate my plan" : "Continue"} <ArrowRight className="size-4" />
+            {step === total - 1 ? t("onb.generate") : t("onb.continue")} <ArrowRight className="size-4" />
           </Button>
         </div>
       )}
@@ -293,28 +300,30 @@ function StepBody({
   data,
   update,
   toggle,
+  t,
 }: {
   stepId: string;
   data: Data;
   update: (p: Partial<Data>) => void;
   toggle: (k: "countries" | "strengths" | "dreams", v: string) => void;
+  t: TFunction;
 }) {
   switch (stepId) {
     case "goal":
       return (
         <div className="space-y-6">
           <div className="space-y-2.5">
-            <Label>Degree level</Label>
+            <Label>{t("onb.degreeLevel")}</Label>
             <div className="grid grid-cols-3 gap-3">
               {degrees.map((d) => (
-                <SelectCard key={d} active={data.degree === d} onClick={() => update({ degree: d })}>
-                  {d}
+                <SelectCard key={d.value} active={data.degree === d.value} onClick={() => update({ degree: d.value })}>
+                  {t(d.key)}
                 </SelectCard>
               ))}
             </div>
           </div>
           <div className="space-y-2.5">
-            <Label>Intended major</Label>
+            <Label>{t("onb.intendedMajor")}</Label>
             <div className="flex flex-wrap gap-2.5">
               {majors.map((m) => (
                 <Chip key={m} active={data.major === m} onClick={() => update({ major: m })}>
@@ -324,7 +333,7 @@ function StepBody({
             </div>
           </div>
           <div className="space-y-2.5">
-            <Label>Target intake</Label>
+            <Label>{t("onb.targetIntake")}</Label>
             <div className="flex flex-wrap gap-2.5">
               {intakes.map((it) => (
                 <Chip key={it} active={data.intake === it} onClick={() => update({ intake: it })}>
@@ -343,7 +352,7 @@ function StepBody({
             <Input id="gpa" inputMode="decimal" value={data.gpa} onChange={(e) => update({ gpa: e.target.value })} />
           </div>
           <div className="space-y-1.5">
-            <Label>GPA scale</Label>
+            <Label>{t("onb.gpaScale")}</Label>
             <div className="grid grid-cols-2 gap-3">
               {["4.0", "5.0"].map((s) => (
                 <SelectCard key={s} active={data.scale === s} onClick={() => update({ scale: s })}>
@@ -355,7 +364,7 @@ function StepBody({
           {data.gpa && (
             <p className="sm:col-span-2 rounded-xl border border-border/60 bg-card/40 px-4 py-3 text-sm text-muted-foreground">
               <Sparkles className="mr-1.5 inline size-4 text-primary" />
-              A {data.gpa}/{data.scale} GPA places you in a strong position for most target schools.
+              {t("onb.gpaHint", { gpa: data.gpa, scale: data.scale })}
             </p>
           )}
         </div>
@@ -388,7 +397,7 @@ function StepBody({
         <div className="space-y-7">
           <div className="text-center">
             <span className="text-4xl font-bold tabular-nums text-gradient">{formatCurrency(data.budget)}</span>
-            <span className="text-sm text-muted-foreground"> / year</span>
+            <span className="text-sm text-muted-foreground"> {t("onb.perYear")}</span>
           </div>
           <Slider
             min={0}
@@ -403,7 +412,7 @@ function StepBody({
           </div>
           <p className="rounded-xl border border-border/60 bg-card/40 px-4 py-3 text-sm text-muted-foreground">
             <Sparkles className="mr-1.5 inline size-4 text-primary" />
-            With this budget, tuition-free options like ETH Zürich and TUM are well within reach.
+            {t("onb.budgetHint")}
           </p>
         </div>
       );
@@ -411,8 +420,8 @@ function StepBody({
       return (
         <div className="flex flex-wrap gap-2.5">
           {strengthsList.map((s) => (
-            <Chip key={s} active={data.strengths.includes(s)} onClick={() => toggle("strengths", s)}>
-              {data.strengths.includes(s) && <Check className="size-3.5" />} {s}
+            <Chip key={s.value} active={data.strengths.includes(s.value)} onClick={() => toggle("strengths", s.value)}>
+              {data.strengths.includes(s.value) && <Check className="size-3.5" />} {t(s.key)}
             </Chip>
           ))}
         </div>
@@ -487,14 +496,8 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
   );
 }
 
-function Generating() {
-  const lines = [
-    "Analyzing your academic profile",
-    "Matching against 1,400+ universities",
-    "Estimating admission probabilities",
-    "Finding scholarships you qualify for",
-    "Building your personalized roadmap",
-  ];
+function Generating({ t }: { t: TFunction }) {
+  const lines = [t("onb.gen.1"), t("onb.gen.2"), t("onb.gen.3"), t("onb.gen.4"), t("onb.gen.5")];
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -506,8 +509,8 @@ function Generating() {
         <div className="absolute inset-0 animate-spin-slow rounded-full bg-[conic-gradient(from_0deg,transparent,hsl(var(--brand-violet)),transparent)] [mask:radial-gradient(farthest-side,transparent_calc(100%-3px),#000_0)]" />
         <Sparkles className="size-8 text-primary animate-pulse-glow" />
       </div>
-      <h2 className="mt-6 font-display text-2xl font-bold">Crafting your admission plan…</h2>
-      <p className="mt-1 text-sm text-muted-foreground">Our AI is analyzing your profile in real time.</p>
+      <h2 className="mt-6 font-display text-2xl font-bold">{t("onb.gen.title")}</h2>
+      <p className="mt-1 text-sm text-muted-foreground">{t("onb.gen.subtitle")}</p>
       <div className="mt-8 w-full max-w-sm space-y-3 text-left">
         {lines.map((l, i) => (
           <motion.div
@@ -537,10 +540,12 @@ function Result({
   data,
   recommendations,
   onContinue,
+  t,
 }: {
   data: Data;
   recommendations: typeof universities;
   onContinue: () => void;
+  t: TFunction;
 }) {
   return (
     <motion.div
@@ -550,20 +555,20 @@ function Result({
     >
       <div className="flex flex-col items-center text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
-          <Check className="size-3.5" /> Your plan is ready
+          <Check className="size-3.5" /> {t("onb.result.ready")}
         </span>
         <h1 className="mt-4 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-          Welcome to AdmitFlow{data.major ? `, ${data.major} student` : ""}
+          {data.major ? t("onb.result.welcomeMajor", { major: data.major }) : t("onb.result.welcome")}
         </h1>
         <p className="mt-2 max-w-md text-sm text-muted-foreground">
-          Based on your profile, here&apos;s your starting admission score and your best-fit universities.
+          {t("onb.result.subtitle")}
         </p>
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-[auto_1fr]">
         <div className="flex flex-col items-center justify-center rounded-2xl border border-border/70 bg-card/50 p-6">
-          <ScoreRing value={74} label="Admission" gradientId="onb-ring" />
-          <p className="mt-2 text-xs text-muted-foreground">Improves as you complete tasks</p>
+          <ScoreRing value={74} label={t("onb.admission")} gradientId="onb-ring" />
+          <p className="mt-2 text-xs text-muted-foreground">{t("onb.result.improves")}</p>
         </div>
         <div className="space-y-2.5">
           {recommendations.map((u, i) => (
@@ -581,7 +586,7 @@ function Result({
               </div>
               <div className="text-right">
                 <p className="text-sm font-semibold text-success">{u.fitScore}</p>
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">fit</p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("onb.result.fit")}</p>
               </div>
             </motion.div>
           ))}
@@ -590,7 +595,7 @@ function Result({
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
         <Button variant="gradient" size="lg" onClick={onContinue}>
-          Continue to plans <ArrowRight className="size-4" />
+          {t("onb.result.continue")} <ArrowRight className="size-4" />
         </Button>
       </div>
     </motion.div>

@@ -5,22 +5,25 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Reveal } from "@/components/shared/reveal";
-import { faqs } from "@/lib/data/marketing";
+import { faqs, faqsRu } from "@/lib/data/marketing";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 export function FAQ() {
+  const { t, locale } = useT();
   const [open, setOpen] = useState<number | null>(0);
+  const items = locale === "ru" ? faqsRu : faqs;
 
   return (
     <section id="faq" className="relative scroll-mt-24 py-24 sm:py-32">
       <div className="mx-auto max-w-3xl px-6">
         <SectionHeading
-          eyebrow={<><span className="size-1.5 rounded-full bg-brand-cyan" /> Questions, answered</>}
-          title="Frequently asked questions"
+          eyebrow={<><span className="size-1.5 rounded-full bg-primary" /> {t("faq.eyebrow")}</>}
+          title={t("faq.title")}
         />
 
         <div className="mt-12 space-y-3">
-          {faqs.map((f, i) => {
+          {items.map((f, i) => {
             const isOpen = open === i;
             return (
               <Reveal key={f.q} delay={i * 0.04}>
