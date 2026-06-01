@@ -11,6 +11,10 @@ export interface MentorProfile {
   sat: number | null;
   major: string;
   intake: string;
+  degreeLevel: string;
+  budget: number | null;
+  countries: string[];
+  dreamUniversities: string[];
 }
 
 const DEFAULT_PROFILE: MentorProfile = {
@@ -21,6 +25,10 @@ const DEFAULT_PROFILE: MentorProfile = {
   sat: null,
   major: "your field",
   intake: "your intake",
+  degreeLevel: "",
+  budget: null,
+  countries: [],
+  dreamUniversities: [],
 };
 
 /* -------------------------------------------------------------------------- */

@@ -37,6 +37,10 @@ export function MentorChat() {
       sat: onboarding?.sat ?? null,
       major: onboarding?.intendedMajor || "your field",
       intake: onboarding?.targetIntake || "your intake",
+      degreeLevel: onboarding?.degreeLevel || "",
+      budget: onboarding?.budget ?? null,
+      countries: onboarding?.countries ?? [],
+      dreamUniversities: onboarding?.dreamUniversities ?? [],
     }),
     [name, email, onboarding],
   );

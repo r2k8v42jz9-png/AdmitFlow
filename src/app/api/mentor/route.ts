@@ -21,6 +21,10 @@ async function loadProfile(): Promise<MentorProfile> {
     sat: null,
     major: "your field",
     intake: "your intake",
+    degreeLevel: "",
+    budget: null,
+    countries: [],
+    dreamUniversities: [],
   };
   if (!isSupabaseConfigured()) return fallback;
 
@@ -44,6 +48,10 @@ async function loadProfile(): Promise<MentorProfile> {
     sat: onboarding?.sat ?? null,
     major: onboarding?.intended_major ?? "your field",
     intake: onboarding?.target_intake ?? "your intake",
+    degreeLevel: onboarding?.degree_level ?? "",
+    budget: onboarding?.budget ?? null,
+    countries: onboarding?.countries ?? [],
+    dreamUniversities: onboarding?.dream_universities ?? [],
   };
 }
 
