@@ -15,26 +15,26 @@ export interface AuthResult {
 
 export interface EnabledProviders {
   google: boolean;
-  apple: boolean;
 }
 
 /**
- * Reads which social providers are actually enabled in the Supabase project
- * (public, unauthenticated settings endpoint). Lets the UI hide unconfigured
- * providers and show a clear message instead of a broken OAuth redirect.
+ * Reads which social providers are enabled in the Supabase project (public,
+ * unauthenticated settings endpoint). Lets the UI show a clear message instead
+ * of a broken OAuth redirect. (Apple is intentionally not offered — Google +
+ * email only for the demo.)
  */
 export async function fetchEnabledProviders(): Promise<EnabledProviders> {
-  if (!isSupabaseConfigured()) return { google: false, apple: false };
+  if (!isSupabaseConfigured()) return { google: false };
   try {
     const res = await fetch(`${SUPABASE_URL}/auth/v1/settings`, {
       headers: { apikey: SUPABASE_ANON_KEY },
     });
-    if (!res.ok) return { google: false, apple: false };
+    if (!res.ok) return { google: false };
     const data = await res.json();
     const ext = (data?.external ?? {}) as Record<string, boolean>;
-    return { google: Boolean(ext.google), apple: Boolean(ext.apple) };
+    return { google: Boolean(ext.google) };
   } catch {
-    return { google: false, apple: false };
+    return { google: false };
   }
 }
 

@@ -73,7 +73,6 @@ const en: Dict = {
   "auth.createOne": "Create one",
   "auth.backHome": "Back home",
   "auth.googleUnavailable": "Google sign-in isn't available yet. Please continue with email.",
-  "auth.appleUnavailable": "Apple sign-in isn't available yet. Please continue with email.",
 
   // verify email
   "verify.title": "Verify your email",
@@ -339,7 +338,6 @@ const ru: Dict = {
   "auth.createOne": "Создать",
   "auth.backHome": "На главную",
   "auth.googleUnavailable": "Вход через Google пока недоступен. Продолжите через эл. почту.",
-  "auth.appleUnavailable": "Вход через Apple пока недоступен. Продолжите через эл. почту.",
 
   // verify email
   "verify.title": "Подтвердите эл. почту",
