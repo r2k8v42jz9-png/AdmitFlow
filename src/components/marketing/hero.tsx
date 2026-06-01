@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Star, ShieldCheck, TrendingUp, CircleCheckBig } from "lucide-react";
+import { ArrowRight, GraduationCap, Library, Globe2, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuroraBackground } from "@/components/shared/aurora-background";
-import { ScoreRing } from "@/components/shared/score-ring";
 import { universityLogos } from "@/lib/data/marketing";
 import { useT } from "@/lib/i18n";
 
@@ -23,14 +22,10 @@ export function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease }}
-            className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/50 px-3.5 py-1.5 text-sm backdrop-blur-sm"
+            className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/50 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground backdrop-blur-sm"
           >
-            <span className="flex items-center gap-1 text-warning">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className="size-3.5 fill-current" />
-              ))}
-            </span>
-            <span className="text-muted-foreground">{t("hero.rated")}</span>
+            <GraduationCap className="size-3.5 text-primary" />
+            {t("hero.rated")}
           </motion.div>
 
           <motion.h1
@@ -40,7 +35,9 @@ export function Hero() {
             className="mt-6 font-display text-[2.6rem] font-medium leading-[1.05] tracking-[-0.02em] text-balance sm:text-6xl md:text-7xl"
           >
             {t("hero.titleLead")}
-            <span className="text-gradient italic">{t("hero.titleAccent")}</span>
+            <span className="italic text-primary underline decoration-primary/30 decoration-[3px] underline-offset-[8px]">
+              {t("hero.titleAccent")}
+            </span>
             {t("hero.titleTrail")}
           </motion.h1>
 
@@ -48,7 +45,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease, delay: 0.12 }}
-            className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground text-pretty sm:text-xl"
+            className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground text-pretty sm:text-xl"
           >
             {t("hero.subtitle")}
           </motion.p>
@@ -65,9 +62,7 @@ export function Hero() {
               </Link>
             </Button>
             <Button asChild variant="glass" size="xl" className="w-full sm:w-auto">
-              <Link href="/pricing">
-                <Sparkles className="size-4" /> {t("hero.ctaSecondary")}
-              </Link>
+              <Link href="/pricing">{t("hero.ctaSecondary")}</Link>
             </Button>
           </motion.div>
 
@@ -75,26 +70,32 @@ export function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground"
+            className="mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm text-muted-foreground"
           >
-            <span className="inline-flex items-center gap-1.5"><CircleCheckBig className="size-3.5 text-success" /> {t("hero.trust1")}</span>
-            <span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-3.5 text-success" /> {t("hero.trust2")}</span>
-            <span className="inline-flex items-center gap-1.5"><TrendingUp className="size-3.5 text-success" /> {t("hero.trust3")}</span>
+            <span className="inline-flex items-center gap-2">
+              <GraduationCap className="size-4 text-primary/70" /> {t("hero.trust1")}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Library className="size-4 text-primary/70" /> {t("hero.trust2")}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Globe2 className="size-4 text-primary/70" /> {t("hero.trust3")}
+            </span>
           </motion.div>
         </div>
 
-        <HeroMockup />
+        <AdmissionDossier t={t} />
       </div>
 
-      {/* logo strip */}
+      {/* University wordmarks — editorial serif, set as a quiet honor roll */}
       <div className="relative mx-auto mt-16 max-w-5xl px-6">
-        <p className="text-center text-xs font-medium uppercase tracking-widest text-muted-foreground/70">
+        <p className="text-center text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground/70">
           {t("hero.admittedTo")}
         </p>
-        <div className="mask-fade-x mt-5 flex gap-10 overflow-hidden">
-          <div className="flex shrink-0 animate-marquee items-center gap-10 pause-on-hover">
+        <div className="mask-fade-x mt-5 flex gap-12 overflow-hidden">
+          <div className="flex shrink-0 animate-marquee items-center gap-12 pause-on-hover">
             {[...universityLogos, ...universityLogos].map((name, i) => (
-              <span key={i} className="whitespace-nowrap font-display text-lg font-medium italic text-muted-foreground/55">
+              <span key={i} className="whitespace-nowrap font-display text-xl font-medium text-foreground/45">
                 {name}
               </span>
             ))}
@@ -105,106 +106,89 @@ export function Hero() {
   );
 }
 
-function HeroMockup() {
+/**
+ * Editorial "Admission Profile" — presented like a consulting firm's prepared
+ * candidate dossier rather than a chat UI. Reinforces the admissions-consulting
+ * (not AI-SaaS) positioning. Decorative; content is illustrative.
+ */
+function AdmissionDossier({ t }: { t: (k: string) => string }) {
+  const academics = [
+    { label: t("hero.dossier.gpa"), value: "3.9", sub: "/ 4.0" },
+    { label: "IELTS", value: "8.0", sub: "/ 9.0" },
+    { label: "SAT", value: "1520", sub: "/ 1600" },
+  ];
+  const shortlist = [
+    { name: "Massachusetts Institute of Technology", tag: t("hero.dossier.reach"), tone: "text-warning", fit: 74 },
+    { name: "ETH Zürich", tag: t("hero.dossier.target"), tone: "text-primary", fit: 91 },
+    { name: "University of Toronto", tag: t("hero.dossier.safety"), tone: "text-success", fit: 96 },
+  ];
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50, rotateX: 12 }}
-      animate={{ opacity: 1, y: 0, rotateX: 0 }}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, ease, delay: 0.25 }}
-      style={{ perspective: 1200 }}
-      className="relative mx-auto mt-16 max-w-4xl"
+      className="relative mx-auto mt-16 max-w-3xl"
     >
-      <div className="animated-border rounded-[1.75rem]">
-        <div className="glass-strong overflow-hidden rounded-[1.7rem] p-2 shadow-card">
-          <div className="grid gap-3 rounded-3xl bg-background/40 p-3 md:grid-cols-[1.5fr_1fr]">
-            {/* Chat panel */}
-            <div className="rounded-2xl border border-border/60 bg-card/60 p-4">
-              <div className="flex items-center gap-2 border-b border-border/60 pb-3">
-                <span className="size-2.5 rounded-full bg-brand-pink/80" />
-                <span className="size-2.5 rounded-full bg-warning/80" />
-                <span className="size-2.5 rounded-full bg-success/80" />
-                <span className="ml-2 text-xs text-muted-foreground">AdmitFlow Mentor</span>
-              </div>
-              <div className="space-y-3 pt-4">
-                <ChatBubble role="user">What are my chances at MIT?</ChatBubble>
-                <ChatBubble role="ai">
-                  With your <strong>1520 SAT</strong> and robotics medal, I estimate <strong>~31%</strong> for MIT
-                  Early Action. Add a second STEM recommendation to push it higher. Want a plan?
-                </ChatBubble>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {["Build my roadmap", "Find scholarships", "Review my essay"].map((c) => (
-                    <span key={c} className="rounded-full border border-border/70 bg-background/50 px-2.5 py-1 text-[11px] text-muted-foreground">
-                      {c}
-                    </span>
-                  ))}
-                </div>
-              </div>
+      <div className="overflow-hidden rounded-2xl border border-border/70 bg-card/80 shadow-card backdrop-blur-sm">
+        {/* Letterhead */}
+        <div className="flex items-center justify-between border-b border-border/60 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <span className="grid size-9 place-items-center rounded-lg border border-border/60 bg-background/60 text-primary">
+              <GraduationCap className="size-4.5" />
+            </span>
+            <div className="text-left">
+              <p className="font-display text-sm font-medium leading-tight">{t("hero.dossier.title")}</p>
+              <p className="text-xs text-muted-foreground">{t("hero.dossier.preparedFor")}</p>
             </div>
+          </div>
+          <span className="hidden rounded-full border border-border/60 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:inline">
+            {t("hero.dossier.confidential")}
+          </span>
+        </div>
 
-            {/* Score panel */}
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-border/60 bg-card/60 p-4 text-center">
-                <ScoreRing value={74} size={120} label="Admission" gradientId="hero-ring" />
-                <p className="mt-2 text-xs text-muted-foreground">Your live admission score</p>
-              </div>
-              <div className="rounded-2xl border border-border/60 bg-card/60 p-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">ETH Zürich</span>
-                  <span className="font-semibold text-success">91 fit</span>
-                </div>
-                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                  <div className="h-full w-[91%] rounded-full bg-[linear-gradient(90deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))]" />
-                </div>
-              </div>
+        {/* Academic readout */}
+        <div className="grid grid-cols-3 divide-x divide-border/50 border-b border-border/60">
+          {academics.map((a) => (
+            <div key={a.label} className="px-5 py-4 text-left">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{a.label}</p>
+              <p className="mt-1 font-display text-2xl font-medium tabular-nums leading-none">
+                {a.value}
+                <span className="ml-1 text-xs font-normal text-muted-foreground">{a.sub}</span>
+              </p>
             </div>
+          ))}
+        </div>
+
+        {/* Recommended shortlist */}
+        <div className="px-6 py-5">
+          <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            {t("hero.dossier.shortlist")}
+          </p>
+          <div className="space-y-2.5">
+            {shortlist.map((u) => (
+              <div key={u.name} className="flex items-center gap-3">
+                <span className="min-w-0 flex-1 truncate font-display text-[15px] text-foreground/90">{u.name}</span>
+                <span className={`shrink-0 text-[11px] font-medium uppercase tracking-wider ${u.tone}`}>{u.tag}</span>
+                <span className="w-10 shrink-0 text-right text-sm font-semibold tabular-nums text-foreground/80">{u.fit}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Counselor note */}
+        <div className="border-t border-border/60 bg-background/40 px-6 py-4">
+          <div className="flex gap-3">
+            <Quote className="size-4 shrink-0 text-primary/50" />
+            <p className="text-sm italic leading-relaxed text-muted-foreground">
+              {t("hero.dossier.note")}
+              <span className="mt-1 block not-italic text-xs font-medium text-foreground/70">
+                {t("hero.dossier.noteAuthor")}
+              </span>
+            </p>
           </div>
         </div>
       </div>
-
-      {/* floating accents */}
-      <motion.div
-        animate={{ y: [0, -12, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -left-6 top-1/3 hidden rounded-2xl glass-strong px-4 py-3 shadow-card md:block"
-      >
-        <p className="text-xs text-muted-foreground">Deadline in</p>
-        <p className="text-lg font-bold tabular-nums">12 days</p>
-      </motion.div>
-      <motion.div
-        animate={{ y: [0, 12, 0] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute -right-6 bottom-10 hidden items-center gap-2 rounded-2xl glass-strong px-4 py-3 shadow-card md:flex"
-      >
-        <span className="grid size-8 place-items-center rounded-lg bg-success/15 text-success">
-          <CircleCheckBig className="size-4" />
-        </span>
-        <div>
-          <p className="text-xs text-muted-foreground">Application</p>
-          <p className="text-sm font-semibold">Submitted ✓</p>
-        </div>
-      </motion.div>
     </motion.div>
-  );
-}
-
-function ChatBubble({ role, children }: { role: "user" | "ai"; children: React.ReactNode }) {
-  if (role === "user") {
-    return (
-      <div className="flex justify-end">
-        <p className="max-w-[80%] rounded-2xl rounded-br-md bg-primary px-3.5 py-2 text-sm text-primary-foreground">
-          {children}
-        </p>
-      </div>
-    );
-  }
-  return (
-    <div className="flex items-start gap-2.5">
-      <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg bg-[linear-gradient(135deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] text-white">
-        <Sparkles className="size-3.5" />
-      </span>
-      <p className="max-w-[85%] rounded-2xl rounded-tl-md border border-border/60 bg-background/60 px-3.5 py-2 text-sm text-foreground/90">
-        {children}
-      </p>
-    </div>
   );
 }

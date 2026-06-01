@@ -12,8 +12,8 @@ export function Features() {
     <section id="features" className="relative scroll-mt-24 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
-          eyebrow={<><span className="size-1.5 rounded-full bg-primary" /> Everything in one platform</>}
-          title={<>An entire admissions team,<br className="hidden sm:block" /> powered by AI</>}
+          eyebrow={<><span className="size-1.5 rounded-full bg-primary" /> A complete admissions service</>}
+          title={<>An entire admissions team,<br className="hidden sm:block" /> in your corner</>}
           description="From the first university search to your acceptance letter — every step is guided, measured and personalized to you."
         />
 

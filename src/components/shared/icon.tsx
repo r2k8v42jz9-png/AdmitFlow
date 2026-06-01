@@ -10,6 +10,7 @@ import {
   PenLine,
   Send,
   PartyPopper,
+  MessageSquare,
   type LucideIcon,
 } from "lucide-react";
 
@@ -25,9 +26,10 @@ const registry: Record<string, LucideIcon> = {
   PenLine,
   Send,
   PartyPopper,
+  MessageSquare,
 };
 
 export function DynamicIcon({ name, className }: { name: string; className?: string }) {
-  const Icon = registry[name] ?? Sparkles;
+  const Icon = registry[name] ?? GraduationCap;
   return <Icon className={className} />;
 }

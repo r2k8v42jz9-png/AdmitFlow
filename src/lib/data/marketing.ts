@@ -24,40 +24,40 @@ export const universityLogos = [
 
 export const featureCards = [
   {
-    icon: "Sparkles",
-    title: "AI Admission Mentor",
-    description: "A 24/7 mentor that knows every program, deadline and essay rubric — trained on 2M+ admitted profiles.",
-    accent: "from-brand-blue/30 to-brand-cyan/10",
+    icon: "MessageSquare",
+    title: "Personal admissions mentor",
+    description: "Guidance on every program, deadline and essay — informed by what admissions committees actually reward.",
+    accent: "from-brand-blue/20 to-brand-indigo/5",
   },
   {
     icon: "Target",
-    title: "Admission Chance Estimator",
-    description: "Get a calibrated probability for every university based on your real profile — not guesswork.",
-    accent: "from-brand-violet/30 to-brand-pink/10",
+    title: "Honest chance assessment",
+    description: "A calibrated read on every university — safe, target or reach — based on your real academics, not guesswork.",
+    accent: "from-brand-indigo/20 to-brand-blue/5",
   },
   {
     icon: "Map",
-    title: "Personalized Roadmap",
-    description: "A month-by-month plan with milestones, tasks and exam schedules tailored to your target intake.",
-    accent: "from-brand-indigo/30 to-brand-blue/10",
+    title: "Month-by-month plan",
+    description: "A clear application timeline with milestones, tasks and exam dates tailored to your target intake.",
+    accent: "from-brand-blue/20 to-brand-indigo/5",
   },
   {
     icon: "Building2",
-    title: "University Explorer",
-    description: "Search 1,400+ universities with AI fit scores, tuition, scholarships and live deadline tracking.",
-    accent: "from-brand-cyan/30 to-brand-blue/10",
+    title: "University shortlist",
+    description: "A balanced list across 1,400+ universities with fit, tuition, scholarships and live deadlines.",
+    accent: "from-brand-indigo/20 to-brand-blue/5",
   },
   {
     icon: "FileText",
-    title: "Essay Feedback Engine",
-    description: "Paragraph-level feedback on tone, structure and impact — modeled on what admissions readers reward.",
-    accent: "from-brand-pink/30 to-brand-violet/10",
+    title: "Essay review",
+    description: "Paragraph-level feedback on tone, structure and impact — the way an admissions reader would assess it.",
+    accent: "from-brand-blue/20 to-brand-indigo/5",
   },
   {
     icon: "CalendarClock",
-    title: "Deadline Autopilot",
-    description: "Never miss a date. We track every round, scholarship and document with smart reminders.",
-    accent: "from-brand-blue/30 to-brand-indigo/10",
+    title: "Deadline tracking",
+    description: "Every round, scholarship and document tracked in one place, with timely reminders so nothing slips.",
+    accent: "from-brand-indigo/20 to-brand-blue/5",
   },
 ];
 
@@ -114,20 +114,20 @@ export const testimonials = [
 
 export const faqs = [
   {
-    q: "How accurate is the admission chance estimator?",
-    a: "Our model is trained on millions of anonymized admitted and rejected profiles, then calibrated against published acceptance rates. It produces a probability range, not a guarantee — but students using it report list decisions that are 3.2× more likely to convert to offers.",
+    q: "How accurate is the admission chance assessment?",
+    a: "We benchmark your profile against published acceptance rates and historical admitted-student data, then calibrate the result. It produces an honest probability range, not a guarantee — but students who plan around it report list decisions that are 3.2× more likely to convert to offers.",
   },
   {
     q: "Is AdmitFlow only for US universities?",
     a: "No. We cover 1,400+ universities across the US, UK, Canada, Europe, Asia and Australia — with country-specific deadlines, tuition in local currency, visa notes and scholarship databases.",
   },
   {
-    q: "Will the AI write my essays for me?",
-    a: "AdmitFlow never ghost-writes. The essay engine gives structural feedback, brainstorming prompts and paragraph-level suggestions so your authentic voice comes through — the way admissions readers want it.",
+    q: "Will you write my essays for me?",
+    a: "Never. We give structural feedback, brainstorming prompts and paragraph-level suggestions so your authentic voice comes through — exactly the way admissions readers want it.",
   },
   {
     q: "How much does AdmitFlow cost?",
-    a: "Plans start at $19/month for Starter, which includes your personalized roadmap, deadline tracker, profile analysis and 50 AI mentor messages. Pro ($49/mo) unlocks unlimited AI, the admission estimator and essay feedback, and Premium Mentor ($149/mo) adds a dedicated human counselor.",
+    a: "Plans start at $19/month for Starter, which includes your personalized roadmap, deadline tracker, profile analysis and 50 mentor messages. Pro ($49/mo) unlocks unlimited mentoring, the chance assessment and essay review, and Premium Mentor ($149/mo) adds a dedicated human counselor.",
   },
   {
     q: "Do you work with school counselors?",
@@ -163,10 +163,10 @@ export const pricingTiers: PricingTier[] = [
     badge: "Most popular",
     cta: "Upgrade to Pro",
     features: [
-      "Unlimited AI mentor chat",
+      "Unlimited mentor guidance",
       "Full university database",
-      "Admission chance estimator",
-      "Essay feedback engine",
+      "Admission chance assessment",
+      "Essay review & feedback",
       "Scholarship finder & alerts",
       "Advanced roadmap",
       "Application tracker",

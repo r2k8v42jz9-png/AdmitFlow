@@ -1,14 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sparkles, Wand2, CheckCircle2, AlertCircle, Lightbulb } from "lucide-react";
+import { PenLine, CheckCircle2, AlertCircle, Lightbulb } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Reveal } from "@/components/shared/reveal";
 
 const feedback = [
   { icon: CheckCircle2, tone: "text-success", text: "Strong, specific hook — the opening scene lands immediately." },
   { icon: AlertCircle, tone: "text-warning", text: "Paragraph 2 tells rather than shows. Add a concrete detail." },
-  { icon: Lightbulb, tone: "text-brand-violet", text: "Tie your robotics project back to your intended major." },
+  { icon: Lightbulb, tone: "text-primary", text: "Tie your robotics project back to your intended major." },
 ];
 
 export function AIShowcase() {
@@ -16,9 +16,9 @@ export function AIShowcase() {
     <section className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
-          eyebrow={<><Sparkles className="size-3.5 text-primary" /> AI that actually understands admissions</>}
-          title="Feedback like a top counselor — instantly"
-          description="Trained on millions of admitted profiles and essay rubrics, AdmitFlow gives you the kind of guidance most students pay thousands for."
+          eyebrow={<><span className="size-1.5 rounded-full bg-primary" /> Essay review</>}
+          title="Feedback like a top admissions counselor"
+          description="The kind of line-by-line guidance students normally pay thousands for — measured against what admissions readers actually reward."
         />
 
         <div className="mt-14 grid items-center gap-10 lg:grid-cols-2">
@@ -34,8 +34,8 @@ export function AIShowcase() {
                   body: "Highlights what's working, flags weak spots and suggests sharper phrasing — without ever writing it for you.",
                 },
                 {
-                  title: "Always-on, always personal",
-                  body: "Your mentor remembers your GPA, scores, target schools and budget, so every answer is tailored to you.",
+                  title: "Always personal to you",
+                  body: "Your mentor knows your GPA, scores, target schools and budget, so every answer is tailored to your situation.",
                 },
               ].map((item, i) => (
                 <div key={item.title} className="flex gap-4">
@@ -52,10 +52,10 @@ export function AIShowcase() {
           </Reveal>
 
           <Reveal delay={0.1} className="order-1 lg:order-2">
-            <div className="animated-border rounded-3xl">
-              <div className="glass-strong rounded-[1.45rem] p-5 shadow-card">
+            <div className="rounded-3xl border border-border/70 bg-card/40 p-1.5">
+              <div className="glass-strong rounded-[1.35rem] p-5 shadow-card">
                 <div className="flex items-center gap-2 text-sm font-medium">
-                  <Wand2 className="size-4 text-brand-violet" /> Essay Feedback Engine
+                  <PenLine className="size-4 text-primary" /> Personal statement — reviewed
                 </div>
                 <div className="mt-4 rounded-xl border border-border/60 bg-background/50 p-4 text-sm leading-relaxed text-foreground/80">
                   <p>
@@ -84,7 +84,7 @@ export function AIShowcase() {
                 </div>
                 <div className="mt-4 flex items-center justify-between rounded-xl bg-primary/10 px-4 py-2.5">
                   <span className="text-sm font-medium">Essay strength</span>
-                  <span className="font-display text-sm font-bold text-success">Good → improving</span>
+                  <span className="text-sm font-semibold text-success">Good → improving</span>
                 </div>
               </div>
             </div>
