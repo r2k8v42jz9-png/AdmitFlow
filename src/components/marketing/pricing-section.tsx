@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Check, Sparkles } from "lucide-react";
+import { Check, Sparkles, Loader2 } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { StaggerContainer, StaggerItem } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
@@ -16,21 +16,32 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
   const router = useRouter();
   const { t } = useT();
   const [yearly, setYearly] = useState(true);
+  const [selecting, setSelecting] = useState<string | null>(null);
 
-  const onSelect = (tierId: string) => {
+  const onSelect = async (tierId: string) => {
+    if (selecting) return;
     if (!getUserState().authenticated) {
       router.push("/login");
       return;
     }
-    // Mark the subscription active (the DB write is the source of truth).
-    // NOTE: real checkout (Pricing → Checkout → Payment → Success → Dashboard)
-    // is a separate billing batch; selecting a plan currently activates directly.
+    setSelecting(tierId);
+
+    // Start the trial immediately on plan selection.
+    // (Real checkout — Pricing → Payment → Success — is a separate billing batch;
+    // selecting a plan currently begins a trial directly.)
     setSubscription(tierId as Plan, true);
-    import("@/lib/supabase/config").then(({ isSupabaseConfigured }) => {
+
+    // CRITICAL: await the DB write BEFORE navigating, or the dashboard proxy
+    // reads a stale subscription status and bounces back to /pricing.
+    try {
+      const { isSupabaseConfigured } = await import("@/lib/supabase/config");
       if (isSupabaseConfigured()) {
-        import("@/lib/supabase/data").then(({ savePlan }) => savePlan(tierId as Plan, "active"));
+        const { savePlan } = await import("@/lib/supabase/data");
+        await savePlan(tierId as Plan, "trialing");
       }
-    });
+    } catch {
+      /* proceed regardless; the proxy will re-gate if the write failed */
+    }
     router.push("/dashboard");
   };
 
@@ -119,8 +130,9 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
                     size="lg"
                     className="mt-6 w-full"
                     onClick={() => onSelect(tier.id)}
+                    disabled={!!selecting}
                   >
-                    {t(`plan.${tier.id}.cta`)}
+                    {selecting === tier.id ? <Loader2 className="size-4 animate-spin" /> : t(`plan.${tier.id}.cta`)}
                   </Button>
 
                   <ul className="mt-7 space-y-3">

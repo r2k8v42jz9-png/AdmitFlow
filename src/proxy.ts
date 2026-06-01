@@ -62,13 +62,14 @@ export async function proxy(request: NextRequest) {
     .maybeSingle();
   if (!onboarding?.completed) return redirect(request, "/onboarding");
 
-  // 3) Subscription must be active.
+  // 3) Subscription must grant access (active OR trialing).
   const { data: subscription } = await supabase
     .from("subscriptions")
     .select("status")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (subscription?.status !== "active") return redirect(request, "/pricing");
+  const access = subscription?.status === "active" || subscription?.status === "trialing";
+  if (!access) return redirect(request, "/pricing");
 
   return response;
 }

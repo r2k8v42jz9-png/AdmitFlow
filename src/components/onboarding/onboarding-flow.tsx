@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -15,6 +15,7 @@ import {
   Globe2,
   BookOpen,
   Heart,
+  Loader2,
 } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";
@@ -28,10 +29,15 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { useT, type TFunction } from "@/lib/i18n";
 import { cn, formatCurrency } from "@/lib/utils";
 
-/** Persist onboarding to the database when Supabase is configured (fire-and-forget). */
-function persistOnboardingRemote(data: OnboardingData) {
+/**
+ * Persist onboarding to the database and RESOLVE only once the write lands.
+ * Callers must await this before navigating, otherwise the proxy on the next
+ * page reads a stale `onboarding_data.completed` and bounces back here.
+ */
+async function persistOnboardingRemote(data: OnboardingData): Promise<void> {
   if (!isSupabaseConfigured()) return;
-  import("@/lib/supabase/data").then(({ saveOnboarding: save }) => save(data));
+  const { saveOnboarding: save } = await import("@/lib/supabase/data");
+  await save(data);
 }
 
 function parseNum(value: string): number | null {
@@ -106,6 +112,8 @@ export function OnboardingFlow() {
   const ready = hydrated && (remoteResolved || !isSupabaseConfigured());
   const [step, setStep] = useState(0);
   const [phase, setPhase] = useState<"form" | "generating" | "result">("form");
+  const [navigating, setNavigating] = useState(false);
+  const persistPromiseRef = useRef<Promise<void> | null>(null);
   const [data, setData] = useState<Data>({
     degree: "Bachelor's",
     major: "",
@@ -166,27 +174,35 @@ export function OnboardingFlow() {
   const next = () => {
     if (step < total - 1) {
       setStep((s) => s + 1);
-    } else {
-      const mapped = toOnboarding(data);
-      saveOnboarding(mapped);
-      persistOnboardingRemote(mapped);
-      setPhase("generating");
-      setTimeout(() => setPhase("result"), 2800);
+      return;
     }
+    // Final step: persist locally + remotely. Kick off the DB write now and
+    // hold the promise; the result CTA awaits it before routing to /pricing.
+    const mapped = toOnboarding(data);
+    saveOnboarding(mapped);
+    persistPromiseRef.current = persistOnboardingRemote(mapped);
+    setPhase("generating");
+    setTimeout(() => setPhase("result"), 2800);
   };
   const back = () => setStep((s) => Math.max(0, s - 1));
 
-  const skip = () => {
-    const mapped = toOnboarding(data);
-    saveOnboarding(mapped);
-    persistOnboardingRemote(mapped);
-    // Onboarding done but no active subscription yet → choose a plan.
+  // Wait for the onboarding write to land, then go to pricing. Prevents the
+  // proxy from bouncing back to /onboarding on a stale read.
+  const goToPricing = async () => {
+    if (navigating) return;
+    setNavigating(true);
+    try {
+      const mapped = toOnboarding(data);
+      saveOnboarding(mapped);
+      await (persistPromiseRef.current ?? persistOnboardingRemote(mapped));
+    } catch {
+      /* even if the write errors, proceed — proxy will re-gate as needed */
+    }
     router.replace("/pricing");
   };
 
-  const finish = () => {
-    router.replace("/pricing");
-  };
+  const skip = goToPricing;
+  const finish = goToPricing;
 
   const recommendations = [...universities]
     .filter((u) => data.countries.length === 0 || data.countries.includes(u.country))
@@ -212,7 +228,8 @@ export function OnboardingFlow() {
           <button
             type="button"
             onClick={skip}
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            disabled={navigating}
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
           >
             {t("onb.skip")}
           </button>
@@ -264,7 +281,7 @@ export function OnboardingFlow() {
           {phase === "generating" && <Generating key="gen" t={t} />}
 
           {phase === "result" && (
-            <Result key="res" data={data} recommendations={recommendations} onContinue={finish} t={t} />
+            <Result key="res" data={data} recommendations={recommendations} onContinue={finish} navigating={navigating} t={t} />
           )}
         </AnimatePresence>
       </div>
@@ -540,11 +557,13 @@ function Result({
   data,
   recommendations,
   onContinue,
+  navigating,
   t,
 }: {
   data: Data;
   recommendations: typeof universities;
   onContinue: () => void;
+  navigating: boolean;
   t: TFunction;
 }) {
   return (
@@ -594,8 +613,8 @@ function Result({
       </div>
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-        <Button variant="gradient" size="lg" onClick={onContinue}>
-          {t("onb.result.continue")} <ArrowRight className="size-4" />
+        <Button variant="gradient" size="lg" onClick={onContinue} disabled={navigating}>
+          {navigating ? <Loader2 className="size-4 animate-spin" /> : <>{t("onb.result.continue")} <ArrowRight className="size-4" /></>}
         </Button>
       </div>
     </motion.div>

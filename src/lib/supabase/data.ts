@@ -25,7 +25,12 @@ interface OnboardingRow {
   completed: boolean;
 }
 
-export type SubscriptionStatus = "inactive" | "active" | "past_due" | "canceled";
+export type SubscriptionStatus = "inactive" | "trialing" | "active" | "past_due" | "canceled";
+
+/** A subscription grants app access while trialing OR active. */
+export function isAccessGranted(status: string | null | undefined): boolean {
+  return status === "active" || status === "trialing";
+}
 
 function rowToOnboarding(r: OnboardingRow): OnboardingData {
   return {
@@ -94,7 +99,7 @@ export async function loadUserState(): Promise<Partial<UserState> | null> {
     email: user.email ?? "",
     onboarded: onboardingRow?.completed ?? false,
     plan: (subRes.data?.plan as Plan | null) ?? null,
-    subscriptionActive: subRes.data?.status === "active",
+    subscriptionActive: isAccessGranted(subRes.data?.status),
     onboarding: onboardingRow?.completed ? rowToOnboarding(onboardingRow) : null,
     streak: {
       count: streakRes.data?.count ?? 0,
