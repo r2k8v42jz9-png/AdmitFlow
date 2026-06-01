@@ -31,18 +31,24 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
     // selecting a plan currently begins a trial directly.)
     setSubscription(tierId as Plan, true);
 
-    // CRITICAL: await the DB write BEFORE navigating, or the dashboard proxy
-    // reads a stale subscription status and bounces back to /pricing.
+    // CRITICAL: await the DB write, then re-hydrate the client store from the
+    // DB BEFORE navigating, so AppGate already sees subscriptionActive=true.
     try {
       const { isSupabaseConfigured } = await import("@/lib/supabase/config");
       if (isSupabaseConfigured()) {
         const { savePlan } = await import("@/lib/supabase/data");
         await savePlan(tierId as Plan, "trialing");
+        // Re-read our own write so the local cache + the next proxy request both
+        // observe 'trialing' (avoids the read-after-write bounce to /pricing).
+        const { hydrateLocalFromProfile } = await import("@/lib/supabase/auth");
+        await hydrateLocalFromProfile();
       }
     } catch {
-      /* proceed regardless; the proxy will re-gate if the write failed */
+      /* proceed regardless; the gate will re-check */
     }
-    router.push("/dashboard");
+    // Full navigation (not client push): guarantees the proxy runs with the
+    // freshly-committed session/cookies and the dashboard hydrates from scratch.
+    window.location.assign("/dashboard");
   };
 
   return (
