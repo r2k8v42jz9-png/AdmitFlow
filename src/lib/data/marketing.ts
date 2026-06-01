@@ -174,7 +174,7 @@ export const pricingTiers: PricingTier[] = [
     tagline: "Everything you need to start applying with a real plan.",
     cta: "Start with Starter",
     features: [
-      "50 AI mentor messages / month",
+      "50 mentor messages / month",
       "20 university recommendations",
       "Basic personalized roadmap",
       "Deadline tracker",

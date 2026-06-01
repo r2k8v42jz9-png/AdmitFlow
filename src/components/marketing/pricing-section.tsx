@@ -45,30 +45,37 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
           />
         )}
 
-        <div className="mt-10 flex items-center justify-center gap-3">
-          <span className={cn("text-sm transition-colors", !yearly ? "text-foreground" : "text-muted-foreground")}>
-            {t("pricing.monthly")}
-          </span>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
           <button
             type="button"
             role="switch"
             aria-checked={yearly}
+            aria-label={t("pricing.yearly")}
             onClick={() => setYearly((v) => !v)}
-            className={cn(
-              "relative h-7 w-12 rounded-full border border-border/70 bg-card/60 transition-colors",
-              yearly && "bg-primary/20 border-primary/40",
-            )}
+            className="inline-flex items-center gap-3"
           >
+            <span className={cn("text-sm transition-colors", !yearly ? "text-foreground" : "text-muted-foreground")}>
+              {t("pricing.monthly")}
+            </span>
+            {/* Flex track: items-center handles vertical centering; thumb travels
+                exactly track-width − thumb − 2×inset = 48 − 20 − 4 = 24px. */}
             <span
               className={cn(
-                "absolute top-0.5 size-5 rounded-full bg-[linear-gradient(135deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] shadow transition-transform",
-                yearly ? "translate-x-[1.45rem]" : "translate-x-0.5",
+                "flex h-7 w-12 shrink-0 items-center rounded-full border p-0.5 transition-colors",
+                yearly ? "border-primary/40 bg-primary/20" : "border-border/70 bg-card/60",
               )}
-            />
+            >
+              <span
+                className={cn(
+                  "size-5 rounded-full bg-[linear-gradient(135deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] shadow transition-transform duration-200",
+                  yearly ? "translate-x-6" : "translate-x-0",
+                )}
+              />
+            </span>
+            <span className={cn("text-sm transition-colors", yearly ? "text-foreground" : "text-muted-foreground")}>
+              {t("pricing.yearly")}
+            </span>
           </button>
-          <span className={cn("text-sm transition-colors", yearly ? "text-foreground" : "text-muted-foreground")}>
-            {t("pricing.yearly")}
-          </span>
           <span className="rounded-full bg-success/15 px-2 py-0.5 text-xs font-medium text-success">{t("pricing.save")}</span>
         </div>
 
