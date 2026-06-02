@@ -6,7 +6,6 @@ import {
   Sparkles,
   Send,
   Plus,
-  MessageSquare,
   PanelLeftClose,
   PanelLeftOpen,
   Square,
@@ -14,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Markdown } from "@/components/mentor/markdown";
-import { chatThreads, suggestionChips } from "@/lib/data/mentor";
+import { suggestionChips } from "@/lib/data/mentor";
 import { useUser, nameFromEmail } from "@/lib/user-store";
 import { generateMentorReply, buildWelcome, type MentorProfile } from "@/lib/mentor-engine";
 import { useT } from "@/lib/i18n";
@@ -53,7 +52,6 @@ export function MentorChat() {
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeThread, setActiveThread] = useState<string | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -114,7 +112,6 @@ export function MentorChat() {
     history.push({ role: "user", content: trimmed });
     setMessages((m) => [...m, { id: newId(), role: "user", content: trimmed }]);
     setInput("");
-    setActiveThread(null);
     void streamReply(history, trimmed);
   };
 
@@ -126,7 +123,6 @@ export function MentorChat() {
   const newChat = () => {
     if (streaming) stop();
     setMessages([{ id: "welcome", role: "assistant", content: welcome }]);
-    setActiveThread(null);
     inputRef.current?.focus();
   };
 
@@ -160,23 +156,11 @@ export function MentorChat() {
               <p className="px-4 pb-2 pt-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 {t("mentor.recent")}
               </p>
-              <div className="flex-1 space-y-1 overflow-y-auto px-2 pb-3">
-                {chatThreads.map((t) => (
-                  <button
-                    key={t.id}
-                    onClick={() => setActiveThread(t.id)}
-                    className={cn(
-                      "group flex w-full flex-col gap-0.5 rounded-xl border border-transparent p-3 text-left transition-colors",
-                      activeThread === t.id ? "border-border/70 bg-card" : "hover:bg-card/60",
-                    )}
-                  >
-                    <span className="flex items-center gap-2 text-sm font-medium">
-                      <MessageSquare className="size-3.5 shrink-0 text-muted-foreground" />
-                      <span className="truncate">{t.title}</span>
-                    </span>
-                    <span className="truncate pl-[1.375rem] text-xs text-muted-foreground">{t.preview}</span>
-                  </button>
-                ))}
+              <div className="flex-1 overflow-y-auto px-2 pb-3">
+                {/* No persisted conversation history yet — honest empty state. */}
+                <p className="px-3 py-6 text-center text-xs leading-relaxed text-muted-foreground">
+                  {t("mentor.noHistory")}
+                </p>
               </div>
             </div>
           </motion.aside>

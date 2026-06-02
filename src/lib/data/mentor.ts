@@ -1,38 +1,5 @@
-import type { ChatThread } from "@/lib/types";
-
-export const chatThreads: ChatThread[] = [
-  {
-    id: "th-1",
-    title: "Improving my MIT chances",
-    preview: "Given your 1520 SAT and robotics medal…",
-    time: "Today",
-  },
-  {
-    id: "th-2",
-    title: "Common App essay outline",
-    preview: "Here's a structure that highlights growth…",
-    time: "Today",
-  },
-  {
-    id: "th-3",
-    title: "Best value EU universities",
-    preview: "ETH, TUM and EPFL all offer elite STEM…",
-    time: "Yesterday",
-  },
-  {
-    id: "th-4",
-    title: "IELTS 7.5 — is it enough?",
-    preview: "For your target schools, 7.5 clears every…",
-    time: "Yesterday",
-  },
-  {
-    id: "th-5",
-    title: "Scholarships for internationals",
-    preview: "You qualify for at least 4 funded routes…",
-    time: "3 days ago",
-  },
-];
-
+// Prompt starters shown in the empty mentor chat. These are UI guidance
+// (suggested questions), not fabricated user data.
 export const suggestionChips = [
   "Estimate my chances at Stanford",
   "Build a roadmap for Fall 2027",

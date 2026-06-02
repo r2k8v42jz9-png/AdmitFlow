@@ -100,6 +100,7 @@ const en: Dict = {
   // app topbar
   "topbar.search": "Search…",
   "topbar.notifications": "Notifications",
+  "topbar.noNotifications": "You're all caught up — no notifications yet.",
   "topbar.profile": "Profile",
   "topbar.settings": "Settings",
   "topbar.upgrade": "Upgrade to Premium",
@@ -207,6 +208,7 @@ const en: Dict = {
   "mentor.new": "New",
   "mentor.newConversation": "New conversation",
   "mentor.recent": "Recent",
+  "mentor.noHistory": "Your conversations will appear here once you start chatting.",
   "mentor.tryAsking": "Try asking",
   "mentor.placeholder": "Ask your mentor anything…",
   "mentor.disclaimer": "AdmitFlow Mentor can make mistakes. Verify important deadlines and requirements.",
@@ -378,6 +380,7 @@ const ru: Dict = {
   // app topbar
   "topbar.search": "Поиск…",
   "topbar.notifications": "Уведомления",
+  "topbar.noNotifications": "Пока нет уведомлений.",
   "topbar.profile": "Профиль",
   "topbar.settings": "Настройки",
   "topbar.upgrade": "Перейти на Premium",
@@ -485,6 +488,7 @@ const ru: Dict = {
   "mentor.new": "Новый",
   "mentor.newConversation": "Новый чат",
   "mentor.recent": "Недавние",
+  "mentor.noHistory": "Ваши беседы появятся здесь, как только вы начнёте чат.",
   "mentor.tryAsking": "Попробуйте спросить",
   "mentor.placeholder": "Спросите наставника о чём угодно…",
   "mentor.disclaimer": "Наставник AdmitFlow может ошибаться. Проверяйте важные сроки и требования.",

@@ -11,14 +11,10 @@ import {
   Settings,
   LogOut,
   Crown,
-  Sparkles,
-  CircleCheckBig,
-  CalendarClock,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -41,11 +37,6 @@ const labelMap: Record<string, string> = {
   settings: "Settings",
 };
 
-const notifications = [
-  { icon: CalendarClock, tone: "text-warning", title: "Oxford interview in 6 days", time: "Jun 4 · 10:00 AM", unread: true },
-  { icon: Sparkles, tone: "text-primary", title: "New scholarship match found", time: "ETH ESOP · CHF 12,000", unread: true },
-  { icon: CircleCheckBig, tone: "text-success", title: "Toronto application submitted", time: "2 hours ago", unread: false },
-];
 
 export function AppTopbar({
   onOpenCommand,
@@ -133,32 +124,19 @@ export function AppTopbar({
           <DropdownMenuTrigger asChild>
             <button
               className="relative grid size-9 place-items-center rounded-lg border border-border/70 bg-card/40 text-muted-foreground transition-colors hover:text-foreground"
-              aria-label="Notifications"
+              aria-label={t("topbar.notifications")}
             >
               <Bell className="size-[18px]" />
-              <span className="absolute right-2 top-2 size-2 rounded-full bg-brand-pink ring-2 ring-background" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
             <div className="flex items-center justify-between px-2.5 py-1.5">
-              <span className="text-sm font-semibold">Notifications</span>
-              <Badge variant="default" className="text-[10px]">2 new</Badge>
+              <span className="text-sm font-semibold">{t("topbar.notifications")}</span>
             </div>
             <DropdownMenuSeparator />
-            {notifications.map((n, i) => (
-              <DropdownMenuItem key={i} className="items-start gap-3 py-2.5">
-                <span className={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-lg bg-muted ${n.tone}`}>
-                  <n.icon className="size-4" />
-                </span>
-                <div className="flex-1">
-                  <p className="text-sm font-medium leading-tight text-foreground">{n.title}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{n.time}</p>
-                </div>
-                {n.unread && <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary" />}
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="justify-center text-sm text-primary">View all</DropdownMenuItem>
+            {/* No notifications system backs this yet — show an honest empty state
+                rather than fabricated alerts. */}
+            <p className="px-3 py-6 text-center text-xs text-muted-foreground">{t("topbar.noNotifications")}</p>
           </DropdownMenuContent>
         </DropdownMenu>
 
