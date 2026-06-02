@@ -51,24 +51,6 @@ function visaFor(country?: string): string {
   }
 }
 
-function computeStatuses(windows: [Date, Date][]): RoadmapMilestone["status"][] {
-  const today = FROZEN_TODAY.getTime();
-  let activeAssigned = false;
-  const res: RoadmapMilestone["status"][] = windows.map(([s, e]) => {
-    if (e.getTime() < today) return "done";
-    if (!activeAssigned && s.getTime() <= today) {
-      activeAssigned = true;
-      return "active";
-    }
-    return "upcoming";
-  });
-  if (!res.includes("active")) {
-    const firstUpcoming = res.indexOf("upcoming");
-    res[firstUpcoming !== -1 ? firstUpcoming : res.length - 1] = "active";
-  }
-  return res;
-}
-
 /**
  * Generates a personalized roadmap from a user's onboarding profile.
  * Tasks, milestones and deadlines vary by GPA, IELTS/SAT, degree level,
@@ -98,35 +80,38 @@ export function generateRoadmap(onboarding: OnboardingData | null): RoadmapMiles
     [addMonths(intake, -6), addMonths(intake, -3)],
     [addMonths(intake, -3), intake],
   ];
-  const statuses = computeStatuses(windows);
   const windowLabel = (i: number) => `${monthYear.format(windows[i][0])} – ${monthYear.format(windows[i][1])}`;
 
-  /* ---- Milestone 1: Foundation & tests ---- */
+  /* ---- Milestone 1: Foundation & tests ----
+     Completion is driven STRICTLY by data that exists in the user's profile.
+     A task is `done` only when the corresponding record is present (e.g. an
+     IELTS/SAT score). Action items with no backing record stay `false`. */
   const m1: RoadmapTask[] = [];
-  if (o.ielts == null) {
-    m1.push({ id: "m1-ielts", label: "Register for and take IELTS (target 7.0)", done: false });
-  } else if (o.ielts < 6.5) {
-    m1.push({ id: "m1-ielts", label: `Retake IELTS to reach 7.0+ (current ${o.ielts})`, done: false });
-  } else {
-    m1.push({ id: "m1-ielts", label: `IELTS achieved — band ${o.ielts}`, done: true });
-  }
+  // IELTS: done only if a score exists in the profile.
+  m1.push(
+    o.ielts != null
+      ? { id: "m1-ielts", label: `IELTS recorded — band ${o.ielts}`, done: true }
+      : { id: "m1-ielts", label: "Register for and take IELTS (target 7.0)", done: false },
+  );
   if (isBachelor) {
+    // SAT: done only if a score exists.
     m1.push(
-      o.sat == null
-        ? { id: "m1-sat", label: "Take the SAT (target 1450+)", done: false }
-        : { id: "m1-sat", label: `SAT achieved — ${o.sat}`, done: true },
+      o.sat != null
+        ? { id: "m1-sat", label: `SAT recorded — ${o.sat}`, done: true }
+        : { id: "m1-sat", label: "Take the SAT (target 1450+)", done: false },
     );
   }
   if (isMaster || isPhD) {
+    // GRE: no GRE field in the profile → never auto-completed.
     m1.push({ id: "m1-gre", label: "Take the GRE (target 320+)", done: false });
   }
-  if (gpaRatio != null && gpaRatio < 0.85) {
-    m1.push({ id: "m1-gpa", label: `Strengthen GPA — currently ${o.gpa}/${o.gpaScale}`, done: false });
-  } else if (gpaRatio != null) {
-    m1.push({ id: "m1-gpa", label: `Maintain strong GPA (${o.gpa}/${o.gpaScale})`, done: true });
-  } else {
-    m1.push({ id: "m1-gpa", label: "Add your GPA to your academic profile", done: false });
-  }
+  // GPA: done only if a GPA value exists (the data point is recorded).
+  m1.push(
+    gpaRatio != null
+      ? { id: "m1-gpa", label: `GPA recorded — ${o.gpa}/${o.gpaScale}`, done: true }
+      : { id: "m1-gpa", label: "Add your GPA to your academic profile", done: false },
+  );
+  // Transcript: no document store → never auto-completed.
   m1.push({ id: "m1-docs", label: "Translate & notarize academic transcripts", done: false });
 
   /* ---- Milestone 2: Shortlist universities ---- */
@@ -190,15 +175,26 @@ export function generateRoadmap(onboarding: OnboardingData | null): RoadmapMiles
   ];
 
   return milestones.map((m, i) => {
-    const status = statuses[i];
-    return {
-      ...m,
-      status,
-      window: windowLabel(i),
-      // A completed phase implies its tasks are done.
-      tasks: status === "done" ? m.tasks.map((t) => ({ ...t, done: true })) : m.tasks,
-    };
+    // Milestone status reflects ACTUAL task completion, not the calendar window:
+    //   all tasks done → "done"; some done OR it's the earliest unfinished
+    //   phase → "active"; otherwise "upcoming".
+    const doneCount = m.tasks.filter((t) => t.done).length;
+    const allDone = m.tasks.length > 0 && doneCount === m.tasks.length;
+    let status: RoadmapMilestone["status"];
+    if (allDone) status = "done";
+    else if (doneCount > 0 || i === firstUnfinished(milestones)) status = "active";
+    else status = "upcoming";
+
+    return { ...m, status, window: windowLabel(i), tasks: m.tasks };
   });
+}
+
+/** Index of the earliest milestone that isn't fully complete (for "active"). */
+function firstUnfinished(milestones: { tasks: RoadmapTask[] }[]): number {
+  const idx = milestones.findIndex(
+    (m) => m.tasks.length === 0 || m.tasks.some((t) => !t.done),
+  );
+  return idx === -1 ? 0 : idx;
 }
 
 /** Suggested next universities to add, biased to the user's target countries. */

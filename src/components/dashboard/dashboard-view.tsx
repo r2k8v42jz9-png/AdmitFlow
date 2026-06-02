@@ -49,7 +49,11 @@ export function DashboardView() {
       accent: "from-success/20 to-transparent",
     },
     {
-      label: t("dash.stat.applications"),
+      // Real count of the user's target universities (their onboarding picks).
+      // This is NOT "applications" — there is no applications table yet, so an
+      // application count would always be 0. We show the truthful target count
+      // and label it accordingly to avoid an inconsistent metric.
+      label: t("dash.stat.targets"),
       value: String(myUniversities.length),
       icon: Building2,
       tone: "text-brand-blue",

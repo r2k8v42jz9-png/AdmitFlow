@@ -142,11 +142,14 @@ export function SettingsPanels() {
             <Button variant="outline" asChild>
               <Link href="/pricing">Change plan</Link>
             </Button>
-            <Button variant="gradient" asChild>
-              <Link href="/pricing">
-                <Crown className="size-4" /> Upgrade
-              </Link>
-            </Button>
+            {/* Premium Mentor is the top tier — no upgrade prompt. */}
+            {user.plan !== "premium" && (
+              <Button variant="gradient" asChild>
+                <Link href="/pricing">
+                  <Crown className="size-4" /> Upgrade
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </SettingsSection>

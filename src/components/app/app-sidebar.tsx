@@ -8,6 +8,7 @@ import { Logo, LogoMark } from "@/components/shared/logo";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { mainNav, secondaryNav, type NavItem } from "@/components/app/nav-config";
 import { useT } from "@/lib/i18n";
+import { useUser } from "@/lib/user-store";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,9 @@ export function AppSidebar({
   onToggleCollapse?: () => void;
   onNavigate?: () => void;
 }) {
+  // Premium Mentor is the highest tier — never show upgrade prompts to them.
+  const { plan } = useUser();
+  const showUpgrade = plan !== "premium";
   return (
     <TooltipProvider delayDuration={0}>
       <div className="flex h-full flex-col gap-2 p-3">
@@ -70,7 +74,7 @@ export function AppSidebar({
               <ChevronsLeft className="size-4 rotate-180" />
             </button>
           )}
-          {!collapsed && <UpgradeCard />}
+          {!collapsed && showUpgrade && <UpgradeCard />}
         </div>
       </div>
     </TooltipProvider>
