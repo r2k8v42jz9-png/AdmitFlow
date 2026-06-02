@@ -73,6 +73,9 @@ const en: Dict = {
   "auth.createOne": "Create one",
   "auth.backHome": "Back home",
   "auth.googleUnavailable": "Google sign-in isn't available yet. Please continue with email.",
+  "auth.resetNeedEmail": "Enter your email above, then tap “Forgot password?” to get a reset link.",
+  "auth.resetSent": "If that email exists, we've sent a password-reset link. Check your inbox.",
+  "auth.resetUnavailable": "Password reset isn't available right now. Please try again later.",
 
   // verify email
   "verify.title": "Verify your email",
@@ -354,6 +357,9 @@ const ru: Dict = {
   "auth.createOne": "Создать",
   "auth.backHome": "На главную",
   "auth.googleUnavailable": "Вход через Google пока недоступен. Продолжите через эл. почту.",
+  "auth.resetNeedEmail": "Введите эл. почту выше и нажмите «Забыли пароль?», чтобы получить ссылку.",
+  "auth.resetSent": "Если такой адрес существует, мы отправили ссылку для сброса пароля. Проверьте почту.",
+  "auth.resetUnavailable": "Сброс пароля сейчас недоступен. Попробуйте позже.",
 
   // verify email
   "verify.title": "Подтвердите эл. почту",

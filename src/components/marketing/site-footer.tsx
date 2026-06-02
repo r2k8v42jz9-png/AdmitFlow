@@ -55,14 +55,13 @@ export function SiteFooter() {
             </p>
             <div className="flex items-center gap-2">
               {[AtSign, MessageCircle, Globe].map((Icon, i) => (
-                <a
+                <span
                   key={i}
-                  href="#"
-                  className="grid size-9 place-items-center rounded-lg border border-border/70 bg-card/50 text-muted-foreground transition-colors hover:text-foreground hover:bg-accent"
-                  aria-label="social link"
+                  className="grid size-9 place-items-center rounded-lg border border-border/70 bg-card/50 text-muted-foreground/60"
+                  aria-hidden
                 >
                   <Icon className="size-4" />
-                </a>
+                </span>
               ))}
             </div>
           </div>

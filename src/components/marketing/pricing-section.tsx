@@ -33,18 +33,26 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
 
     // CRITICAL: await the DB write, then re-hydrate the client store from the
     // DB BEFORE navigating, so AppGate already sees subscriptionActive=true.
+    // Capped with an 8s timeout so a hung request can never spin forever.
     try {
       const { isSupabaseConfigured } = await import("@/lib/supabase/config");
       if (isSupabaseConfigured()) {
-        const { savePlan } = await import("@/lib/supabase/data");
-        await savePlan(tierId as Plan, "trialing");
-        // Re-read our own write so the local cache + the next proxy request both
-        // observe 'trialing' (avoids the read-after-write bounce to /pricing).
-        const { hydrateLocalFromProfile } = await import("@/lib/supabase/auth");
-        await hydrateLocalFromProfile();
+        const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 8000));
+        await Promise.race([
+          (async () => {
+            const { savePlan } = await import("@/lib/supabase/data");
+            await savePlan(tierId as Plan, "trialing");
+            // Re-read our own write so the local cache + the next proxy request
+            // both observe 'trialing' (avoids the read-after-write bounce).
+            const { hydrateLocalFromProfile } = await import("@/lib/supabase/auth");
+            await hydrateLocalFromProfile();
+          })(),
+          timeout,
+        ]);
       }
     } catch {
-      /* proceed regardless; the gate will re-check */
+      /* timed out or failed — proceed; the gate re-checks and the local store
+         already reflects the selection, so the user is never stuck here. */
     }
     // Full navigation (not client push): guarantees the proxy runs with the
     // freshly-committed session/cookies and the dashboard hydrates from scratch.

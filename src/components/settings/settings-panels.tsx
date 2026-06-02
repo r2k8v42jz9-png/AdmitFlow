@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { Monitor, Moon, Sun, Check, Crown, ShieldAlert } from "lucide-react";
+import { Monitor, Moon, Sun, Check, Crown, ShieldAlert, Loader2, LogOut } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
@@ -11,7 +11,16 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useUser, deriveProfile, nameFromEmail } from "@/lib/user-store";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { useUser, deriveProfile, nameFromEmail, signOut } from "@/lib/user-store";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { cn } from "@/lib/utils";
 
 const themeOptions = [
@@ -35,6 +44,10 @@ export function SettingsPanels() {
   const [mounted, setMounted] = useState(false);
   const [notifications, setNotifications] = useState(notificationDefaults);
   const [saved, setSaved] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [signingOut, setSigningOut] = useState(false);
 
   // Hydration guard for next-themes — set state after mount to avoid SSR mismatch.
   // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -42,6 +55,44 @@ export function SettingsPanels() {
 
   const toggleNotif = (id: string) =>
     setNotifications((n) => n.map((item) => (item.id === id ? { ...item, on: !item.on } : item)));
+
+  const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      if (isSupabaseConfigured()) {
+        const { signOutSupabase } = await import("@/lib/supabase/auth");
+        await signOutSupabase();
+      } else {
+        signOut();
+      }
+    } catch {
+      signOut();
+    }
+    window.location.assign("/");
+  };
+
+  const handleDelete = async () => {
+    if (deleting) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      if (isSupabaseConfigured()) {
+        const { deleteAccount } = await import("@/lib/supabase/data");
+        const res = await deleteAccount();
+        if (!res.ok) throw new Error("delete_failed");
+        const { signOutSupabase } = await import("@/lib/supabase/auth");
+        await signOutSupabase();
+      } else {
+        signOut();
+      }
+      // Hard navigation clears all in-memory + cookie state.
+      window.location.assign("/?deleted=1");
+    } catch {
+      setDeleting(false);
+      setDeleteError("delete_failed");
+    }
+  };
 
   const save = () => {
     setSaved(true);
@@ -79,7 +130,6 @@ export function SettingsPanels() {
               "Save changes"
             )}
           </Button>
-          <Button variant="ghost">Cancel</Button>
         </div>
       </SettingsSection>
 
@@ -132,9 +182,9 @@ export function SettingsPanels() {
               <Crown className="size-5" />
             </span>
             <div>
-              <p className="flex items-center gap-2 font-medium">
+              <div className="flex items-center gap-2 font-medium">
                 AdmitFlow {planLabel} <Badge variant="gradient">Current</Badge>
-              </p>
+              </div>
               <p className="text-sm text-muted-foreground">Renews monthly · Unlimited AI mentor & roadmaps</p>
             </div>
           </div>
@@ -154,6 +204,13 @@ export function SettingsPanels() {
         </div>
       </SettingsSection>
 
+      {/* Session */}
+      <SettingsSection title="Session" description="Sign out of your account on this device.">
+        <Button variant="outline" onClick={handleSignOut} disabled={signingOut}>
+          {signingOut ? <Loader2 className="size-4 animate-spin" /> : <LogOut className="size-4" />} Sign out
+        </Button>
+      </SettingsSection>
+
       {/* Danger zone */}
       <Card className="border-destructive/30 p-6">
         <div className="flex items-start gap-3">
@@ -166,10 +223,38 @@ export function SettingsPanels() {
               Permanently delete your account and all associated data. This action cannot be undone.
             </p>
             <Separator className="my-4" />
-            <Button variant="destructive">Delete account</Button>
+            <Button variant="destructive" onClick={() => { setDeleteError(null); setConfirmOpen(true); }}>
+              Delete account
+            </Button>
           </div>
         </div>
       </Card>
+
+      {/* Delete confirmation modal */}
+      <Dialog open={confirmOpen} onOpenChange={(o) => !deleting && setConfirmOpen(o)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete your account?</DialogTitle>
+            <DialogDescription>
+              This permanently deletes your profile, onboarding data, plan, roadmap progress and
+              streak. This cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          {deleteError && (
+            <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              Couldn&apos;t delete your account. Please try again.
+            </p>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmOpen(false)} disabled={deleting}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
+              {deleting ? <Loader2 className="size-4 animate-spin" /> : "Delete account"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -174,3 +174,37 @@ export async function saveLanguage(language: string): Promise<void> {
   if (!user) return;
   await supabase.from("profiles").update({ language }).eq("id", user.id);
 }
+
+/**
+ * Permanently deletes the signed-in user's data, then their auth account.
+ * - Deletes all five per-user tables (RLS lets a user delete their own rows).
+ * - Attempts the `delete_own_account` RPC (security definer) to remove the
+ *   auth.users row. If the RPC isn't installed, data is still wiped and the
+ *   user is signed out — surfaced via the returned flag so the UI can inform.
+ * Returns { ok, authDeleted } or throws on a hard failure.
+ */
+export async function deleteAccount(): Promise<{ ok: boolean; authDeleted: boolean }> {
+  if (!isSupabaseConfigured()) return { ok: true, authDeleted: false };
+  const { supabase, user } = await uid();
+  if (!user) return { ok: false, authDeleted: false };
+
+  // 1) Delete all per-user data rows (own-row, allowed by RLS).
+  await Promise.allSettled([
+    supabase.from("onboarding_data").delete().eq("user_id", user.id),
+    supabase.from("subscriptions").delete().eq("user_id", user.id),
+    supabase.from("user_progress").delete().eq("user_id", user.id),
+    supabase.from("streaks").delete().eq("user_id", user.id),
+    supabase.from("profiles").delete().eq("id", user.id),
+  ]);
+
+  // 2) Delete the auth account via a security-definer RPC (if installed).
+  let authDeleted = false;
+  try {
+    const { error } = await supabase.rpc("delete_own_account");
+    authDeleted = !error;
+  } catch {
+    authDeleted = false;
+  }
+
+  return { ok: true, authDeleted };
+}

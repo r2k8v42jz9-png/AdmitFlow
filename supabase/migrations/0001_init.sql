@@ -175,3 +175,19 @@ insert into public.onboarding_data (user_id) select id from auth.users on confli
 insert into public.subscriptions  (user_id) select id from auth.users on conflict (user_id) do nothing;
 insert into public.user_progress  (user_id) select id from auth.users on conflict (user_id) do nothing;
 insert into public.streaks        (user_id) select id from auth.users on conflict (user_id) do nothing;
+
+-- ════════════════════════════════════════════════════════════════════════
+-- Self-service account deletion
+-- A signed-in user can delete their own auth.users row (cascades to all
+-- per-user tables via the ON DELETE CASCADE foreign keys). security definer
+-- lets it run with elevated rights, but it ONLY ever deletes auth.uid().
+-- ════════════════════════════════════════════════════════════════════════
+create or replace function public.delete_own_account()
+returns void language plpgsql security definer set search_path = public as $$
+begin
+  delete from auth.users where id = auth.uid();
+end;
+$$;
+
+revoke all on function public.delete_own_account() from public;
+grant execute on function public.delete_own_account() to authenticated;

@@ -64,6 +64,15 @@ export async function signInWithEmail(email: string, password: string): Promise<
   return { ok: true };
 }
 
+/** Sends a Supabase password-reset email to the given address. */
+export async function sendPasswordReset(email: string): Promise<AuthResult> {
+  const supabase = createClient();
+  const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/login` : undefined;
+  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
 /**
  * Google OAuth — redirects to Google, returns via /auth/callback.
  * Lands on /dashboard so the proxy cascade routes to the correct step

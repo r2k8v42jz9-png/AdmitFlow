@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { signUpWithEmail, signInWithEmail, signInWithGoogle, fetchEnabledProviders } from "@/lib/supabase/auth";
+import { signUpWithEmail, signInWithEmail, signInWithGoogle, fetchEnabledProviders, sendPasswordReset } from "@/lib/supabase/auth";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +32,24 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [googleEnabled, setGoogleEnabled] = useState(false);
+
+  const onForgotPassword = async () => {
+    setError(null);
+    setNotice(null);
+    if (!isSupabaseConfigured()) {
+      setError(t("auth.resetUnavailable"));
+      return;
+    }
+    if (!email.trim()) {
+      setError(t("auth.resetNeedEmail"));
+      return;
+    }
+    const r = await sendPasswordReset(email.trim());
+    if (r.ok) setNotice(t("auth.resetSent"));
+    else setError(r.error ?? t("auth.resetUnavailable"));
+  };
 
   // Detect whether Google OAuth is enabled in Supabase so we can show a clear
   // message instead of a broken redirect. (Apple is intentionally removed.)
@@ -181,8 +198,16 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
               </span>
               {t("auth.rememberMe")}
             </label>
-            <Link href="#" className="text-primary hover:underline">{t("auth.forgot")}</Link>
+            <button type="button" onClick={onForgotPassword} className="text-primary hover:underline">
+              {t("auth.forgot")}
+            </button>
           </div>
+        )}
+
+        {notice && (
+          <p className="rounded-xl border border-success/30 bg-success/10 px-3.5 py-2.5 text-sm text-success">
+            {notice}
+          </p>
         )}
 
         {error && (
@@ -205,8 +230,8 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       {isSignup && (
         <p className="mt-4 text-center text-xs text-muted-foreground">
           By creating an account you agree to our{" "}
-          <Link href="#" className="text-foreground/80 hover:underline">Terms</Link> and{" "}
-          <Link href="#" className="text-foreground/80 hover:underline">Privacy Policy</Link>.
+          <Link href="/" className="text-foreground/80 hover:underline">Terms</Link> and{" "}
+          <Link href="/" className="text-foreground/80 hover:underline">Privacy Policy</Link>.
         </p>
       )}
 
