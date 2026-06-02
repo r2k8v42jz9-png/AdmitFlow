@@ -139,6 +139,19 @@ const en: Dict = {
   "dash.activity": "Recent activity",
   "dash.saved": "Saved {n} universities ·",
   "dash.exploreMore": "explore more",
+  "dash.myList": "My universities",
+  "dash.scoreSubEmpty": "Add your GPA, IELTS and SAT to calculate your score",
+  // empty states
+  "empty.profile.title": "Complete your profile",
+  "empty.profile.body": "Add your GPA, test scores and goals so we can estimate your chances.",
+  "empty.profile.cta": "Complete your profile",
+  "empty.universities.title": "Add target universities",
+  "empty.universities.body": "Choose the universities you're aiming for to track fit and deadlines.",
+  "empty.universities.cta": "Add target universities",
+  "empty.applications.title": "Create your first application plan",
+  "empty.applications.body": "Build a personalized, step-by-step plan from your profile and targets.",
+  "empty.applications.cta": "Create your first plan",
+  "empty.deadlines": "No deadlines yet — they'll appear once you build your roadmap.",
 
   // profile
   "profile.title": "Profile",
@@ -404,6 +417,19 @@ const ru: Dict = {
   "dash.activity": "Последние действия",
   "dash.saved": "Сохранено вузов: {n} ·",
   "dash.exploreMore": "смотреть ещё",
+  "dash.myList": "Мои университеты",
+  "dash.scoreSubEmpty": "Добавьте GPA, IELTS и SAT, чтобы рассчитать балл",
+  // empty states
+  "empty.profile.title": "Заполните профиль",
+  "empty.profile.body": "Добавьте GPA, результаты тестов и цели, чтобы мы оценили ваши шансы.",
+  "empty.profile.cta": "Заполнить профиль",
+  "empty.universities.title": "Добавьте целевые университеты",
+  "empty.universities.body": "Выберите вузы, к которым стремитесь, чтобы отслеживать соответствие и сроки.",
+  "empty.universities.cta": "Добавить университеты",
+  "empty.applications.title": "Создайте первый план поступления",
+  "empty.applications.body": "Постройте персональный пошаговый план на основе профиля и целей.",
+  "empty.applications.cta": "Создать первый план",
+  "empty.deadlines": "Пока нет сроков — они появятся после создания плана.",
 
   // profile
   "profile.title": "Профиль",

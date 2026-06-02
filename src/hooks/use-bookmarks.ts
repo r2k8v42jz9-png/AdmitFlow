@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { savedUniversityIds } from "@/lib/data/app";
 
 const KEY = "admitflow:bookmarks";
 
 export function useBookmarks() {
-  const [ids, setIds] = useState<string[]>(savedUniversityIds);
+  // Start EMPTY — new users have no saved universities until they save one.
+  const [ids, setIds] = useState<string[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {

@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { currentUser } from "@/lib/data/app";
+import { useUser, deriveProfile, nameFromEmail } from "@/lib/user-store";
 import { cn } from "@/lib/utils";
 
 const themeOptions = [
@@ -29,6 +29,9 @@ const notificationDefaults = [
 
 export function SettingsPanels() {
   const { theme, setTheme } = useTheme();
+  const user = useUser();
+  const { planLabel } = deriveProfile(user);
+  const displayName = user.name || nameFromEmail(user.email) || "";
   const [mounted, setMounted] = useState(false);
   const [notifications, setNotifications] = useState(notificationDefaults);
   const [saved, setSaved] = useState(false);
@@ -49,25 +52,22 @@ export function SettingsPanels() {
     <div className="space-y-6">
       {/* Account */}
       <SettingsSection title="Account" description="Update your personal information.">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div key={displayName + user.email} className="grid gap-4 sm:grid-cols-2">
           <Field label="Full name">
-            <Input defaultValue={currentUser.name} />
+            <Input defaultValue={displayName} />
           </Field>
           <Field label="Email address">
-            <Input type="email" defaultValue={currentUser.email} />
+            <Input type="email" defaultValue={user.email} />
           </Field>
           <Field label="Intended major">
-            <Input defaultValue={currentUser.intendedMajor} />
+            <Input defaultValue={user.onboarding?.intendedMajor ?? ""} />
           </Field>
           <Field label="Target intake">
-            <Input defaultValue={currentUser.targetIntake} />
+            <Input defaultValue={user.onboarding?.targetIntake ?? ""} />
           </Field>
         </div>
         <Field label="Bio" className="mt-4">
-          <Textarea
-            defaultValue="Aspiring computer scientist focused on AI and robotics. Targeting top STEM programs for Fall 2027."
-            rows={3}
-          />
+          <Textarea defaultValue="" placeholder="Tell us about your goals…" rows={3} />
         </Field>
         <div className="mt-4 flex items-center gap-3">
           <Button variant="gradient" onClick={save}>
@@ -133,7 +133,7 @@ export function SettingsPanels() {
             </span>
             <div>
               <p className="flex items-center gap-2 font-medium">
-                AdmitFlow {currentUser.plan} <Badge variant="gradient">Current</Badge>
+                AdmitFlow {planLabel} <Badge variant="gradient">Current</Badge>
               </p>
               <p className="text-sm text-muted-foreground">Renews monthly · Unlimited AI mentor & roadmaps</p>
             </div>

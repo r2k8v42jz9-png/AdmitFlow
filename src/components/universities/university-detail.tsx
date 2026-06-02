@@ -26,7 +26,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { admissionBand } from "@/components/universities/university-card";
 import { useBookmarks } from "@/hooks/use-bookmarks";
-import { currentUser } from "@/lib/data/app";
+import { useUser } from "@/lib/user-store";
 import { formatCurrency, formatCompact, formatDate, relativeDeadline, cn } from "@/lib/utils";
 import type { University } from "@/lib/types";
 
@@ -39,6 +39,7 @@ const toneClass: Record<string, string> = {
 
 export function UniversityDetail({ university: u }: { university: University }) {
   const { isSaved, toggle } = useBookmarks();
+  const { onboarding } = useUser();
   const saved = isSaved(u.id);
   const band = admissionBand(u.admissionProbability);
 
@@ -213,10 +214,10 @@ export function UniversityDetail({ university: u }: { university: University }) 
                 How your current academics stack up against {u.shortName}&apos;s typical admit.
               </p>
               <div className="mt-5 space-y-4">
-                <RequirementRow label="GPA" yours={currentUser.gpa} required={u.requirements.gpa} max={4} format={(v) => v.toFixed(2)} />
-                <RequirementRow label="IELTS" yours={currentUser.ielts} required={u.requirements.ielts} max={9} format={(v) => v.toFixed(1)} />
+                <RequirementRow label="GPA" yours={onboarding?.gpa ?? null} required={u.requirements.gpa} max={4} format={(v) => v.toFixed(2)} />
+                <RequirementRow label="IELTS" yours={onboarding?.ielts ?? null} required={u.requirements.ielts} max={9} format={(v) => v.toFixed(1)} />
                 {u.requirements.sat && (
-                  <RequirementRow label="SAT" yours={currentUser.sat} required={u.requirements.sat} max={1600} format={(v) => `${v}`} />
+                  <RequirementRow label="SAT" yours={onboarding?.sat ?? null} required={u.requirements.sat} max={1600} format={(v) => `${v}`} />
                 )}
               </div>
               <div className="mt-6 grid grid-cols-2 gap-3 border-t border-border/60 pt-5 sm:grid-cols-4">
@@ -384,13 +385,14 @@ function RequirementRow({
   format,
 }: {
   label: string;
-  yours: number;
+  yours: number | null;
   required: number;
   max: number;
   format: (v: number) => string;
 }) {
-  const meets = yours >= required;
-  const pct = Math.min((yours / max) * 100, 100);
+  const hasValue = yours != null;
+  const meets = hasValue && yours >= required;
+  const pct = hasValue ? Math.min((yours / max) * 100, 100) : 0;
   const reqPct = Math.min((required / max) * 100, 100);
 
   return (
@@ -398,13 +400,14 @@ function RequirementRow({
       <div className="mb-1.5 flex items-center justify-between text-sm">
         <span className="font-medium">{label}</span>
         <span className="flex items-center gap-1.5">
-          <span className="tabular-nums">{format(yours)}</span>
+          <span className="tabular-nums">{hasValue ? format(yours) : "—"}</span>
           <span className="text-muted-foreground">/ typ. {format(required)}</span>
-          {meets ? (
-            <Check className="size-4 text-success" />
-          ) : (
-            <X className="size-4 text-warning" />
-          )}
+          {hasValue &&
+            (meets ? (
+              <Check className="size-4 text-success" />
+            ) : (
+              <X className="size-4 text-warning" />
+            ))}
         </span>
       </div>
       <div className="relative h-2 w-full overflow-hidden rounded-full bg-muted">
