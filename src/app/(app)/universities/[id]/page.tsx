@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageContainer } from "@/components/app/page-header";
 import { UniversityDetail } from "@/components/universities/university-detail";
-import { getUniversity, universities } from "@/lib/data/universities";
+import { getUniversityByIdServer } from "@/lib/supabase/universities.server";
 
-export function generateStaticParams() {
-  return universities.map((u) => ({ id: u.id }));
-}
+// Rendered dynamically: data comes from Supabase (with a bundled-catalog
+// fallback inside getUniversityByIdServer).
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -14,7 +14,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const u = getUniversity(id);
+  const u = await getUniversityByIdServer(id);
   if (!u) return { title: "University not found" };
   return {
     title: u.name,
@@ -28,7 +28,7 @@ export default async function UniversityDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const university = getUniversity(id);
+  const university = await getUniversityByIdServer(id);
   if (!university) notFound();
 
   return (

@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search, SlidersHorizontal, Bookmark, X, ArrowUpDown, Telescope, Check } from "lucide-react";
+import { Search, SlidersHorizontal, Bookmark, X, Telescope, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,67 +12,123 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuCheckboxItem,
-  DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { UniversityCard } from "@/components/universities/university-card";
-import { useBookmarks } from "@/hooks/use-bookmarks";
-import { universities, countries, allTags } from "@/lib/data/universities";
+import { useSavedUniversities } from "@/lib/saved-universities";
+import { searchUniversities, getUniversityFacets } from "@/lib/supabase/universities";
+import type { University } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-type SortKey = "fit" | "rank" | "tuition-asc" | "acceptance";
-const sortLabels: Record<SortKey, string> = {
-  fit: "Best AI fit",
-  rank: "World ranking",
-  "tuition-asc": "Lowest tuition",
-  acceptance: "Acceptance rate",
-};
+const PAGE_SIZE = 24;
 
 export function UniversityExplorer() {
-  const { ids, toggle, isSaved, count } = useBookmarks();
+  const { ids: savedIds, toggle, isSaved, count } = useSavedUniversities();
+
+  // Filters (country/field are single-select to match the search_universities RPC).
   const [query, setQuery] = useState("");
-  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [sort, setSort] = useState<SortKey>("fit");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [country, setCountry] = useState<string | null>(null);
+  const [field, setField] = useState<string | null>(null);
+  const [needsScholarship, setNeedsScholarship] = useState(false);
   const [savedOnly, setSavedOnly] = useState(false);
 
-  const toggleIn = (arr: string[], set: (v: string[]) => void, value: string) =>
-    set(arr.includes(value) ? arr.filter((x) => x !== value) : [...arr, value]);
+  // Facets for the filter dropdown (loaded from the DB, local fallback inside).
+  const [facets, setFacets] = useState<{ countries: string[]; fields: string[] }>({
+    countries: [],
+    fields: [],
+  });
 
-  const results = useMemo(() => {
-    let list = universities.filter((u) => {
-      const q = query.toLowerCase();
-      const matchesQuery =
-        !q ||
-        u.name.toLowerCase().includes(q) ||
-        u.shortName.toLowerCase().includes(q) ||
-        u.country.toLowerCase().includes(q) ||
-        u.city.toLowerCase().includes(q) ||
-        u.tags.some((t) => t.toLowerCase().includes(q));
-      const matchesCountry = selectedCountries.length === 0 || selectedCountries.includes(u.country);
-      const matchesTags = selectedTags.length === 0 || selectedTags.every((t) => u.tags.includes(t));
-      const matchesSaved = !savedOnly || ids.includes(u.id);
-      return matchesQuery && matchesCountry && matchesTags && matchesSaved;
+  // Results + pagination state.
+  const [results, setResults] = useState<University[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+
+  // Refs read by the IntersectionObserver / async loaders to avoid stale state.
+  const offsetRef = useRef(0);
+  const hasMoreRef = useRef(false);
+  const loadingRef = useRef(false);
+  const reqIdRef = useRef(0);
+
+  useEffect(() => {
+    let active = true;
+    getUniversityFacets().then((f) => {
+      if (active) setFacets(f);
     });
+    return () => {
+      active = false;
+    };
+  }, []);
 
-    list = [...list].sort((a, b) => {
-      switch (sort) {
-        case "rank":
-          return a.rankWorld - b.rankWorld;
-        case "tuition-asc":
-          return a.tuitionPerYear - b.tuitionPerYear;
-        case "acceptance":
-          return b.acceptanceRate - a.acceptanceRate;
-        default:
-          return b.fitScore - a.fitScore;
-      }
-    });
-    return list;
-  }, [query, selectedCountries, selectedTags, sort, savedOnly, ids]);
+  // Debounce the search box (server-side FTS on every keystroke would be wasteful).
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedQuery(query.trim()), 300);
+    return () => clearTimeout(id);
+  }, [query]);
 
-  const activeFilters = selectedCountries.length + selectedTags.length;
+  /** Loads a page from the DB. reset=true starts a new query from offset 0. */
+  const load = useCallback(
+    async (reset: boolean) => {
+      if (!reset && (loadingRef.current || !hasMoreRef.current)) return;
+      const reqId = reset ? ++reqIdRef.current : reqIdRef.current;
+      const offset = reset ? 0 : offsetRef.current;
+      loadingRef.current = true;
+      if (reset) setLoading(true);
+      else setLoadingMore(true);
+
+      const batch = await searchUniversities({
+        q: debouncedQuery || undefined,
+        country: country || undefined,
+        field: field || undefined,
+        needsScholarship: needsScholarship || undefined,
+        limit: PAGE_SIZE,
+        offset,
+      });
+
+      // Ignore responses from superseded queries (filters changed mid-flight).
+      if (reqId !== reqIdRef.current) return;
+
+      offsetRef.current = offset + batch.length;
+      const more = batch.length === PAGE_SIZE;
+      hasMoreRef.current = more;
+      setHasMore(more);
+      setResults((prev) => (reset ? batch : [...prev, ...batch]));
+      setLoading(false);
+      setLoadingMore(false);
+      loadingRef.current = false;
+    },
+    [debouncedQuery, country, field, needsScholarship],
+  );
+
+  // Re-run from page 0 whenever a server-side filter changes.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load(true);
+  }, [load]);
+
+  // Infinite scroll: observe a sentinel near the bottom of the grid.
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) load(false);
+      },
+      { rootMargin: "600px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [load]);
+
+  // "Saved" is a per-user, client-side refinement over the loaded results.
+  const visible = savedOnly ? results.filter((u) => savedIds.includes(u.id)) : results;
+
+  const activeFilters = (country ? 1 : 0) + (field ? 1 : 0) + (needsScholarship ? 1 : 0);
   const clearAll = () => {
-    setSelectedCountries([]);
-    setSelectedTags([]);
+    setCountry(null);
+    setField(null);
+    setNeedsScholarship(false);
     setQuery("");
     setSavedOnly(false);
   };
@@ -100,7 +156,7 @@ export function UniversityExplorer() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* Country filter */}
+          {/* Filters */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="h-11">
@@ -114,11 +170,11 @@ export function UniversityExplorer() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="max-h-96 w-64 overflow-y-auto">
               <DropdownMenuLabel>Country</DropdownMenuLabel>
-              {countries.map((c) => (
+              {facets.countries.map((c) => (
                 <DropdownMenuCheckboxItem
                   key={c}
-                  checked={selectedCountries.includes(c)}
-                  onCheckedChange={() => toggleIn(selectedCountries, setSelectedCountries, c)}
+                  checked={country === c}
+                  onCheckedChange={() => setCountry((cur) => (cur === c ? null : c))}
                   onSelect={(e) => e.preventDefault()}
                 >
                   {c}
@@ -126,33 +182,24 @@ export function UniversityExplorer() {
               ))}
               <DropdownMenuSeparator />
               <DropdownMenuLabel>Focus area</DropdownMenuLabel>
-              {allTags.map((t) => (
+              {facets.fields.map((f) => (
                 <DropdownMenuCheckboxItem
-                  key={t}
-                  checked={selectedTags.includes(t)}
-                  onCheckedChange={() => toggleIn(selectedTags, setSelectedTags, t)}
+                  key={f}
+                  checked={field === f}
+                  onCheckedChange={() => setField((cur) => (cur === f ? null : f))}
                   onSelect={(e) => e.preventDefault()}
                 >
-                  {t}
+                  {f}
                 </DropdownMenuCheckboxItem>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Sort */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-11">
-                <ArrowUpDown className="size-4" /> {sortLabels[sort]}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              {(Object.keys(sortLabels) as SortKey[]).map((k) => (
-                <DropdownMenuItem key={k} onClick={() => setSort(k)} className="justify-between">
-                  {sortLabels[k]}
-                  {sort === k && <Check className="size-4 text-primary" />}
-                </DropdownMenuItem>
-              ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuCheckboxItem
+                checked={needsScholarship}
+                onCheckedChange={() => setNeedsScholarship((v) => !v)}
+                onSelect={(e) => e.preventDefault()}
+              >
+                Offers scholarships
+              </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -173,19 +220,10 @@ export function UniversityExplorer() {
       {/* Active filter chips */}
       {(activeFilters > 0 || savedOnly) && (
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          {[...selectedCountries, ...selectedTags].map((f) => (
-            <span key={f} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/50 px-2.5 py-1 text-xs">
-              {f}
-              <button
-                onClick={() => {
-                  setSelectedCountries((c) => c.filter((x) => x !== f));
-                  setSelectedTags((t) => t.filter((x) => x !== f));
-                }}
-              >
-                <X className="size-3 text-muted-foreground hover:text-foreground" />
-              </button>
-            </span>
-          ))}
+          {country && <FilterChip label={country} onClear={() => setCountry(null)} />}
+          {field && <FilterChip label={field} onClear={() => setField(null)} />}
+          {needsScholarship && <FilterChip label="Offers scholarships" onClear={() => setNeedsScholarship(false)} />}
+          {savedOnly && <FilterChip label="Saved only" onClear={() => setSavedOnly(false)} />}
           <button onClick={clearAll} className="text-xs font-medium text-primary hover:underline">
             Clear all
           </button>
@@ -194,18 +232,41 @@ export function UniversityExplorer() {
 
       {/* Result count */}
       <p className="mt-5 text-sm text-muted-foreground">
-        <span className="font-medium text-foreground">{results.length}</span> universities found
+        <span className="font-medium text-foreground">{visible.length}</span>{" "}
+        {savedOnly ? "saved" : `universities loaded${hasMore ? "+" : ""}`}
+        <span className="ml-2 text-xs">· ranked by world ranking</span>
       </p>
 
       {/* Grid */}
-      {results.length > 0 ? (
-        <motion.div layout className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {results.map((u, i) => (
-              <UniversityCard key={u.id} university={u} saved={isSaved(u.id)} onToggleSave={toggle} index={i} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+      {loading ? (
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-56 animate-pulse rounded-2xl border border-border/50 bg-card/40" />
+          ))}
+        </div>
+      ) : visible.length > 0 ? (
+        <>
+          <motion.div layout className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <AnimatePresence mode="popLayout">
+              {visible.map((u, i) => (
+                <UniversityCard key={u.id} university={u} saved={isSaved(u.id)} onToggleSave={toggle} index={i} />
+              ))}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Infinite-scroll sentinel + loader (hidden in saved-only view) */}
+          {!savedOnly && (
+            <div ref={sentinelRef} className="mt-6 flex justify-center py-4">
+              {loadingMore ? (
+                <span className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="size-4 animate-spin" /> Loading more…
+                </span>
+              ) : !hasMore ? (
+                <span className="text-xs text-muted-foreground">You&apos;ve reached the end.</span>
+              ) : null}
+            </div>
+          )}
+        </>
       ) : (
         <div className="mt-10 grid place-items-center rounded-2xl border border-dashed border-border bg-card/30 py-16 text-center">
           <span className="grid size-14 place-items-center rounded-2xl bg-muted text-muted-foreground">
@@ -213,7 +274,9 @@ export function UniversityExplorer() {
           </span>
           <h3 className="mt-4 font-display text-lg font-semibold">No universities match</h3>
           <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-            Try adjusting your filters or search terms to discover more options.
+            {savedOnly
+              ? "You haven't saved any universities in this view yet."
+              : "Try adjusting your filters or search terms to discover more options."}
           </p>
           <Button variant="outline" className="mt-5" onClick={clearAll}>
             Clear filters
@@ -221,5 +284,16 @@ export function UniversityExplorer() {
         </div>
       )}
     </div>
+  );
+}
+
+function FilterChip({ label, onClear }: { label: string; onClear: () => void }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/50 px-2.5 py-1 text-xs">
+      {label}
+      <button onClick={onClear}>
+        <X className="size-3 text-muted-foreground hover:text-foreground" />
+      </button>
+    </span>
   );
 }

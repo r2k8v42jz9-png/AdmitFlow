@@ -1,6 +1,5 @@
 import type { OnboardingData } from "@/lib/user-store";
 import type { RoadmapMilestone, RoadmapTask, University } from "@/lib/types";
-import { getUniversity } from "@/lib/data/universities";
 
 /** Frozen "today" — keeps generated windows deterministic across SSR/CSR. */
 const FROZEN_TODAY = new Date("2026-05-29T00:00:00");
@@ -59,13 +58,13 @@ function visaFor(country?: string): string {
  * schools the user has saved — so every profile yields a different plan, and
  * the plan updates whenever a university is added or removed.
  *
- * `savedUniversityIds` come from the `user_universities`-backed store (NOT from
- * onboarding.dreamUniversities). Their details are resolved against the local
- * catalog as a temporary fallback until the DB catalog is the live source.
+ * `selected` are the user's saved universities (from the `user_universities`-
+ * backed store), already resolved to full `University` objects loaded from
+ * Supabase — NOT from onboarding.dreamUniversities or the static catalog.
  */
 export function generateRoadmap(
   onboarding: OnboardingData | null,
-  savedUniversityIds: string[] = [],
+  selected: University[] = [],
 ): RoadmapMilestone[] {
   const o = onboarding ?? DEFAULT_ONBOARDING;
   const intake = parseIntake(o.targetIntake);
@@ -79,12 +78,8 @@ export function generateRoadmap(
   const countries = o.countries ?? [];
   const country = countries[0];
 
-  // Resolve the user's SAVED universities so the roadmap reflects their real
-  // targets — their deadlines and requirements shape the plan (not a template).
-  // Source = the user_universities-backed store, resolved via the local catalog.
-  const selected = savedUniversityIds
-    .map((id) => getUniversity(id))
-    .filter((u): u is University => !!u);
+  // The user's SAVED universities shape the plan (their deadlines and
+  // requirements drive the milestones) — not a generic template.
   const targetCount = Math.max(selected.length, 6);
 
   // Toughest test bar across selected schools → drives the test-prep milestone.

@@ -23,7 +23,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { ScoreRing } from "@/components/shared/score-ring";
-import { universities, countries } from "@/lib/data/universities";
+import { searchUniversities, getUniversityFacets } from "@/lib/supabase/universities";
+import type { University } from "@/lib/types";
 import { useUser, saveOnboarding, type OnboardingData } from "@/lib/user-store";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { useT, type TFunction } from "@/lib/i18n";
@@ -114,6 +115,10 @@ export function OnboardingFlow() {
   const [phase, setPhase] = useState<"form" | "generating" | "result">("form");
   const [navigating, setNavigating] = useState(false);
   const persistPromiseRef = useRef<Promise<void> | null>(null);
+  // University catalog + country facets for the picker steps, sourced from
+  // Supabase (the data layer falls back to the bundled catalog internally).
+  const [uniList, setUniList] = useState<University[]>([]);
+  const [countryList, setCountryList] = useState<string[]>([]);
   const [data, setData] = useState<Data>({
     degree: "Bachelor's",
     major: "",
@@ -161,6 +166,20 @@ export function OnboardingFlow() {
     });
   }, [hydrated, onboarding]);
 
+  // Load the catalog + facets once for the picker steps.
+  useEffect(() => {
+    let active = true;
+    searchUniversities({ limit: 100 }).then((u) => {
+      if (active) setUniList(u);
+    });
+    getUniversityFacets().then((f) => {
+      if (active) setCountryList(f.countries);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const total = steps.length;
   const progress = phase === "result" ? 100 : ((step + (phase === "generating" ? 1 : 0)) / total) * 100;
 
@@ -207,7 +226,7 @@ export function OnboardingFlow() {
   const skip = goToPricing;
   const finish = goToPricing;
 
-  const recommendations = [...universities]
+  const recommendations = [...uniList]
     .filter((u) => data.countries.length === 0 || data.countries.includes(u.country))
     .sort((a, b) => b.fitScore - a.fitScore)
     .slice(0, 4);
@@ -277,7 +296,7 @@ export function OnboardingFlow() {
                 </div>
               </div>
 
-              <StepBody data={data} update={update} toggle={toggle} stepId={Current.id} t={t} />
+              <StepBody data={data} update={update} toggle={toggle} stepId={Current.id} t={t} uniList={uniList} countryList={countryList} />
             </motion.div>
           )}
 
@@ -321,12 +340,16 @@ function StepBody({
   update,
   toggle,
   t,
+  uniList,
+  countryList,
 }: {
   stepId: string;
   data: Data;
   update: (p: Partial<Data>) => void;
   toggle: (k: "countries" | "strengths" | "dreams", v: string) => void;
   t: TFunction;
+  uniList: University[];
+  countryList: string[];
 }) {
   switch (stepId) {
     case "goal":
@@ -405,7 +428,7 @@ function StepBody({
     case "countries":
       return (
         <div className="flex flex-wrap gap-2.5">
-          {countries.map((c) => (
+          {countryList.map((c) => (
             <Chip key={c} active={data.countries.includes(c)} onClick={() => toggle("countries", c)}>
               {data.countries.includes(c) && <Check className="size-3.5" />} {c}
             </Chip>
@@ -449,7 +472,7 @@ function StepBody({
     case "dreams":
       return (
         <div className="grid max-h-[22rem] gap-2.5 overflow-y-auto pr-1 sm:grid-cols-2">
-          {universities.map((u) => {
+          {uniList.map((u) => {
             const active = data.dreams.includes(u.id);
             return (
               <button
@@ -564,7 +587,7 @@ function Result({
   t,
 }: {
   data: Data;
-  recommendations: typeof universities;
+  recommendations: University[];
   onContinue: () => void;
   navigating: boolean;
   t: TFunction;

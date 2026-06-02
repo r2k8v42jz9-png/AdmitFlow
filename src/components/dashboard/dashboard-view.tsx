@@ -17,9 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { EmptyState } from "@/components/shared/empty-state";
-import { universities } from "@/lib/data/universities";
 import { useUser, deriveProfile } from "@/lib/user-store";
-import { useSavedUniversities } from "@/lib/saved-universities";
+import { useSavedUniversityDetails } from "@/lib/saved-universities";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -32,14 +31,10 @@ export function DashboardView() {
   // Everything below is derived ONLY from the user's real Supabase-backed data.
   const hasAcademics = o?.gpa != null || o?.ielts != null || o?.sat != null;
 
-  // The universities the user has SAVED (user_universities-backed store). This
-  // is the same source the roadmap reads, so the dashboard target count and the
-  // roadmap always agree and update together. Details resolve via the local
-  // catalog as a temporary fallback until the DB catalog is the live source.
-  const { ids: savedIds } = useSavedUniversities();
-  const myUniversities = savedIds
-    .map((id) => universities.find((u) => u.id === id))
-    .filter((u): u is (typeof universities)[number] => !!u);
+  // The universities the user has SAVED (user_universities-backed), with details
+  // loaded from Supabase. Same source the roadmap reads, so the dashboard target
+  // count and the roadmap always agree and update together.
+  const { universities: myUniversities } = useSavedUniversityDetails();
 
   const avgFit = myUniversities.length
     ? Math.round(myUniversities.reduce((a, u) => a + u.fitScore, 0) / myUniversities.length)

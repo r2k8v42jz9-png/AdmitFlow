@@ -1,15 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSyncExternalStore } from "react";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import {
   getSavedUniversities,
+  getUniversitiesByIds,
   saveUniversity,
   unsaveUniversity,
   setUniversityCategory,
   type UniCategory,
 } from "@/lib/supabase/universities";
+import type { University } from "@/lib/types";
 
 export type { UniCategory };
 
@@ -230,4 +232,40 @@ export function useSavedUniversities(): UseSavedUniversities {
     remove: removeSavedUniversity,
     setCategory: setSavedCategory,
   };
+}
+
+/**
+ * Resolves the user's saved universities to full `University` objects, loaded
+ * from Supabase (batched) and kept in sync with the saved store. Used by the
+ * dashboard and roadmap so both read DB-backed details, not the static catalog.
+ */
+export function useSavedUniversityDetails(): { universities: University[]; loading: boolean } {
+  const { ids } = useSavedUniversities();
+  const key = ids.join(",");
+  const [universities, setUniversities] = useState<University[]>([]);
+  const [loading, setLoading] = useState(ids.length > 0);
+
+  useEffect(() => {
+    let active = true;
+    if (ids.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setUniversities([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    getUniversitiesByIds(ids).then((list) => {
+      if (active) {
+        setUniversities(list);
+        setLoading(false);
+      }
+    });
+    return () => {
+      active = false;
+    };
+    // `key` is the stable string form of `ids` (avoids array-identity refetches).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+
+  return { universities, loading };
 }

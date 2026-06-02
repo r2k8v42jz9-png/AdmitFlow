@@ -2,7 +2,8 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { universities as catalogFallback } from "@/lib/data/universities";
+import { universities as catalogFallback, getUniversity } from "@/lib/data/universities";
+import { rowToUniversity } from "@/lib/supabase/university-map";
 import type { University } from "@/lib/types";
 
 /* -------------------------------------------------------------------------- */
@@ -21,46 +22,8 @@ export interface UniversityFilters {
   offset?: number;
 }
 
-/** Maps a DB universities row to the app's `University` shape. */
-function rowToUniversity(r: Record<string, unknown>): University {
-  const reqs = (r.requirements ?? {}) as Record<string, number>;
-  return {
-    id: String(r.id),
-    name: String(r.name),
-    shortName: (r.short_name as string) ?? String(r.name),
-    country: String(r.country),
-    city: (r.city as string) ?? "",
-    flag: "🏳️",
-    logoColor: "#1d4ed8",
-    rankWorld: (r.qs_rank as number) ?? 9999,
-    rankNational: (r.national_rank as number) ?? 0,
-    acceptanceRate: (r.acceptance_rate as number) ?? 0,
-    tuitionPerYear: (r.tuition_min as number) ?? 0,
-    currency: (r.currency as string) ?? "USD",
-    livingCost: (r.living_cost as number) ?? 0,
-    studentCount: (r.student_count as number) ?? 0,
-    intlPercent: (r.intl_percent as number) ?? 0,
-    fitScore: 0,
-    admissionProbability: 0,
-    tags: (r.fields as string[]) ?? [],
-    requirements: {
-      gpa: reqs.gpa ?? 0,
-      ielts: reqs.ielts ?? 0,
-      sat: reqs.sat,
-      gre: reqs.gre,
-      essays: reqs.essays ?? 0,
-      recommendations: reqs.recommendations ?? 0,
-    },
-    deadlines: [],
-    programs: [],
-    scholarships: (r.scholarships as University["scholarships"]) ?? [],
-    highlights: [],
-    aiInsight: "",
-    blurb: (r.description as string) ?? "",
-    accent: "from-blue-500/25 to-indigo-500/10",
-    website: (r.website as string) ?? undefined,
-  };
-}
+/** Columns + embedded relations to hydrate a full University (detail view). */
+const FULL_SELECT = "*, university_programs(*), university_deadlines(*)";
 
 /** Client-side equivalent of the search_universities RPC, for the fallback. */
 function searchFallback(f: UniversityFilters): University[] {
@@ -82,9 +45,11 @@ function searchFallback(f: UniversityFilters): University[] {
 }
 
 /**
- * Searches the catalog. Uses the Supabase `search_universities` RPC when the
- * catalog table is populated; otherwise falls back to the bundled in-app
- * catalog so the explorer works before the migration/import is run.
+ * Searches the catalog via the Supabase `search_universities` RPC (server-side
+ * filters, ranking and pagination). Falls back to the bundled in-app catalog
+ * ONLY when Supabase is unconfigured or the RPC errors — an empty result set
+ * (e.g. the last page of pagination, or filters matching nothing) is returned
+ * as-is so infinite scroll terminates correctly instead of re-showing locals.
  */
 export async function searchUniversities(f: UniversityFilters = {}): Promise<University[]> {
   if (!isSupabaseConfigured()) return searchFallback(f);
@@ -101,11 +66,96 @@ export async function searchUniversities(f: UniversityFilters = {}): Promise<Uni
       p_limit: f.limit ?? 24,
       p_offset: f.offset ?? 0,
     });
-    // RPC missing / table empty → fall back to the bundled catalog.
-    if (error || !Array.isArray(data) || data.length === 0) return searchFallback(f);
-    return data.map(rowToUniversity);
+    // RPC missing / errored → fall back to the bundled catalog. Empty array is a
+    // valid result (end of pagination), so do NOT fall back on length === 0.
+    if (error || !Array.isArray(data)) return searchFallback(f);
+    return (data as Record<string, unknown>[]).map(rowToUniversity);
   } catch {
     return searchFallback(f);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Single university (detail) + filter facets                                */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Loads one university with its programs + deadlines from Supabase. Falls back
+ * to the bundled catalog if Supabase is unconfigured, the row is missing, or
+ * the query errors.
+ */
+export async function getUniversityById(id: string): Promise<University | null> {
+  if (!isSupabaseConfigured()) return getUniversity(id) ?? null;
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("universities")
+      .select(FULL_SELECT)
+      .eq("id", id)
+      .maybeSingle();
+    if (error || !data) return getUniversity(id) ?? null;
+    return rowToUniversity(data as Record<string, unknown>);
+  } catch {
+    return getUniversity(id) ?? null;
+  }
+}
+
+/**
+ * Batch-loads universities by id (one query), preserving the input order.
+ * Falls back to the bundled catalog per-id on any failure.
+ */
+export async function getUniversitiesByIds(ids: string[]): Promise<University[]> {
+  if (ids.length === 0) return [];
+  const local = () => ids.map((id) => getUniversity(id)).filter((u): u is University => !!u);
+  if (!isSupabaseConfigured()) return local();
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.from("universities").select(FULL_SELECT).in("id", ids);
+    if (error || !Array.isArray(data)) return local();
+    const byId = new Map(
+      (data as Record<string, unknown>[]).map((r) => {
+        const u = rowToUniversity(r);
+        return [u.id, u] as const;
+      }),
+    );
+    return ids.map((id) => byId.get(id)).filter((u): u is University => !!u);
+  } catch {
+    return local();
+  }
+}
+
+export interface UniversityFacets {
+  countries: string[];
+  fields: string[];
+}
+
+/**
+ * Distinct countries + fields for the explorer's filter controls, derived from
+ * the live catalog. Falls back to the bundled catalog's facets on any failure.
+ * (At very large scale, replace the column scan with a dedicated facets RPC.)
+ */
+export async function getUniversityFacets(): Promise<UniversityFacets> {
+  const fallback: UniversityFacets = {
+    countries: [...new Set(catalogFallback.map((u) => u.country))].sort(),
+    fields: [...new Set(catalogFallback.flatMap((u) => u.tags))].sort(),
+  };
+  if (!isSupabaseConfigured()) return fallback;
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase.from("universities").select("country, fields");
+    if (error || !Array.isArray(data) || data.length === 0) return fallback;
+    const countries = new Set<string>();
+    const fields = new Set<string>();
+    for (const row of data as { country: string | null; fields: string[] | null }[]) {
+      if (row.country) countries.add(row.country);
+      for (const f of row.fields ?? []) if (f) fields.add(f);
+    }
+    return {
+      countries: [...countries].sort(),
+      fields: [...fields].sort(),
+    };
+  } catch {
+    return fallback;
   }
 }
 

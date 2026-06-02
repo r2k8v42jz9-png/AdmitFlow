@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -25,7 +26,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { ProfileRadarChart } from "@/components/dashboard/charts";
-import { universities } from "@/lib/data/universities";
+import { getUniversitiesByIds } from "@/lib/supabase/universities";
+import type { University } from "@/lib/types";
 import { useUser, deriveProfile, deriveRadar, nameFromEmail } from "@/lib/user-store";
 import { useT } from "@/lib/i18n";
 import { formatCurrency, initials } from "@/lib/utils";
@@ -51,9 +53,25 @@ export function ProfileView() {
 
   const radar = deriveRadar(user).map((d) => ({ axis: t(d.axis), value: d.value }));
 
-  const dreamNames = (o?.dreamUniversities ?? [])
-    .map((id) => universities.find((u) => u.id === id))
-    .filter((u): u is (typeof universities)[number] => !!u);
+  // Dream universities resolved from Supabase (batched), with local fallback.
+  const dreamIds = o?.dreamUniversities ?? [];
+  const dreamKey = dreamIds.join(",");
+  const [dreamNames, setDreamNames] = useState<University[]>([]);
+  useEffect(() => {
+    let active = true;
+    if (dreamIds.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setDreamNames([]);
+      return;
+    }
+    getUniversitiesByIds(dreamIds).then((list) => {
+      if (active) setDreamNames(list);
+    });
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dreamKey]);
 
   const checklist = [
     { label: t("pf.check.academics"), status: o?.gpa != null ? "done" : "pending" },

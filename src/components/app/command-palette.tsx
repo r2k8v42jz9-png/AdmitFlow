@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Command } from "cmdk";
 import {
@@ -15,7 +16,8 @@ import {
 import { useTheme } from "next-themes";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { allNav } from "@/components/app/nav-config";
-import { universities } from "@/lib/data/universities";
+import { searchUniversities } from "@/lib/supabase/universities";
+import type { University } from "@/lib/types";
 
 const quickActions = [
   { id: "ask", label: "Ask the AI Mentor", icon: Sparkles, href: "/mentor" },
@@ -26,6 +28,22 @@ const quickActions = [
 export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
+  const [search, setSearch] = useState("");
+  const [unis, setUnis] = useState<University[]>([]);
+
+  // University suggestions come from Supabase (search_universities RPC), debounced.
+  useEffect(() => {
+    if (!open) return;
+    let active = true;
+    const id = setTimeout(async () => {
+      const res = await searchUniversities({ q: search.trim() || undefined, limit: 6 });
+      if (active) setUnis(res);
+    }, 200);
+    return () => {
+      active = false;
+      clearTimeout(id);
+    };
+  }, [search, open]);
 
   const go = (href: string) => {
     onOpenChange(false);
@@ -40,6 +58,8 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
           <div className="flex items-center gap-2.5 border-b border-border px-4">
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <Command.Input
+              value={search}
+              onValueChange={setSearch}
               placeholder="Search universities, pages, actions…"
               className="h-12 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/70"
             />
@@ -71,15 +91,23 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
               ))}
             </Command.Group>
 
-            <Command.Group heading="Universities">
-              {universities.slice(0, 8).map((u) => (
-                <Item key={u.id} value={`${u.name} ${u.shortName} ${u.country}`} onSelect={() => go(`/universities/${u.id}`)}>
-                  <span className="text-base">{u.flag}</span>
-                  <span className="flex-1">{u.shortName}</span>
-                  <span className="text-xs text-muted-foreground">{u.country}</span>
-                </Item>
-              ))}
-            </Command.Group>
+            {unis.length > 0 && (
+              <Command.Group heading="Universities">
+                {unis.map((u) => (
+                  // value includes the live search text so server-matched rows are
+                  // never hidden by cmdk's own client-side filtering.
+                  <Item
+                    key={u.id}
+                    value={`${u.name} ${u.shortName} ${u.country} ${search}`}
+                    onSelect={() => go(`/universities/${u.id}`)}
+                  >
+                    <span className="text-base">{u.flag}</span>
+                    <span className="flex-1">{u.shortName}</span>
+                    <span className="text-xs text-muted-foreground">{u.country}</span>
+                  </Item>
+                ))}
+              </Command.Group>
+            )}
 
             <Command.Group heading="Preferences">
               <Item onSelect={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
