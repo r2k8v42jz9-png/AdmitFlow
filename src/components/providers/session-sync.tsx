@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { markRemoteResolved } from "@/lib/user-store";
+import { hydrateSavedUniversities, resetSavedUniversities } from "@/lib/saved-universities";
 
 /**
  * Keeps the client store in sync with the Supabase session on every route.
@@ -14,8 +15,10 @@ export function SessionSync() {
   useEffect(() => {
     if (!isSupabaseConfigured()) {
       // Auth unavailable — resolve the session as "no user" so gates fall through
-      // to /login instead of hanging on a loader.
+      // to /login instead of hanging on a loader. Saved universities still load
+      // from the localStorage fallback so the explorer/roadmap stay usable.
       markRemoteResolved();
+      void hydrateSavedUniversities();
       return;
     }
     let active = true;
@@ -53,16 +56,21 @@ export function SessionSync() {
         } else {
           markRemoteResolved();
         }
+        // Load the user's saved universities from user_universities (falls back
+        // to localStorage if signed out or the table isn't migrated yet).
+        void hydrateSavedUniversities();
 
         const { data } = supabase.auth.onAuthStateChange(async (event) => {
           if (event === "SIGNED_OUT") {
             store.signOut();
+            resetSavedUniversities();
           } else if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED" || event === "USER_UPDATED") {
             try {
               await hydrateLocalFromProfile();
             } catch {
               markRemoteResolved();
             }
+            void hydrateSavedUniversities();
           }
         });
         unsubscribe = () => data.subscription.unsubscribe();

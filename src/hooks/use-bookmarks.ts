@@ -1,43 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useSavedUniversities } from "@/lib/saved-universities";
 
-const KEY = "admitflow:bookmarks";
-
+/**
+ * Backwards-compatible bookmarks hook. Now a thin wrapper over the shared,
+ * reactive saved-universities store (backed by `user_universities` when
+ * Supabase is configured, with a localStorage fallback). Keeping this surface
+ * means the explorer and university detail keep working unchanged while gaining
+ * cross-component reactivity and server-side persistence.
+ */
 export function useBookmarks() {
-  // Start EMPTY — new users have no saved universities until they save one.
-  const [ids, setIds] = useState<string[]>([]);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(KEY);
-      // Sync persisted bookmarks from localStorage on mount (client-only hydration).
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      if (stored) setIds(JSON.parse(stored));
-    } catch {
-      /* ignore */
-    }
-    setHydrated(true);
-  }, []);
-
-  const persist = useCallback((next: string[]) => {
-    setIds(next);
-    try {
-      localStorage.setItem(KEY, JSON.stringify(next));
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  const toggle = useCallback(
-    (id: string) => {
-      persist(ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]);
-    },
-    [ids, persist],
-  );
-
-  const isSaved = useCallback((id: string) => ids.includes(id), [ids]);
-
-  return { ids, toggle, isSaved, hydrated, count: ids.length };
+  const { ids, toggle, isSaved, hydrated, count } = useSavedUniversities();
+  return { ids, toggle, isSaved, hydrated, count };
 }

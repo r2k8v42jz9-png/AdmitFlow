@@ -53,12 +53,20 @@ function visaFor(country?: string): string {
 }
 
 /**
- * Generates a personalized roadmap from a user's onboarding profile.
- * Tasks, milestones and deadlines vary by GPA, IELTS/SAT, degree level,
- * intended intake and target countries — so every profile yields a
- * different plan.
+ * Generates a personalized roadmap from a user's onboarding profile and their
+ * SAVED target universities. Tasks, milestones and deadlines vary by GPA,
+ * IELTS/SAT, degree level, intended intake, target countries and the specific
+ * schools the user has saved — so every profile yields a different plan, and
+ * the plan updates whenever a university is added or removed.
+ *
+ * `savedUniversityIds` come from the `user_universities`-backed store (NOT from
+ * onboarding.dreamUniversities). Their details are resolved against the local
+ * catalog as a temporary fallback until the DB catalog is the live source.
  */
-export function generateRoadmap(onboarding: OnboardingData | null): RoadmapMilestone[] {
+export function generateRoadmap(
+  onboarding: OnboardingData | null,
+  savedUniversityIds: string[] = [],
+): RoadmapMilestone[] {
   const o = onboarding ?? DEFAULT_ONBOARDING;
   const intake = parseIntake(o.targetIntake);
 
@@ -71,9 +79,10 @@ export function generateRoadmap(onboarding: OnboardingData | null): RoadmapMiles
   const countries = o.countries ?? [];
   const country = countries[0];
 
-  // Resolve the user's SELECTED universities so the roadmap reflects their real
+  // Resolve the user's SAVED universities so the roadmap reflects their real
   // targets — their deadlines and requirements shape the plan (not a template).
-  const selected = (o.dreamUniversities ?? [])
+  // Source = the user_universities-backed store, resolved via the local catalog.
+  const selected = savedUniversityIds
     .map((id) => getUniversity(id))
     .filter((u): u is University => !!u);
   const targetCount = Math.max(selected.length, 6);

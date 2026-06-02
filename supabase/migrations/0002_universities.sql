@@ -36,14 +36,11 @@ create table if not exists public.universities (
   scholarships    jsonb  not null default '[]'::jsonb,
   intl_support    text,                              -- international student support notes
   requirements    jsonb  not null default '{}'::jsonb, -- { gpa, ielts, sat, gre, essays, recommendations }
-  -- Generated full-text search vector over the most-searched columns.
-  search_tsv      tsvector generated always as (
-    setweight(to_tsvector('simple', coalesce(name, '')), 'A') ||
-    setweight(to_tsvector('simple', coalesce(short_name, '')), 'A') ||
-    setweight(to_tsvector('simple', coalesce(country, '')), 'B') ||
-    setweight(to_tsvector('simple', coalesce(city, '')), 'B') ||
-    setweight(to_tsvector('simple', array_to_string(fields, ' ')), 'C')
-  ) stored,
+  -- Full-text search vector over the most-searched columns. Maintained by the
+  -- universities_search_tsv trigger below (a GENERATED column can't be used:
+  -- to_tsvector('simple', …) is only STABLE, not IMMUTABLE, so Postgres rejects
+  -- it in a generation expression — "generation expression is not immutable").
+  search_tsv      tsvector,
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
 );
@@ -96,6 +93,38 @@ create index if not exists idx_prog_field         on public.university_programs 
 create index if not exists idx_deadline_university on public.university_deadlines (university_id);
 create index if not exists idx_userunis_user      on public.user_universities (user_id);
 create index if not exists idx_userunis_category   on public.user_universities (user_id, category);
+
+-- Defensive: ensure the column exists even if an older/partial run created the
+-- table without it (keeps this migration safe to re-run across versions).
+alter table public.universities add column if not exists search_tsv tsvector;
+
+-- ── Full-text search vector — maintained by trigger (NOT a generated column) ─
+-- to_tsvector('simple', …) is STABLE (the text→regconfig cast does a catalog
+-- lookup), so it can't live in a GENERATED column. A trigger has no such
+-- restriction and produces an identical, index-backed search_tsv.
+create or replace function public.universities_search_tsv_update()
+returns trigger
+language plpgsql as $$
+begin
+  new.search_tsv :=
+    setweight(to_tsvector('simple', coalesce(new.name, '')), 'A') ||
+    setweight(to_tsvector('simple', coalesce(new.short_name, '')), 'A') ||
+    setweight(to_tsvector('simple', coalesce(new.country, '')), 'B') ||
+    setweight(to_tsvector('simple', coalesce(new.city, '')), 'B') ||
+    setweight(to_tsvector('simple', array_to_string(new.fields, ' ')), 'C');
+  return new;
+end;
+$$;
+
+drop trigger if exists universities_search_tsv on public.universities;
+create trigger universities_search_tsv
+  before insert or update of name, short_name, country, city, fields
+  on public.universities
+  for each row execute function public.universities_search_tsv_update();
+
+-- Backfill any rows already present (no-op on a fresh database). Touching a
+-- watched column (name = name) fires the trigger above to compute search_tsv.
+update public.universities set name = name where search_tsv is null;
 
 -- updated_at trigger (reuses set_updated_at from 0001)
 drop trigger if exists universities_set_updated_at on public.universities;

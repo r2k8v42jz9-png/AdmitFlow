@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { DynamicIcon } from "@/components/shared/icon";
 import { useUser } from "@/lib/user-store";
+import { useSavedUniversities } from "@/lib/saved-universities";
 import { generateRoadmap } from "@/lib/roadmap-engine";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -22,13 +23,17 @@ const statusStyle = {
 export function RoadmapTimeline() {
   const { t } = useT();
   const { onboarding } = useUser();
+  // Saved target universities (user_universities-backed). The roadmap recomputes
+  // automatically whenever this list changes — add/remove a school and the plan
+  // (school count, test bars, per-school submission tasks) updates in place.
+  const { ids: savedIds } = useSavedUniversities();
   const [overrides, setOverrides] = useState<Record<string, boolean>>({});
   const [generating, setGenerating] = useState(false);
 
   const intake = onboarding?.targetIntake || "Not set";
   const major = onboarding?.intendedMajor || "your field";
 
-  const generated = useMemo(() => generateRoadmap(onboarding), [onboarding]);
+  const generated = useMemo(() => generateRoadmap(onboarding, savedIds), [onboarding, savedIds]);
   const milestones = useMemo<RoadmapMilestone[]>(
     () =>
       generated.map((m) => ({
