@@ -64,11 +64,28 @@ export async function signInWithEmail(email: string, password: string): Promise<
   return { ok: true };
 }
 
-/** Sends a Supabase password-reset email to the given address. */
+/**
+ * Sends a Supabase password-reset email. The recovery link must come back
+ * through /auth/callback (already allow-listed for OAuth), which exchanges the
+ * `?code=` for a session and then forwards to /reset-password. Pointing at a
+ * non-allow-listed path (e.g. /login) makes Supabase fall back to the project
+ * Site URL (the marketing root), where the code is never handled.
+ */
 export async function sendPasswordReset(email: string): Promise<AuthResult> {
   const supabase = createClient();
-  const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/login` : undefined;
+  const redirectTo = typeof window !== "undefined" ? callbackUrl("/reset-password") : undefined;
   const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+/**
+ * Sets a new password for the currently-authenticated user (the recovery
+ * session established by /auth/callback). Used by the reset-password page.
+ */
+export async function updatePassword(newPassword: string): Promise<AuthResult> {
+  const supabase = createClient();
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
   if (error) return { ok: false, error: error.message };
   return { ok: true };
 }

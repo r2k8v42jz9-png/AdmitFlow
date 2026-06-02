@@ -60,17 +60,25 @@ export function SessionSync() {
         // to localStorage if signed out or the table isn't migrated yet).
         void hydrateSavedUniversities();
 
-        const { data } = supabase.auth.onAuthStateChange(async (event) => {
+        const { data } = supabase.auth.onAuthStateChange((event) => {
+          // IMPORTANT: never call other supabase methods synchronously inside this
+          // callback — auth-js holds an internal lock while invoking it, so a
+          // re-entrant getUser/updateUser deadlocks (e.g. password update hangs
+          // forever). Defer the work to a macrotask so the lock is released first.
           if (event === "SIGNED_OUT") {
             store.signOut();
             resetSavedUniversities();
-          } else if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED" || event === "USER_UPDATED") {
-            try {
-              await hydrateLocalFromProfile();
-            } catch {
-              markRemoteResolved();
-            }
-            void hydrateSavedUniversities();
+            return;
+          }
+          if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED" || event === "USER_UPDATED") {
+            setTimeout(async () => {
+              try {
+                await hydrateLocalFromProfile();
+              } catch {
+                markRemoteResolved();
+              }
+              void hydrateSavedUniversities();
+            }, 0);
           }
         });
         unsubscribe = () => data.subscription.unsubscribe();
