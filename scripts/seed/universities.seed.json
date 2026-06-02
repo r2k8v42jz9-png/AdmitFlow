@@ -1,0 +1,4976 @@
+[
+  {
+    "id": "mit",
+    "name": "Massachusetts Institute of Technology",
+    "short_name": "MIT",
+    "country": "United States",
+    "city": "Cambridge, MA",
+    "region": null,
+    "website": "https://www.mit.edu",
+    "description": "The global benchmark for science, technology and entrepreneurship.",
+    "logo_url": null,
+    "qs_rank": 1,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 4,
+    "tuition_min": 59750,
+    "tuition_max": 59750,
+    "currency": "USD",
+    "living_cost": 22000,
+    "student_count": 11920,
+    "intl_percent": 33,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "Engineering",
+      "Computer Science",
+      "Research",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "MIT Need-Based Aid",
+        "amount": "Up to full tuition",
+        "coverage": "Tuition + living",
+        "deadline": "2026-11-15"
+      },
+      {
+        "name": "International Merit Grant",
+        "amount": "$25,000/yr",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-01"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.9,
+      "ielts": 7.5,
+      "sat": 1540,
+      "essays": 5,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science & Engineering",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 59750
+      },
+      {
+        "program_name": "Artificial Intelligence",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 61990
+      },
+      {
+        "program_name": "Mechanical Engineering",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 59750
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Action",
+        "round": "Early Action",
+        "deadline_date": "2026-11-01"
+      },
+      {
+        "intake": "Regular Decision",
+        "round": "Regular Decision",
+        "deadline_date": "2027-01-05"
+      }
+    ]
+  },
+  {
+    "id": "stanford",
+    "name": "Stanford University",
+    "short_name": "Stanford",
+    "country": "United States",
+    "city": "Stanford, CA",
+    "region": null,
+    "website": "https://www.stanford.edu",
+    "description": "Where Silicon Valley's boldest ideas are born.",
+    "logo_url": null,
+    "qs_rank": 3,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 3.7,
+    "tuition_min": 61730,
+    "tuition_max": 61730,
+    "currency": "USD",
+    "living_cost": 24500,
+    "student_count": 17680,
+    "intl_percent": 24,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "Computer Science",
+      "Business",
+      "Innovation",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "Knight-Hennessy Scholars",
+        "amount": "Full funding",
+        "coverage": "Tuition + stipend",
+        "deadline": "2026-10-10"
+      },
+      {
+        "name": "Stanford Financial Aid",
+        "amount": "Up to full tuition",
+        "coverage": "Need-based",
+        "deadline": "2026-11-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.95,
+      "ielts": 7.5,
+      "sat": 1550,
+      "essays": 6,
+      "recommendations": 3
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 61730
+      },
+      {
+        "program_name": "Symbolic Systems",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 61730
+      },
+      {
+        "program_name": "MBA",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 79860
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Restrictive Early Action",
+        "round": "Restrictive Early Action",
+        "deadline_date": "2026-11-01"
+      },
+      {
+        "intake": "Regular Decision",
+        "round": "Regular Decision",
+        "deadline_date": "2027-01-05"
+      }
+    ]
+  },
+  {
+    "id": "oxford",
+    "name": "University of Oxford",
+    "short_name": "Oxford",
+    "country": "United Kingdom",
+    "city": "Oxford, England",
+    "region": null,
+    "website": "https://www.oxford.edu",
+    "description": "Eight centuries of academic excellence and tradition.",
+    "logo_url": null,
+    "qs_rank": 2,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 17,
+    "tuition_min": 48620,
+    "tuition_max": 48620,
+    "currency": "GBP",
+    "living_cost": 17500,
+    "student_count": 26000,
+    "intl_percent": 45,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "Liberal Arts",
+      "Research",
+      "Humanities",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "Reach Oxford Scholarship",
+        "amount": "Full cost",
+        "coverage": "Tuition + living + travel",
+        "deadline": "2026-09-30"
+      },
+      {
+        "name": "Clarendon Fund",
+        "amount": "Full funding",
+        "coverage": "Graduate students",
+        "deadline": "2026-12-01"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.8,
+      "ielts": 7,
+      "essays": 1,
+      "recommendations": 1
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 48620
+      },
+      {
+        "program_name": "PPE (Philosophy, Politics & Economics)",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 39010
+      },
+      {
+        "program_name": "MSc Advanced Computer Science",
+        "degree_level": "Master",
+        "duration": "1 year",
+        "tuition": 41000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "UCAS Deadline",
+        "round": "UCAS Deadline",
+        "deadline_date": "2026-10-15"
+      }
+    ]
+  },
+  {
+    "id": "cambridge",
+    "name": "University of Cambridge",
+    "short_name": "Cambridge",
+    "country": "United Kingdom",
+    "city": "Cambridge, England",
+    "region": null,
+    "website": "https://www.cambridge.edu",
+    "description": "A collegiate powerhouse of discovery and rigour.",
+    "logo_url": null,
+    "qs_rank": 5,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 21,
+    "tuition_min": 46000,
+    "tuition_max": 46000,
+    "currency": "GBP",
+    "living_cost": 16800,
+    "student_count": 24450,
+    "intl_percent": 38,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "Research",
+      "STEM",
+      "Mathematics",
+      "Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "Gates Cambridge",
+        "amount": "Full funding",
+        "coverage": "Tuition + stipend",
+        "deadline": "2026-10-12"
+      },
+      {
+        "name": "Cambridge Trust Scholarship",
+        "amount": "Partial–full",
+        "coverage": "Need + merit",
+        "deadline": "2026-12-01"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.85,
+      "ielts": 7.5,
+      "essays": 1,
+      "recommendations": 1
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 46000
+      },
+      {
+        "program_name": "Natural Sciences",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 42000
+      },
+      {
+        "program_name": "MPhil Machine Learning",
+        "degree_level": "Master",
+        "duration": "1 year",
+        "tuition": 44000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "UCAS Deadline",
+        "round": "UCAS Deadline",
+        "deadline_date": "2026-10-15"
+      }
+    ]
+  },
+  {
+    "id": "eth",
+    "name": "ETH Zürich",
+    "short_name": "ETH Zürich",
+    "country": "Switzerland",
+    "city": "Zürich",
+    "region": null,
+    "website": "https://www.eth.edu",
+    "description": "World-class engineering at an unbeatable price.",
+    "logo_url": null,
+    "qs_rank": 7,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 27,
+    "tuition_min": 1460,
+    "tuition_max": 1460,
+    "currency": "CHF",
+    "living_cost": 26000,
+    "student_count": 23900,
+    "intl_percent": 41,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Master"
+    ],
+    "fields": [
+      "Engineering",
+      "STEM",
+      "Affordable",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "ESOP Excellence Scholarship",
+        "amount": "CHF 12,000/sem",
+        "coverage": "Living + tuition",
+        "deadline": "2026-12-15"
+      },
+      {
+        "name": "Master Scholarship Programme",
+        "amount": "Full living",
+        "coverage": "Merit-based",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 7,
+      "essays": 1,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 1460
+      },
+      {
+        "program_name": "Robotics, Systems & Control",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 1460
+      },
+      {
+        "program_name": "Data Science",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 1460
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Application Deadline",
+        "round": "Application Deadline",
+        "deadline_date": "2026-12-15"
+      }
+    ]
+  },
+  {
+    "id": "nus",
+    "name": "National University of Singapore",
+    "short_name": "NUS",
+    "country": "Singapore",
+    "city": "Singapore",
+    "region": null,
+    "website": "https://www.nus.edu",
+    "description": "Asia's leading university and innovation hub.",
+    "logo_url": null,
+    "qs_rank": 8,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 12,
+    "tuition_min": 29850,
+    "tuition_max": 29850,
+    "currency": "SGD",
+    "living_cost": 14500,
+    "student_count": 38600,
+    "intl_percent": 30,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "STEM",
+      "Business",
+      "Asia",
+      "Innovation"
+    ],
+    "scholarships": [
+      {
+        "name": "ASEAN Undergraduate Scholarship",
+        "amount": "Full tuition",
+        "coverage": "Tuition + allowance",
+        "deadline": "2027-03-19"
+      },
+      {
+        "name": "Science & Technology Scholarship",
+        "amount": "Full tuition",
+        "coverage": "Merit",
+        "deadline": "2027-02-28"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "sat": 1450,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 29850
+      },
+      {
+        "program_name": "Business Analytics",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 31000
+      },
+      {
+        "program_name": "Quantitative Finance",
+        "degree_level": "Master",
+        "duration": "1.5 years",
+        "tuition": 48000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "International Round",
+        "round": "International Round",
+        "deadline_date": "2027-02-28"
+      }
+    ]
+  },
+  {
+    "id": "toronto",
+    "name": "University of Toronto",
+    "short_name": "U of T",
+    "country": "Canada",
+    "city": "Toronto, ON",
+    "region": null,
+    "website": "https://www.toronto.edu",
+    "description": "Canada's research giant and the cradle of modern AI.",
+    "logo_url": null,
+    "qs_rank": 21,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 43,
+    "tuition_min": 45900,
+    "tuition_max": 45900,
+    "currency": "CAD",
+    "living_cost": 15500,
+    "student_count": 97000,
+    "intl_percent": 28,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "Research",
+      "STEM",
+      "Diverse",
+      "AI"
+    ],
+    "scholarships": [
+      {
+        "name": "Lester B. Pearson Scholarship",
+        "amount": "Full ride",
+        "coverage": "Tuition + books + living",
+        "deadline": "2026-11-30"
+      },
+      {
+        "name": "International Scholar Award",
+        "amount": "CAD 10,000",
+        "coverage": "Partial",
+        "deadline": "2027-01-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 1
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science (PEY)",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 45900
+      },
+      {
+        "program_name": "Engineering Science",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 62000
+      },
+      {
+        "program_name": "MScAC Applied Computing",
+        "degree_level": "Master",
+        "duration": "1.5 years",
+        "tuition": 38000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "International Deadline",
+        "round": "International Deadline",
+        "deadline_date": "2027-01-15"
+      }
+    ]
+  },
+  {
+    "id": "tum",
+    "name": "Technical University of Munich",
+    "short_name": "TUM",
+    "country": "Germany",
+    "city": "Munich",
+    "region": null,
+    "website": "https://www.tum.edu",
+    "description": "Germany's top technical university — and tuition-free.",
+    "logo_url": null,
+    "qs_rank": 28,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 8,
+    "tuition_min": 0,
+    "tuition_max": 0,
+    "currency": "EUR",
+    "living_cost": 12500,
+    "student_count": 52000,
+    "intl_percent": 42,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "Engineering",
+      "Tuition-Free",
+      "STEM",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "Deutschlandstipendium",
+        "amount": "€300/month",
+        "coverage": "Living stipend",
+        "deadline": "2026-10-31"
+      },
+      {
+        "name": "DAAD Scholarship",
+        "amount": "€934/month",
+        "coverage": "Full living",
+        "deadline": "2026-11-30"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6.5,
+      "essays": 1,
+      "recommendations": 1
+    },
+    "programs": [
+      {
+        "program_name": "Informatics",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "Robotics, Cognition, Intelligence",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "Management & Technology",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 0
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Winter Semester",
+        "round": "Winter Semester",
+        "deadline_date": "2027-01-15"
+      }
+    ]
+  },
+  {
+    "id": "ucl",
+    "name": "University College London",
+    "short_name": "UCL",
+    "country": "United Kingdom",
+    "city": "London, England",
+    "region": null,
+    "website": "https://www.ucl.edu",
+    "description": "London's global university at the centre of it all.",
+    "logo_url": null,
+    "qs_rank": 9,
+    "the_rank": null,
+    "national_rank": 4,
+    "acceptance_rate": 30,
+    "tuition_min": 38000,
+    "tuition_max": 38000,
+    "currency": "GBP",
+    "living_cost": 19500,
+    "student_count": 46830,
+    "intl_percent": 53,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "Research",
+      "Urban",
+      "Diverse",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "UCL Global Undergraduate Scholarship",
+        "amount": "£15,000/yr",
+        "coverage": "Need-based",
+        "deadline": "2027-04-04"
+      },
+      {
+        "name": "Denys Holland Scholarship",
+        "amount": "£9,000/yr",
+        "coverage": "Partial",
+        "deadline": "2027-05-31"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 1,
+      "recommendations": 1
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 38000
+      },
+      {
+        "program_name": "MSc Machine Learning",
+        "degree_level": "Master",
+        "duration": "1 year",
+        "tuition": 41000
+      },
+      {
+        "program_name": "Economics",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 32000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "UCAS Deadline",
+        "round": "UCAS Deadline",
+        "deadline_date": "2027-01-29"
+      }
+    ]
+  },
+  {
+    "id": "melbourne",
+    "name": "University of Melbourne",
+    "short_name": "Melbourne",
+    "country": "Australia",
+    "city": "Melbourne, VIC",
+    "region": null,
+    "website": "https://www.melbourne.edu",
+    "description": "Australia's #1 university in its most liveable city.",
+    "logo_url": null,
+    "qs_rank": 13,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 38,
+    "tuition_min": 45000,
+    "tuition_max": 45000,
+    "currency": "AUD",
+    "living_cost": 21000,
+    "student_count": 52000,
+    "intl_percent": 47,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "Research",
+      "Lifestyle",
+      "STEM",
+      "Business"
+    ],
+    "scholarships": [
+      {
+        "name": "Melbourne International Undergraduate",
+        "amount": "Up to 100% tuition",
+        "coverage": "Merit",
+        "deadline": "2026-10-31"
+      },
+      {
+        "name": "Graduate Research Scholarship",
+        "amount": "Full + stipend",
+        "coverage": "Research",
+        "deadline": "2026-10-31"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6.5,
+      "essays": 1,
+      "recommendations": 1
+    },
+    "programs": [
+      {
+        "program_name": "Bachelor of Science (Computing)",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 45000
+      },
+      {
+        "program_name": "Master of Data Science",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 48000
+      },
+      {
+        "program_name": "Bachelor of Commerce",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 47000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Semester 1 Intake",
+        "round": "Semester 1 Intake",
+        "deadline_date": "2026-10-31"
+      }
+    ]
+  },
+  {
+    "id": "tsinghua",
+    "name": "Tsinghua University",
+    "short_name": "Tsinghua",
+    "country": "China",
+    "city": "Beijing",
+    "region": null,
+    "website": "https://www.tsinghua.edu",
+    "description": "China's premier engineering and research institution.",
+    "logo_url": null,
+    "qs_rank": 12,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 15,
+    "tuition_min": 40000,
+    "tuition_max": 40000,
+    "currency": "CNY",
+    "living_cost": 9000,
+    "student_count": 50000,
+    "intl_percent": 11,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master"
+    ],
+    "fields": [
+      "STEM",
+      "Research",
+      "Asia",
+      "Engineering"
+    ],
+    "scholarships": [
+      {
+        "name": "Chinese Government Scholarship",
+        "amount": "Full + stipend",
+        "coverage": "Tuition + living",
+        "deadline": "2026-12-31"
+      },
+      {
+        "name": "Schwarzman Scholarship",
+        "amount": "Full funding",
+        "coverage": "All costs",
+        "deadline": "2026-09-26"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science & Technology",
+        "degree_level": "Bachelor",
+        "duration": "4 years",
+        "tuition": 40000
+      },
+      {
+        "program_name": "Schwarzman Scholars",
+        "degree_level": "Master",
+        "duration": "1 year",
+        "tuition": 0
+      },
+      {
+        "program_name": "Data Science & Information Tech",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 45000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "International Students",
+        "round": "International Students",
+        "deadline_date": "2026-12-31"
+      }
+    ]
+  },
+  {
+    "id": "epfl",
+    "name": "EPFL",
+    "short_name": "EPFL",
+    "country": "Switzerland",
+    "city": "Lausanne",
+    "region": null,
+    "website": "https://www.epfl.edu",
+    "description": "Switzerland's innovation-driven engineering school.",
+    "logo_url": null,
+    "qs_rank": 14,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 30,
+    "tuition_min": 1530,
+    "tuition_max": 1530,
+    "currency": "CHF",
+    "living_cost": 24000,
+    "student_count": 12500,
+    "intl_percent": 55,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Master",
+      "Bachelor"
+    ],
+    "fields": [
+      "Engineering",
+      "Affordable",
+      "STEM",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "EPFL Excellence Fellowship",
+        "amount": "CHF 16,000/yr",
+        "coverage": "Living",
+        "deadline": "2026-12-15"
+      },
+      {
+        "name": "Master's Excellence Scholarship",
+        "amount": "CHF 32,000 total",
+        "coverage": "Merit",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 7,
+      "essays": 1,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 1530
+      },
+      {
+        "program_name": "Robotics",
+        "degree_level": "Master",
+        "duration": "2 years",
+        "tuition": 1530
+      },
+      {
+        "program_name": "Communication Systems",
+        "degree_level": "Bachelor",
+        "duration": "3 years",
+        "tuition": 1530
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Application Deadline",
+        "round": "Application Deadline",
+        "deadline_date": "2026-12-15"
+      }
+    ]
+  },
+  {
+    "id": "harvard",
+    "name": "Harvard University",
+    "short_name": "Harvard",
+    "country": "United States",
+    "city": "Cambridge, MA",
+    "region": null,
+    "website": "https://harvard.edu",
+    "description": "The world's most renowned university across law, medicine and business.",
+    "logo_url": null,
+    "qs_rank": 4,
+    "the_rank": null,
+    "national_rank": 3,
+    "acceptance_rate": 3.4,
+    "tuition_min": 57000,
+    "tuition_max": 57000,
+    "currency": "USD",
+    "living_cost": 34500,
+    "student_count": 41542,
+    "intl_percent": 38,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Law",
+      "Business",
+      "Medicine",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "Harvard International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.95,
+      "ielts": 7.5,
+      "sat": 1550,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Law",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 57000
+      },
+      {
+        "program_name": "Business",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 57000
+      },
+      {
+        "program_name": "Medicine",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 57000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "berkeley",
+    "name": "University of California, Berkeley",
+    "short_name": "UC Berkeley",
+    "country": "United States",
+    "city": "Berkeley, CA",
+    "region": null,
+    "website": "https://berkeley.edu",
+    "description": "A public powerhouse for engineering and computer science.",
+    "logo_url": null,
+    "qs_rank": 10,
+    "the_rank": null,
+    "national_rank": 4,
+    "acceptance_rate": 11,
+    "tuition_min": 44000,
+    "tuition_max": 44000,
+    "currency": "USD",
+    "living_cost": 28000,
+    "student_count": 25447,
+    "intl_percent": 27,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Computer Science",
+      "Engineering",
+      "Public",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "UC Berkeley International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.85,
+      "ielts": 7,
+      "sat": 1480,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 44000
+      },
+      {
+        "program_name": "Engineering",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 44000
+      },
+      {
+        "program_name": "Public",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 44000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "ubc",
+    "name": "University of British Columbia",
+    "short_name": "UBC",
+    "country": "Canada",
+    "city": "Vancouver",
+    "region": null,
+    "website": "https://ubc.ca",
+    "description": "A global research university on Canada's Pacific coast.",
+    "logo_url": null,
+    "qs_rank": 34,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 52,
+    "tuition_min": 42000,
+    "tuition_max": 42000,
+    "currency": "CAD",
+    "living_cost": 27000,
+    "student_count": 29574,
+    "intl_percent": 30,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Sustainability",
+      "Computer Science"
+    ],
+    "scholarships": [
+      {
+        "name": "UBC International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "sat": 1350,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 42000
+      },
+      {
+        "program_name": "Sustainability",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 42000
+      },
+      {
+        "program_name": "Computer Science",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 42000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "mcgill",
+    "name": "McGill University",
+    "short_name": "McGill",
+    "country": "Canada",
+    "city": "Montreal",
+    "region": null,
+    "website": "https://mcgill.ca",
+    "description": "Canada's most internationally diverse research university.",
+    "logo_url": null,
+    "qs_rank": 30,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 46,
+    "tuition_min": 45000,
+    "tuition_max": 45000,
+    "currency": "CAD",
+    "living_cost": 28500,
+    "student_count": 20872,
+    "intl_percent": 36,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Medicine",
+      "Research",
+      "Business"
+    ],
+    "scholarships": [
+      {
+        "name": "McGill International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Medicine",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 45000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 45000
+      },
+      {
+        "program_name": "Business",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 45000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "imperial",
+    "name": "Imperial College London",
+    "short_name": "Imperial",
+    "country": "United Kingdom",
+    "city": "London",
+    "region": null,
+    "website": "https://imperial.ac.uk",
+    "description": "The UK's leading science, engineering and medicine institution.",
+    "logo_url": null,
+    "qs_rank": 6,
+    "the_rank": null,
+    "national_rank": 3,
+    "acceptance_rate": 14,
+    "tuition_min": 38000,
+    "tuition_max": 38000,
+    "currency": "GBP",
+    "living_cost": 25000,
+    "student_count": 34891,
+    "intl_percent": 39,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Medicine",
+      "STEM",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "Imperial International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.9,
+      "ielts": 7,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 38000
+      },
+      {
+        "program_name": "Medicine",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 38000
+      },
+      {
+        "program_name": "STEM",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 38000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "edinburgh",
+    "name": "University of Edinburgh",
+    "short_name": "Edinburgh",
+    "country": "United Kingdom",
+    "city": "Edinburgh",
+    "region": null,
+    "website": "https://ed.ac.uk",
+    "description": "A historic research university and AI research leader.",
+    "logo_url": null,
+    "qs_rank": 22,
+    "the_rank": null,
+    "national_rank": 4,
+    "acceptance_rate": 40,
+    "tuition_min": 34000,
+    "tuition_max": 34000,
+    "currency": "GBP",
+    "living_cost": 23000,
+    "student_count": 25388,
+    "intl_percent": 24,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "AI",
+      "Humanities",
+      "Medicine",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "Edinburgh International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "AI",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 34000
+      },
+      {
+        "program_name": "Humanities",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 34000
+      },
+      {
+        "program_name": "Medicine",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 34000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "lmu",
+    "name": "Ludwig Maximilian University of Munich",
+    "short_name": "LMU Munich",
+    "country": "Germany",
+    "city": "Munich",
+    "region": null,
+    "website": "https://lmu.de",
+    "description": "One of Europe's oldest and tuition-free flagship universities.",
+    "logo_url": null,
+    "qs_rank": 59,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 40,
+    "tuition_min": 0,
+    "tuition_max": 0,
+    "currency": "EUR",
+    "living_cost": 12000,
+    "student_count": 21284,
+    "intl_percent": 28,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Medicine",
+      "Humanities"
+    ],
+    "scholarships": [
+      {
+        "name": "LMU Munich International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "Medicine",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "Humanities",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 0
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "heidelberg",
+    "name": "Heidelberg University",
+    "short_name": "Heidelberg",
+    "country": "Germany",
+    "city": "Heidelberg",
+    "region": null,
+    "website": "https://uni-heidelberg.de",
+    "description": "Germany's oldest university, renowned for research and medicine.",
+    "logo_url": null,
+    "qs_rank": 87,
+    "the_rank": null,
+    "national_rank": 3,
+    "acceptance_rate": 45,
+    "tuition_min": 1500,
+    "tuition_max": 1500,
+    "currency": "EUR",
+    "living_cost": 6750,
+    "student_count": 33991,
+    "intl_percent": 19,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Medicine",
+      "Research",
+      "Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "Heidelberg International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Medicine",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 1500
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 1500
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 1500
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "psl",
+    "name": "Université PSL",
+    "short_name": "PSL",
+    "country": "France",
+    "city": "Paris",
+    "region": null,
+    "website": "https://psl.eu",
+    "description": "Paris's collegiate research university spanning sciences and the arts.",
+    "logo_url": null,
+    "qs_rank": 24,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 22,
+    "tuition_min": 3500,
+    "tuition_max": 3500,
+    "currency": "EUR",
+    "living_cost": 7750,
+    "student_count": 25305,
+    "intl_percent": 17,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Sciences",
+      "Humanities"
+    ],
+    "scholarships": [
+      {
+        "name": "PSL International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 3500
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 3500
+      },
+      {
+        "program_name": "Humanities",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 3500
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "polytechnique",
+    "name": "École Polytechnique",
+    "short_name": "Polytechnique",
+    "country": "France",
+    "city": "Palaiseau",
+    "region": null,
+    "website": "https://polytechnique.edu",
+    "description": "France's elite engineering grande école.",
+    "logo_url": null,
+    "qs_rank": 38,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 20,
+    "tuition_min": 15000,
+    "tuition_max": 15000,
+    "currency": "EUR",
+    "living_cost": 13500,
+    "student_count": 10516,
+    "intl_percent": 28,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Mathematics",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "Polytechnique International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.8,
+      "ielts": 7,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 15000
+      },
+      {
+        "program_name": "Mathematics",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 15000
+      },
+      {
+        "program_name": "STEM",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 15000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "tudelft",
+    "name": "Delft University of Technology",
+    "short_name": "TU Delft",
+    "country": "Netherlands",
+    "city": "Delft",
+    "region": null,
+    "website": "https://tudelft.nl",
+    "description": "Europe's top technical university for engineering and design.",
+    "logo_url": null,
+    "qs_rank": 47,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 35,
+    "tuition_min": 16000,
+    "tuition_max": 16000,
+    "currency": "EUR",
+    "living_cost": 14000,
+    "student_count": 12616,
+    "intl_percent": 28,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Aerospace",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "TU Delft International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 16000
+      },
+      {
+        "program_name": "Aerospace",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 16000
+      },
+      {
+        "program_name": "STEM",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 16000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "uva",
+    "name": "University of Amsterdam",
+    "short_name": "UvA",
+    "country": "Netherlands",
+    "city": "Amsterdam",
+    "region": null,
+    "website": "https://uva.nl",
+    "description": "A leading European research university in the heart of Amsterdam.",
+    "logo_url": null,
+    "qs_rank": 53,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 45,
+    "tuition_min": 14000,
+    "tuition_max": 14000,
+    "currency": "EUR",
+    "living_cost": 13000,
+    "student_count": 30192,
+    "intl_percent": 32,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Social Sciences",
+      "AI",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "UvA International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Social Sciences",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 14000
+      },
+      {
+        "program_name": "AI",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 14000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 14000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "polimi",
+    "name": "Politecnico di Milano",
+    "short_name": "PoliMi",
+    "country": "Italy",
+    "city": "Milan",
+    "region": null,
+    "website": "https://polimi.it",
+    "description": "Italy's top technical university for engineering and design.",
+    "logo_url": null,
+    "qs_rank": 111,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 50,
+    "tuition_min": 3900,
+    "tuition_max": 3900,
+    "currency": "EUR",
+    "living_cost": 7950,
+    "student_count": 19560,
+    "intl_percent": 24,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Design",
+      "Architecture"
+    ],
+    "scholarships": [
+      {
+        "name": "PoliMi International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 3900
+      },
+      {
+        "program_name": "Design",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 3900
+      },
+      {
+        "program_name": "Architecture",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 3900
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "bologna",
+    "name": "University of Bologna",
+    "short_name": "Bologna",
+    "country": "Italy",
+    "city": "Bologna",
+    "region": null,
+    "website": "https://unibo.it",
+    "description": "The oldest university in the world, founded in 1088.",
+    "logo_url": null,
+    "qs_rank": 154,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 55,
+    "tuition_min": 3000,
+    "tuition_max": 3000,
+    "currency": "EUR",
+    "living_cost": 7500,
+    "student_count": 26842,
+    "intl_percent": 30,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Humanities",
+      "Law",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "Bologna International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.4,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Humanities",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 3000
+      },
+      {
+        "program_name": "Law",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 3000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 3000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "ub",
+    "name": "University of Barcelona",
+    "short_name": "UB",
+    "country": "Spain",
+    "city": "Barcelona",
+    "region": null,
+    "website": "https://ub.edu",
+    "description": "Spain's leading research university by the Mediterranean.",
+    "logo_url": null,
+    "qs_rank": 164,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 55,
+    "tuition_min": 3000,
+    "tuition_max": 3000,
+    "currency": "EUR",
+    "living_cost": 7500,
+    "student_count": 13725,
+    "intl_percent": 13,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Medicine",
+      "Sciences",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "UB International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.4,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Medicine",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 3000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 3000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 3000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "uam",
+    "name": "Autonomous University of Madrid",
+    "short_name": "UAM",
+    "country": "Spain",
+    "city": "Madrid",
+    "region": null,
+    "website": "https://uam.es",
+    "description": "A top Madrid research university with strong sciences.",
+    "logo_url": null,
+    "qs_rank": 198,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 50,
+    "tuition_min": 2500,
+    "tuition_max": 2500,
+    "currency": "EUR",
+    "living_cost": 7250,
+    "student_count": 29553,
+    "intl_percent": 37,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Sciences",
+      "Law",
+      "Economics"
+    ],
+    "scholarships": [
+      {
+        "name": "UAM International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.4,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Sciences",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 2500
+      },
+      {
+        "program_name": "Law",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 2500
+      },
+      {
+        "program_name": "Economics",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 2500
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "kth",
+    "name": "KTH Royal Institute of Technology",
+    "short_name": "KTH",
+    "country": "Sweden",
+    "city": "Stockholm",
+    "region": null,
+    "website": "https://kth.se",
+    "description": "Scandinavia's largest technical research university.",
+    "logo_url": null,
+    "qs_rank": 73,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 35,
+    "tuition_min": 155000,
+    "tuition_max": 155000,
+    "currency": "SEK",
+    "living_cost": 83500,
+    "student_count": 20527,
+    "intl_percent": 27,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Technology",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "KTH International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 155000
+      },
+      {
+        "program_name": "Technology",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 155000
+      },
+      {
+        "program_name": "STEM",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 155000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "lund",
+    "name": "Lund University",
+    "short_name": "Lund",
+    "country": "Sweden",
+    "city": "Lund",
+    "region": null,
+    "website": "https://lunduniversity.lu.se",
+    "description": "A top-ranked, innovation-driven Swedish university.",
+    "logo_url": null,
+    "qs_rank": 85,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 40,
+    "tuition_min": 140000,
+    "tuition_max": 140000,
+    "currency": "SEK",
+    "living_cost": 76000,
+    "student_count": 15375,
+    "intl_percent": 15,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Innovation",
+      "Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "Lund International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 140000
+      },
+      {
+        "program_name": "Innovation",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 140000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 140000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "uio",
+    "name": "University of Oslo",
+    "short_name": "UiO",
+    "country": "Norway",
+    "city": "Oslo",
+    "region": null,
+    "website": "https://uio.no",
+    "description": "Norway's oldest and largest tuition-free university.",
+    "logo_url": null,
+    "qs_rank": 117,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 45,
+    "tuition_min": 0,
+    "tuition_max": 0,
+    "currency": "NOK",
+    "living_cost": 140000,
+    "student_count": 29803,
+    "intl_percent": 35,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Sciences",
+      "Law"
+    ],
+    "scholarships": [
+      {
+        "name": "UiO International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.4,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "Law",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 0
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "ntnu",
+    "name": "Norwegian University of Science and Technology",
+    "short_name": "NTNU",
+    "country": "Norway",
+    "city": "Trondheim",
+    "region": null,
+    "website": "https://ntnu.edu",
+    "description": "Norway's primary institution for engineering and technology.",
+    "logo_url": null,
+    "qs_rank": 101,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 50,
+    "tuition_min": 0,
+    "tuition_max": 0,
+    "currency": "NOK",
+    "living_cost": 135000,
+    "student_count": 10013,
+    "intl_percent": 21,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Technology",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "NTNU International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "Technology",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "STEM",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 0
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "aalto",
+    "name": "Aalto University",
+    "short_name": "Aalto",
+    "country": "Finland",
+    "city": "Espoo",
+    "region": null,
+    "website": "https://aalto.fi",
+    "description": "Finland's hub for design, technology and entrepreneurship.",
+    "logo_url": null,
+    "qs_rank": 109,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 30,
+    "tuition_min": 15000,
+    "tuition_max": 15000,
+    "currency": "EUR",
+    "living_cost": 13500,
+    "student_count": 12759,
+    "intl_percent": 19,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Design",
+      "Engineering",
+      "Business"
+    ],
+    "scholarships": [
+      {
+        "name": "Aalto International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Design",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 15000
+      },
+      {
+        "program_name": "Engineering",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 15000
+      },
+      {
+        "program_name": "Business",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 15000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "helsinki",
+    "name": "University of Helsinki",
+    "short_name": "Helsinki",
+    "country": "Finland",
+    "city": "Helsinki",
+    "region": null,
+    "website": "https://helsinki.fi",
+    "description": "Finland's largest and most prestigious research university.",
+    "logo_url": null,
+    "qs_rank": 115,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 40,
+    "tuition_min": 13000,
+    "tuition_max": 13000,
+    "currency": "EUR",
+    "living_cost": 12500,
+    "student_count": 31383,
+    "intl_percent": 23,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Sciences",
+      "Medicine"
+    ],
+    "scholarships": [
+      {
+        "name": "Helsinki International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 13000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 13000
+      },
+      {
+        "program_name": "Medicine",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 13000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "ku",
+    "name": "University of Copenhagen",
+    "short_name": "UCPH",
+    "country": "Denmark",
+    "city": "Copenhagen",
+    "region": null,
+    "website": "https://ku.dk",
+    "description": "Denmark's oldest and top-ranked research university.",
+    "logo_url": null,
+    "qs_rank": 107,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 41,
+    "tuition_min": 120000,
+    "tuition_max": 120000,
+    "currency": "DKK",
+    "living_cost": 66000,
+    "student_count": 13434,
+    "intl_percent": 30,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Medicine",
+      "Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "UCPH International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 120000
+      },
+      {
+        "program_name": "Medicine",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 120000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 120000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "dtu",
+    "name": "Technical University of Denmark",
+    "short_name": "DTU",
+    "country": "Denmark",
+    "city": "Lyngby",
+    "region": null,
+    "website": "https://dtu.dk",
+    "description": "A leading European technical university near Copenhagen.",
+    "logo_url": null,
+    "qs_rank": 104,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 38,
+    "tuition_min": 110000,
+    "tuition_max": 110000,
+    "currency": "DKK",
+    "living_cost": 61000,
+    "student_count": 13813,
+    "intl_percent": 33,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Technology",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "DTU International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 110000
+      },
+      {
+        "program_name": "Technology",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 110000
+      },
+      {
+        "program_name": "STEM",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 110000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "sydney",
+    "name": "University of Sydney",
+    "short_name": "Sydney",
+    "country": "Australia",
+    "city": "Sydney",
+    "region": null,
+    "website": "https://sydney.edu.au",
+    "description": "Australia's first university and a global top-20 institution.",
+    "logo_url": null,
+    "qs_rank": 18,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 30,
+    "tuition_min": 50000,
+    "tuition_max": 50000,
+    "currency": "AUD",
+    "living_cost": 31000,
+    "student_count": 28468,
+    "intl_percent": 12,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Medicine",
+      "Business"
+    ],
+    "scholarships": [
+      {
+        "name": "Sydney International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 50000
+      },
+      {
+        "program_name": "Medicine",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 50000
+      },
+      {
+        "program_name": "Business",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 50000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "anu",
+    "name": "Australian National University",
+    "short_name": "ANU",
+    "country": "Australia",
+    "city": "Canberra",
+    "region": null,
+    "website": "https://anu.edu.au",
+    "description": "Australia's national research university in the capital.",
+    "logo_url": null,
+    "qs_rank": 30,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 35,
+    "tuition_min": 47000,
+    "tuition_max": 47000,
+    "currency": "AUD",
+    "living_cost": 29500,
+    "student_count": 10744,
+    "intl_percent": 16,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Policy",
+      "Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "ANU International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 47000
+      },
+      {
+        "program_name": "Policy",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 47000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 47000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "auckland",
+    "name": "University of Auckland",
+    "short_name": "Auckland",
+    "country": "New Zealand",
+    "city": "Auckland",
+    "region": null,
+    "website": "https://auckland.ac.nz",
+    "description": "New Zealand's highest-ranked, most comprehensive university.",
+    "logo_url": null,
+    "qs_rank": 65,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 45,
+    "tuition_min": 40000,
+    "tuition_max": 40000,
+    "currency": "NZD",
+    "living_cost": 26000,
+    "student_count": 29079,
+    "intl_percent": 31,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Engineering",
+      "Business"
+    ],
+    "scholarships": [
+      {
+        "name": "Auckland International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.4,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 40000
+      },
+      {
+        "program_name": "Engineering",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 40000
+      },
+      {
+        "program_name": "Business",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 40000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "otago",
+    "name": "University of Otago",
+    "short_name": "Otago",
+    "country": "New Zealand",
+    "city": "Dunedin",
+    "region": null,
+    "website": "https://otago.ac.nz",
+    "description": "New Zealand's oldest university, strong in health sciences.",
+    "logo_url": null,
+    "qs_rank": 206,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 55,
+    "tuition_min": 35000,
+    "tuition_max": 35000,
+    "currency": "NZD",
+    "living_cost": 23500,
+    "student_count": 25108,
+    "intl_percent": 16,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Medicine",
+      "Sciences",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "Otago International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.3,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Medicine",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 35000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 35000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 35000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "ntu",
+    "name": "Nanyang Technological University",
+    "short_name": "NTU Singapore",
+    "country": "Singapore",
+    "city": "Singapore",
+    "region": null,
+    "website": "https://ntu.edu.sg",
+    "description": "A young, fast-rising global technological university.",
+    "logo_url": null,
+    "qs_rank": 26,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 25,
+    "tuition_min": 38000,
+    "tuition_max": 38000,
+    "currency": "SGD",
+    "living_cost": 25000,
+    "student_count": 23423,
+    "intl_percent": 39,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Technology",
+      "Business"
+    ],
+    "scholarships": [
+      {
+        "name": "NTU Singapore International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 38000
+      },
+      {
+        "program_name": "Technology",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 38000
+      },
+      {
+        "program_name": "Business",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 38000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "tokyo",
+    "name": "University of Tokyo",
+    "short_name": "UTokyo",
+    "country": "Japan",
+    "city": "Tokyo",
+    "region": null,
+    "website": "https://u-tokyo.ac.jp",
+    "description": "Japan's most prestigious national research university.",
+    "logo_url": null,
+    "qs_rank": 28,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 35,
+    "tuition_min": 535800,
+    "tuition_max": 535800,
+    "currency": "JPY",
+    "living_cost": 1500000,
+    "student_count": 23926,
+    "intl_percent": 38,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Engineering",
+      "Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "UTokyo International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 7,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 535800
+      },
+      {
+        "program_name": "Engineering",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 535800
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 535800
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "kyoto",
+    "name": "Kyoto University",
+    "short_name": "Kyoto",
+    "country": "Japan",
+    "city": "Kyoto",
+    "region": null,
+    "website": "https://kyoto-u.ac.jp",
+    "description": "A Nobel-laureate-rich university famed for free thinking.",
+    "logo_url": null,
+    "qs_rank": 46,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 38,
+    "tuition_min": 535800,
+    "tuition_max": 535800,
+    "currency": "JPY",
+    "living_cost": 1300000,
+    "student_count": 13836,
+    "intl_percent": 20,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Sciences",
+      "Innovation"
+    ],
+    "scholarships": [
+      {
+        "name": "Kyoto International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 535800
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 535800
+      },
+      {
+        "program_name": "Innovation",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 535800
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "snu",
+    "name": "Seoul National University",
+    "short_name": "SNU",
+    "country": "South Korea",
+    "city": "Seoul",
+    "region": null,
+    "website": "https://snu.ac.kr",
+    "description": "South Korea's flagship national university.",
+    "logo_url": null,
+    "qs_rank": 41,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 20,
+    "tuition_min": 12000000,
+    "tuition_max": 12000000,
+    "currency": "KRW",
+    "living_cost": 14000000,
+    "student_count": 28042,
+    "intl_percent": 38,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Engineering",
+      "Business"
+    ],
+    "scholarships": [
+      {
+        "name": "SNU International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 12000000
+      },
+      {
+        "program_name": "Engineering",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 12000000
+      },
+      {
+        "program_name": "Business",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 12000000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "kaist",
+    "name": "Korea Advanced Institute of Science & Technology",
+    "short_name": "KAIST",
+    "country": "South Korea",
+    "city": "Daejeon",
+    "region": null,
+    "website": "https://kaist.ac.kr",
+    "description": "Korea's premier science and technology research institute.",
+    "logo_url": null,
+    "qs_rank": 56,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 30,
+    "tuition_min": 9000000,
+    "tuition_max": 9000000,
+    "currency": "KRW",
+    "living_cost": 12000000,
+    "student_count": 29060,
+    "intl_percent": 20,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "AI",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "KAIST International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 9000000
+      },
+      {
+        "program_name": "AI",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 9000000
+      },
+      {
+        "program_name": "STEM",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 9000000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "pku",
+    "name": "Peking University",
+    "short_name": "Peking",
+    "country": "China",
+    "city": "Beijing",
+    "region": null,
+    "website": "https://pku.edu.cn",
+    "description": "China's most prestigious comprehensive university.",
+    "logo_url": null,
+    "qs_rank": 14,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 16,
+    "tuition_min": 30000,
+    "tuition_max": 30000,
+    "currency": "CNY",
+    "living_cost": 21000,
+    "student_count": 25066,
+    "intl_percent": 30,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Humanities",
+      "Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "Peking International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.8,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 30000
+      },
+      {
+        "program_name": "Humanities",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 30000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 30000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "fudan",
+    "name": "Fudan University",
+    "short_name": "Fudan",
+    "country": "China",
+    "city": "Shanghai",
+    "region": null,
+    "website": "https://fudan.edu.cn",
+    "description": "A leading Shanghai university strong in business and medicine.",
+    "logo_url": null,
+    "qs_rank": 39,
+    "the_rank": null,
+    "national_rank": 3,
+    "acceptance_rate": 20,
+    "tuition_min": 28000,
+    "tuition_max": 28000,
+    "currency": "CNY",
+    "living_cost": 20000,
+    "student_count": 33906,
+    "intl_percent": 22,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Business",
+      "Medicine",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "Fudan International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Business",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 28000
+      },
+      {
+        "program_name": "Medicine",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 28000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 28000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "nyuad",
+    "name": "New York University Abu Dhabi",
+    "short_name": "NYU Abu Dhabi",
+    "country": "United Arab Emirates",
+    "city": "Abu Dhabi",
+    "region": null,
+    "website": "https://nyuad.nyu.edu",
+    "description": "NYU's highly selective liberal-arts campus in the Gulf.",
+    "logo_url": null,
+    "qs_rank": 230,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 4,
+    "tuition_min": 78000,
+    "tuition_max": 78000,
+    "currency": "AED",
+    "living_cost": 45000,
+    "student_count": 37565,
+    "intl_percent": 25,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Liberal Arts",
+      "Research",
+      "Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "NYU Abu Dhabi International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.8,
+      "ielts": 7,
+      "sat": 1450,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Liberal Arts",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 78000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 78000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 78000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "khalifa",
+    "name": "Khalifa University",
+    "short_name": "Khalifa",
+    "country": "United Arab Emirates",
+    "city": "Abu Dhabi",
+    "region": null,
+    "website": "https://ku.ac.ae",
+    "description": "The UAE's top research university for science and engineering.",
+    "logo_url": null,
+    "qs_rank": 230,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 30,
+    "tuition_min": 70000,
+    "tuition_max": 70000,
+    "currency": "AED",
+    "living_cost": 41000,
+    "student_count": 22188,
+    "intl_percent": 16,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Technology",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "Khalifa International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 70000
+      },
+      {
+        "program_name": "Technology",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 70000
+      },
+      {
+        "program_name": "STEM",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 70000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "bogazici",
+    "name": "Boğaziçi University",
+    "short_name": "Boğaziçi",
+    "country": "Turkey",
+    "city": "Istanbul",
+    "region": null,
+    "website": "https://bogazici.edu.tr",
+    "description": "Turkey's most selective, English-taught flagship university.",
+    "logo_url": null,
+    "qs_rank": 701,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 10,
+    "tuition_min": 24000,
+    "tuition_max": 24000,
+    "currency": "TRY",
+    "living_cost": 18000,
+    "student_count": 26444,
+    "intl_percent": 32,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Economics",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "Boğaziçi International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 24000
+      },
+      {
+        "program_name": "Economics",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 24000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 24000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "metu",
+    "name": "Middle East Technical University",
+    "short_name": "METU",
+    "country": "Turkey",
+    "city": "Ankara",
+    "region": null,
+    "website": "https://metu.edu.tr",
+    "description": "Turkey's leading technical research university.",
+    "logo_url": null,
+    "qs_rank": 660,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 15,
+    "tuition_min": 22000,
+    "tuition_max": 22000,
+    "currency": "TRY",
+    "living_cost": 17000,
+    "student_count": 29993,
+    "intl_percent": 17,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Technology",
+      "STEM"
+    ],
+    "scholarships": [
+      {
+        "name": "METU International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 22000
+      },
+      {
+        "program_name": "Technology",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 22000
+      },
+      {
+        "program_name": "STEM",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 22000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "um",
+    "name": "University of Malaya",
+    "short_name": "UM",
+    "country": "Malaysia",
+    "city": "Kuala Lumpur",
+    "region": null,
+    "website": "https://um.edu.my",
+    "description": "Malaysia's oldest and highest-ranked university.",
+    "logo_url": null,
+    "qs_rank": 60,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 25,
+    "tuition_min": 30000,
+    "tuition_max": 30000,
+    "currency": "MYR",
+    "living_cost": 21000,
+    "student_count": 13736,
+    "intl_percent": 24,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Engineering",
+      "Medicine"
+    ],
+    "scholarships": [
+      {
+        "name": "UM International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 30000
+      },
+      {
+        "program_name": "Engineering",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 30000
+      },
+      {
+        "program_name": "Medicine",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 30000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "usm",
+    "name": "Universiti Sains Malaysia",
+    "short_name": "USM",
+    "country": "Malaysia",
+    "city": "Penang",
+    "region": null,
+    "website": "https://usm.my",
+    "description": "Malaysia's APEX research-intensive science university.",
+    "logo_url": null,
+    "qs_rank": 137,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 35,
+    "tuition_min": 26000,
+    "tuition_max": 26000,
+    "currency": "MYR",
+    "living_cost": 19000,
+    "student_count": 30111,
+    "intl_percent": 35,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Sciences",
+      "Engineering",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "USM International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.3,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Sciences",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 26000
+      },
+      {
+        "program_name": "Engineering",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 26000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 26000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "nuuz",
+    "name": "National University of Uzbekistan",
+    "short_name": "NUUz",
+    "country": "Uzbekistan",
+    "city": "Tashkent",
+    "region": null,
+    "website": "https://nuu.uz",
+    "description": "Uzbekistan's oldest and largest national university.",
+    "logo_url": null,
+    "qs_rank": 1001,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 40,
+    "tuition_min": 30000000,
+    "tuition_max": 30000000,
+    "currency": "UZS",
+    "living_cost": 24000000,
+    "student_count": 11196,
+    "intl_percent": 28,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Sciences",
+      "Research",
+      "Humanities"
+    ],
+    "scholarships": [
+      {
+        "name": "NUUz International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.3,
+      "ielts": 5.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Sciences",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 30000000
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 30000000
+      },
+      {
+        "program_name": "Humanities",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 30000000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "inha-tashkent",
+    "name": "Inha University in Tashkent",
+    "short_name": "Inha Tashkent",
+    "country": "Uzbekistan",
+    "city": "Tashkent",
+    "region": null,
+    "website": "https://inha.uz",
+    "description": "A Korean-partnered IT and engineering university in Tashkent.",
+    "logo_url": null,
+    "qs_rank": 1201,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 45,
+    "tuition_min": 35000000,
+    "tuition_max": 35000000,
+    "currency": "UZS",
+    "living_cost": 22000000,
+    "student_count": 19777,
+    "intl_percent": 13,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Computer Science",
+      "Engineering",
+      "IT"
+    ],
+    "scholarships": [
+      {
+        "name": "Inha Tashkent International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.2,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Computer Science",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 35000000
+      },
+      {
+        "program_name": "Engineering",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 35000000
+      },
+      {
+        "program_name": "IT",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 35000000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "westminster-tashkent",
+    "name": "Westminster International University in Tashkent",
+    "short_name": "WIUT",
+    "country": "Uzbekistan",
+    "city": "Tashkent",
+    "region": null,
+    "website": "https://wiut.uz",
+    "description": "A UK-affiliated, English-taught university in Tashkent.",
+    "logo_url": null,
+    "qs_rank": 1201,
+    "the_rank": null,
+    "national_rank": 3,
+    "acceptance_rate": 50,
+    "tuition_min": 40000000,
+    "tuition_max": 40000000,
+    "currency": "UZS",
+    "living_cost": 22000000,
+    "student_count": 19182,
+    "intl_percent": 30,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Business",
+      "Economics",
+      "Law"
+    ],
+    "scholarships": [
+      {
+        "name": "WIUT International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.2,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Business",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 40000000
+      },
+      {
+        "program_name": "Economics",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 40000000
+      },
+      {
+        "program_name": "Law",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 40000000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "nu",
+    "name": "Nazarbayev University",
+    "short_name": "Nazarbayev",
+    "country": "Kazakhstan",
+    "city": "Astana",
+    "region": null,
+    "website": "https://nu.edu.kz",
+    "description": "Kazakhstan's English-medium flagship, mostly scholarship-funded.",
+    "logo_url": null,
+    "qs_rank": 350,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 20,
+    "tuition_min": 0,
+    "tuition_max": 0,
+    "currency": "KZT",
+    "living_cost": 2500000,
+    "student_count": 13527,
+    "intl_percent": 39,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Engineering",
+      "Sciences",
+      "Research"
+    ],
+    "scholarships": [
+      {
+        "name": "Nazarbayev International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.6,
+      "ielts": 6.5,
+      "sat": 1300,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Engineering",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 0
+      },
+      {
+        "program_name": "Research",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 0
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "kaznu",
+    "name": "Al-Farabi Kazakh National University",
+    "short_name": "KazNU",
+    "country": "Kazakhstan",
+    "city": "Almaty",
+    "region": null,
+    "website": "https://kaznu.kz",
+    "description": "Kazakhstan's oldest and largest classical university.",
+    "logo_url": null,
+    "qs_rank": 150,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 40,
+    "tuition_min": 2000000,
+    "tuition_max": 2000000,
+    "currency": "KZT",
+    "living_cost": 2000000,
+    "student_count": 13243,
+    "intl_percent": 19,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Sciences",
+      "Humanities"
+    ],
+    "scholarships": [
+      {
+        "name": "KazNU International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.3,
+      "ielts": 5.5,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 2000000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 2000000
+      },
+      {
+        "program_name": "Humanities",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 2000000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "msu",
+    "name": "Lomonosov Moscow State University",
+    "short_name": "MSU",
+    "country": "Russia",
+    "city": "Moscow",
+    "region": null,
+    "website": "https://msu.ru",
+    "description": "Russia's most prestigious and oldest university.",
+    "logo_url": null,
+    "qs_rank": 87,
+    "the_rank": null,
+    "national_rank": 1,
+    "acceptance_rate": 18,
+    "tuition_min": 400000,
+    "tuition_max": 400000,
+    "currency": "RUB",
+    "living_cost": 500000,
+    "student_count": 22431,
+    "intl_percent": 27,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Sciences",
+      "Mathematics"
+    ],
+    "scholarships": [
+      {
+        "name": "MSU International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.7,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 400000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 400000
+      },
+      {
+        "program_name": "Mathematics",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 400000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "hse",
+    "name": "HSE University",
+    "short_name": "HSE",
+    "country": "Russia",
+    "city": "Moscow",
+    "region": null,
+    "website": "https://hse.ru",
+    "description": "A modern Russian leader in economics, data and social science.",
+    "logo_url": null,
+    "qs_rank": 300,
+    "the_rank": null,
+    "national_rank": 3,
+    "acceptance_rate": 30,
+    "tuition_min": 450000,
+    "tuition_max": 450000,
+    "currency": "RUB",
+    "living_cost": 550000,
+    "student_count": 17610,
+    "intl_percent": 22,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Economics",
+      "Computer Science",
+      "Social Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "HSE International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Economics",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 450000
+      },
+      {
+        "program_name": "Computer Science",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 450000
+      },
+      {
+        "program_name": "Social Sciences",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 450000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  },
+  {
+    "id": "spbu",
+    "name": "Saint Petersburg State University",
+    "short_name": "SPbU",
+    "country": "Russia",
+    "city": "Saint Petersburg",
+    "region": null,
+    "website": "https://spbu.ru",
+    "description": "Russia's second-oldest university on the Baltic coast.",
+    "logo_url": null,
+    "qs_rank": 270,
+    "the_rank": null,
+    "national_rank": 2,
+    "acceptance_rate": 25,
+    "tuition_min": 380000,
+    "tuition_max": 380000,
+    "currency": "RUB",
+    "living_cost": 480000,
+    "student_count": 26752,
+    "intl_percent": 28,
+    "languages": [
+      "English"
+    ],
+    "degree_levels": [
+      "Bachelor",
+      "Master",
+      "PhD"
+    ],
+    "fields": [
+      "Research",
+      "Humanities",
+      "Sciences"
+    ],
+    "scholarships": [
+      {
+        "name": "SPbU International Merit Award",
+        "amount": "Partial tuition",
+        "coverage": "Partial tuition",
+        "deadline": "2026-12-15"
+      }
+    ],
+    "intl_support": null,
+    "requirements": {
+      "gpa": 3.5,
+      "ielts": 6,
+      "essays": 2,
+      "recommendations": 2
+    },
+    "programs": [
+      {
+        "program_name": "Research",
+        "degree_level": "Bachelor",
+        "duration": "3–4 years",
+        "tuition": 380000
+      },
+      {
+        "program_name": "Humanities",
+        "degree_level": "Master",
+        "duration": "1–2 years",
+        "tuition": 380000
+      },
+      {
+        "program_name": "Sciences",
+        "degree_level": "PhD",
+        "duration": "3–5 years",
+        "tuition": 380000
+      }
+    ],
+    "deadlines": [
+      {
+        "intake": "Early Round",
+        "round": "Early Round",
+        "deadline_date": "2026-11-15"
+      },
+      {
+        "intake": "Regular Round",
+        "round": "Regular Round",
+        "deadline_date": "2027-02-01"
+      }
+    ]
+  }
+]

@@ -1,5 +1,6 @@
 import type { OnboardingData } from "@/lib/user-store";
 import type { RoadmapMilestone, RoadmapTask, University } from "@/lib/types";
+import { getUniversity } from "@/lib/data/universities";
 
 /** Frozen "today" — keeps generated windows deterministic across SSR/CSR. */
 const FROZEN_TODAY = new Date("2026-05-29T00:00:00");
@@ -69,7 +70,17 @@ export function generateRoadmap(onboarding: OnboardingData | null): RoadmapMiles
   const gpaRatio = o.gpa != null && o.gpaScale ? o.gpa / o.gpaScale : null;
   const countries = o.countries ?? [];
   const country = countries[0];
-  const targetCount = Math.max(o.dreamUniversities?.length ?? 0, 6);
+
+  // Resolve the user's SELECTED universities so the roadmap reflects their real
+  // targets — their deadlines and requirements shape the plan (not a template).
+  const selected = (o.dreamUniversities ?? [])
+    .map((id) => getUniversity(id))
+    .filter((u): u is University => !!u);
+  const targetCount = Math.max(selected.length, 6);
+
+  // Toughest test bar across selected schools → drives the test-prep milestone.
+  const maxReqIelts = selected.reduce((m, u) => Math.max(m, u.requirements.ielts ?? 0), 0);
+  const maxReqSat = selected.reduce((m, u) => Math.max(m, u.requirements.sat ?? 0), 0);
 
   const earlyDeadline = addMonths(intake, -10);
 
@@ -86,19 +97,23 @@ export function generateRoadmap(onboarding: OnboardingData | null): RoadmapMiles
      Completion is driven STRICTLY by data that exists in the user's profile.
      A task is `done` only when the corresponding record is present (e.g. an
      IELTS/SAT score). Action items with no backing record stay `false`. */
+  // Test targets reflect the toughest requirement among the SELECTED schools.
+  const ieltsTarget = maxReqIelts > 0 ? maxReqIelts.toFixed(1) : "7.0";
+  const satTarget = maxReqSat > 0 ? `${maxReqSat}` : "1450+";
+
   const m1: RoadmapTask[] = [];
   // IELTS: done only if a score exists in the profile.
   m1.push(
     o.ielts != null
       ? { id: "m1-ielts", label: `IELTS recorded — band ${o.ielts}`, done: true }
-      : { id: "m1-ielts", label: "Register for and take IELTS (target 7.0)", done: false },
+      : { id: "m1-ielts", label: `Register for and take IELTS (target ${ieltsTarget} for your schools)`, done: false },
   );
   if (isBachelor) {
     // SAT: done only if a score exists.
     m1.push(
       o.sat != null
         ? { id: "m1-sat", label: `SAT recorded — ${o.sat}`, done: true }
-        : { id: "m1-sat", label: "Take the SAT (target 1450+)", done: false },
+        : { id: "m1-sat", label: `Take the SAT (target ${satTarget} for your schools)`, done: false },
     );
   }
   if (isMaster || isPhD) {
@@ -148,11 +163,22 @@ export function generateRoadmap(onboarding: OnboardingData | null): RoadmapMiles
     m3.push({ id: "m3-ucas", label: "Finalize your UCAS personal statement", done: false });
   }
 
-  /* ---- Milestone 4: Submit applications ---- */
-  const m4: RoadmapTask[] = [
-    { id: "m4-early", label: `Submit early-round applications (by ${fullDate.format(earlyDeadline)})`, done: false },
-    { id: "m4-scholar", label: "Apply for scholarships you qualify for", done: false },
-  ];
+  /* ---- Milestone 4: Submit applications ----
+     One concrete task PER SELECTED SCHOOL, using that school's earliest real
+     deadline — so e.g. picking Harvard + UCL produces their actual dates. */
+  const m4: RoadmapTask[] = [];
+  for (const u of selected.slice(0, 8)) {
+    const earliest = [...(u.deadlines ?? [])]
+      .map((d) => d.date)
+      .filter(Boolean)
+      .sort()[0];
+    const when = earliest ? ` (by ${fullDate.format(new Date(earliest))})` : "";
+    m4.push({ id: `m4-app-${u.id}`, label: `Submit your ${u.shortName} application${when}`, done: false });
+  }
+  if (m4.length === 0) {
+    m4.push({ id: "m4-early", label: `Submit early-round applications (by ${fullDate.format(earlyDeadline)})`, done: false });
+  }
+  m4.push({ id: "m4-scholar", label: "Apply for scholarships you qualify for", done: false });
   if (countries.includes("Germany")) {
     m4.push({ id: "m4-aps", label: "Submit via uni-assist / complete your APS certificate", done: false });
   }
