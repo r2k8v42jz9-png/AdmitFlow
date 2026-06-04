@@ -1,24 +1,43 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
+import type { EmailOtpType } from "@supabase/supabase-js";
 import { SUPABASE_URL, SUPABASE_ANON_KEY, isSupabaseConfigured } from "@/lib/supabase/config";
 
 /**
- * OAuth + email-confirmation callback.
+ * Auth callback for BOTH email links and OAuth.
  *
- * Supabase redirects here with a `?code=` after Google login (or email
- * confirmation). We exchange it for a session — and CRITICALLY, the session
- * cookies that `exchangeCodeForSession` writes must be attached to the SAME
- * redirect response we return, or the browser lands on the next page with no
- * session and the proxy bounces it straight back to /login (the OAuth loop).
+ *  - Email links (password recovery, signup confirm, magic link, email change)
+ *    arrive with `?token_hash=...&type=...` and are verified with `verifyOtp`.
+ *    This is the robust path: unlike the PKCE `?code=` flow, it needs NO
+ *    `code_verifier` cookie, so it works even when the link is opened in a
+ *    different browser/in-app webview or after an email scanner touched it.
+ *
+ *  - OAuth (Google) arrives with `?code=` and is completed with
+ *    `exchangeCodeForSession` (PKCE — the verifier cookie is present because the
+ *    flow started in the same browser moments earlier).
+ *
+ * In both cases the session cookies must be written onto the SAME redirect
+ * response we return, or the browser lands on `next` with no session and the
+ * proxy bounces it back to /login.
+ *
+ * On failure we log the real reason (visible in Vercel function logs) and pass
+ * a short `reason` on the redirect so the failure is diagnosable without log
+ * access.
  */
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const tokenHash = searchParams.get("token_hash");
+  const type = searchParams.get("type") as EmailOtpType | null;
   const next = searchParams.get("next") ?? "/onboarding";
 
-  if (!code || !isSupabaseConfigured()) {
-    return NextResponse.redirect(`${origin}/login?error=auth_callback`);
-  }
+  const fail = (reason: string) => {
+    console.error(`[auth/callback] ${reason} (type=${type ?? "-"}, hasCode=${!!code}, hasTokenHash=${!!tokenHash})`);
+    return NextResponse.redirect(`${origin}/login?error=auth_callback&reason=${encodeURIComponent(reason)}`);
+  };
+
+  if (!isSupabaseConfigured()) return fail("supabase_not_configured");
+  if (!code && !tokenHash) return fail("missing_code_or_token");
 
   // The response we will return — Supabase writes auth cookies onto it.
   const response = NextResponse.redirect(`${origin}${next}`);
@@ -36,16 +55,21 @@ export async function GET(request: Request) {
           .filter((c) => c.name) ?? [];
       },
       setAll(cookiesToSet) {
-        // Attach every Set-Cookie to the redirect response itself.
         cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
       },
     },
   });
 
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
-  if (error) {
-    return NextResponse.redirect(`${origin}/login?error=auth_callback`);
+  // Email-link flow (recovery etc.) — no code_verifier needed.
+  if (tokenHash && type) {
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
+    if (error) return fail(`verifyOtp_failed: ${error.message}`);
+    return response;
   }
+
+  // OAuth / PKCE code flow.
+  const { error } = await supabase.auth.exchangeCodeForSession(code!);
+  if (error) return fail(`exchange_failed: ${error.message}`);
 
   return response;
 }

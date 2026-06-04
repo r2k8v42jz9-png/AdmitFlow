@@ -12,15 +12,23 @@ import { CTA } from "@/components/marketing/cta";
 export default async function LandingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ code?: string }>;
+  searchParams: Promise<{ code?: string; token_hash?: string; type?: string }>;
 }) {
   // Defensive: Supabase recovery/confirmation links can land on the Site URL
-  // (this marketing root) with a `?code=` when the email's redirect target
-  // isn't allow-listed. Forward it to the callback, which exchanges the code
-  // for a session and continues to the password-reset page.
-  const { code } = await searchParams;
-  if (code) {
-    redirect(`/auth/callback?next=${encodeURIComponent("/reset-password")}&code=${encodeURIComponent(code)}`);
+  // (this marketing root) when the email's redirect target isn't allow-listed.
+  // Forward whichever auth params arrived (PKCE `code`, or email-link
+  // `token_hash`+`type`) to the callback, which establishes the session and
+  // continues to the password-reset page.
+  const { code, token_hash, type } = await searchParams;
+  if (code || token_hash) {
+    const params = new URLSearchParams({ next: "/reset-password" });
+    if (token_hash) {
+      params.set("token_hash", token_hash);
+      params.set("type", type ?? "recovery");
+    } else if (code) {
+      params.set("code", code);
+    }
+    redirect(`/auth/callback?${params.toString()}`);
   }
 
   return (
