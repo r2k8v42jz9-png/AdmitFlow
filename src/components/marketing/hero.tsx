@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MatchBoard } from "@/components/marketing/match-board";
+import { Constellation } from "@/components/marketing/constellation";
 import { universityLogos } from "@/lib/data/marketing";
 import { useT } from "@/lib/i18n";
 
@@ -12,13 +12,6 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
   const { t } = useT();
-  const reduce = useReducedMotion() ?? false;
-
-  // subtle pointer-driven 3D tilt of the board
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const rotX = useSpring(useTransform(my, [-0.5, 0.5], [4.5, -4.5]), { stiffness: 110, damping: 18 });
-  const rotY = useSpring(useTransform(mx, [-0.5, 0.5], [-5.5, 5.5]), { stiffness: 110, damping: 18 });
 
   return (
     <section className="relative overflow-hidden pt-32 pb-24 sm:pt-40">
@@ -98,26 +91,14 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Signature element — the live match engine */}
+        {/* Signature element — the living University Constellation */}
         <motion.div
-          initial={{ opacity: 0, y: 34, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.9, ease, delay: 0.15 }}
-          style={{ perspective: 1400 }}
-          onPointerMove={(e) => {
-            if (reduce) return;
-            const r = e.currentTarget.getBoundingClientRect();
-            mx.set((e.clientX - r.left) / r.width - 0.5);
-            my.set((e.clientY - r.top) / r.height - 0.5);
-          }}
-          onPointerLeave={() => {
-            mx.set(0);
-            my.set(0);
-          }}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease, delay: 0.15 }}
+          className="relative"
         >
-          <motion.div style={{ rotateX: reduce ? 0 : rotX, rotateY: reduce ? 0 : rotY, transformStyle: "preserve-3d" }}>
-            <MatchBoard />
-          </motion.div>
+          <Constellation />
         </motion.div>
       </div>
 
