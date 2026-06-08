@@ -15,11 +15,10 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden pt-32 pb-24 sm:pt-40">
-      {/* Airy light field */}
-      <div className="absolute inset-0 -z-20 bg-background" />
-      <div className="absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-[0.5]" />
-      <div className="absolute -right-40 -top-44 -z-10 h-[38rem] w-[38rem] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.15),transparent_70%)] blur-2xl" />
-      <div className="absolute -left-48 top-48 -z-10 h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-cyan)/0.12),transparent_70%)] blur-2xl" />
+      {/* Pure white base + soft blue-white ambient glow on the right (no grid/pattern) */}
+      <div className="absolute inset-0 -z-20 bg-white" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(58%_70%_at_80%_40%,hsl(var(--brand-blue)/0.1),transparent_62%)]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(42%_55%_at_92%_74%,hsl(var(--brand-cyan)/0.07),transparent_60%)]" />
 
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[0.82fr_1.18fr]">
         {/* Copy */}

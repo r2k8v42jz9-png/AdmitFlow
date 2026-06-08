@@ -59,6 +59,12 @@ for (const [a, b] of EDGES) {
   ADJ[b].add(a);
 }
 
+// extremely subtle free-floating atmosphere particles
+const AMBIENT = [
+  { x: 0.22, y: 0.2 }, { x: 0.7, y: 0.16 }, { x: 0.5, y: 0.62 }, { x: 0.86, y: 0.55 },
+  { x: 0.3, y: 0.78 }, { x: 0.6, y: 0.34 }, { x: 0.16, y: 0.5 }, { x: 0.78, y: 0.86 },
+];
+
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const quad = (a: number, c: number, b: number, t: number) => {
   const mt = 1 - t;
@@ -75,6 +81,7 @@ export function Constellation() {
   const pathEls = useRef<Record<string, SVGPathElement | null>>({});
   const partEls = useRef<Record<string, SVGCircleElement | null>>({});
   const pulseEls = useRef<(SVGCircleElement | null)[]>([]);
+  const ambientEls = useRef<(SVGCircleElement | null)[]>([]);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const [hover, setHover] = useState<string | null>(null);
@@ -198,7 +205,7 @@ export function Constellation() {
         if (!el || !circle) continue;
         const isHv = hv === n.id;
         const isNear = hv ? neighbors!.has(n.id) : false;
-        const targetScale = isHv ? 2.1 : isNear ? 1.2 : hv ? 0.86 : 1;
+        const targetScale = isHv ? 2.28 : isNear ? 1.22 : hv ? 0.85 : 1;
         const targetOp = !hv ? 1 : isHv || isNear ? 1 : 0.22;
         scale[n.id] = lerp(scale[n.id], targetScale * breathe, k);
         op[n.id] = lerp(op[n.id], targetOp, k);
@@ -228,7 +235,7 @@ export function Constellation() {
         if (path) {
           path.setAttribute("d", `M ${pa.x.toFixed(1)} ${pa.y.toFixed(1)} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${pb.x.toFixed(1)} ${pb.y.toFixed(1)}`);
           const active = hv ? a === hv || b === hv : false;
-          path.style.strokeOpacity = active ? "0.55" : hv ? "0.05" : "0.13";
+          path.style.strokeOpacity = active ? "0.55" : hv ? "0.05" : (0.1 + Math.sin(t * 0.6 + i * 0.9) * 0.045).toFixed(3);
           path.style.strokeWidth = active ? "1.8" : "1";
         }
         const part = partEls.current[`${a}-${b}`];
@@ -283,6 +290,17 @@ export function Constellation() {
         });
       }
 
+      // ambient atmosphere particles — extremely subtle, slow
+      if (!reduce) {
+        AMBIENT.forEach((a, i) => {
+          const el = ambientEls.current[i];
+          if (!el) return;
+          el.setAttribute("cx", ((a.x + Math.sin(t * 0.07 + i) * 0.02) * dims.W).toFixed(1));
+          el.setAttribute("cy", ((a.y + Math.cos(t * 0.06 + i * 1.3) * 0.02) * dims.H).toFixed(1));
+          el.style.opacity = (0.13 + Math.sin(t * 0.5 + i) * 0.08).toFixed(2);
+        });
+      }
+
       // information card — follows the focused node, clears the enlarged node
       const card = cardRef.current;
       if (card) {
@@ -334,16 +352,27 @@ export function Constellation() {
       onPointerLeave={onPointerLeave}
       className="relative aspect-[1/0.92] w-full"
     >
-      {/* atmospheric depth field (parallax slower) */}
-      <div ref={bgRef} className="pointer-events-none absolute inset-[-8%] -z-10 overflow-hidden">
-        <div className="absolute left-[18%] top-[20%] h-72 w-72 rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.1),transparent_70%)] blur-3xl" />
-        <div className="absolute right-[12%] bottom-[16%] h-72 w-72 rounded-full bg-[radial-gradient(circle,hsl(var(--brand-cyan)/0.1),transparent_70%)] blur-3xl" />
-        <div className="absolute inset-0 bg-dots opacity-[0.45] [mask-image:radial-gradient(ellipse_at_center,#000_35%,transparent_78%)]" />
+      {/* atmospheric depth field — a faint glow that hugs the network (no grid/pattern) */}
+      <div ref={bgRef} className="pointer-events-none absolute inset-[-12%] -z-10">
+        <div className="absolute inset-[14%] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.06),transparent_68%)] blur-2xl" />
+        <div className="absolute left-[16%] top-[18%] h-72 w-72 rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.08),transparent_70%)] blur-3xl" />
+        <div className="absolute right-[10%] bottom-[14%] h-72 w-72 rounded-full bg-[radial-gradient(circle,hsl(var(--brand-cyan)/0.07),transparent_70%)] blur-3xl" />
       </div>
 
       {/* parallax layer: links + nodes + card move together */}
       <div ref={layerRef} className="absolute inset-0">
         <svg className="absolute inset-0 h-full w-full overflow-visible" aria-hidden>
+          {AMBIENT.map((_, i) => (
+            <circle
+              key={`amb-${i}`}
+              ref={(el) => {
+                ambientEls.current[i] = el;
+              }}
+              r={1.4}
+              fill="hsl(var(--brand-blue))"
+              style={{ opacity: 0 }}
+            />
+          ))}
           {EDGES.map(([a, b]) => (
             <path
               key={`p-${a}-${b}`}
@@ -406,8 +435,8 @@ export function Constellation() {
               >
                 <span
                   className={[
-                    "absolute inset-[-32%] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.4),transparent_68%)] transition-opacity duration-300",
-                    active ? "opacity-100" : near ? "opacity-60" : "animate-pulse-glow opacity-40",
+                    "absolute rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.46),transparent_68%)] transition-all duration-300",
+                    active ? "inset-[-42%] opacity-100" : near ? "inset-[-32%] opacity-65" : "inset-[-30%] animate-pulse-glow opacity-40",
                   ].join(" ")}
                 />
                 <span
@@ -459,12 +488,12 @@ export function Constellation() {
         <div
           ref={cardRef}
           style={{ opacity: 0, transform: "translate(0,0)" }}
-          className="glass-strong pointer-events-none absolute left-0 top-0 z-[70] w-[312px] rounded-3xl p-5 shadow-[0_40px_90px_-35px_hsl(224_60%_30%/0.55)]"
+          className="pointer-events-none absolute left-0 top-0 z-[70] w-[336px] rounded-3xl border border-white/70 bg-white/80 p-5 shadow-[0_50px_110px_-40px_hsl(224_60%_30%/0.55),0_8px_24px_-12px_hsl(224_40%_30%/0.25)] backdrop-blur-2xl"
         >
           {cardNode && (
             <>
               <div className="flex items-center gap-3.5">
-                <span className="grid size-12 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-2 ring-1 ring-border">
+                <span className="grid size-14 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-2.5 ring-1 ring-black/[0.06] shadow-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`https://www.google.com/s2/favicons?sz=128&domain=${cardNode.domain}`} alt="" className="max-h-full max-w-full object-contain" />
                 </span>
