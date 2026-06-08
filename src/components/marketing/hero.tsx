@@ -5,20 +5,21 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Constellation } from "@/components/marketing/constellation";
-import { universityLogos } from "@/lib/data/marketing";
 import { useT } from "@/lib/i18n";
+import { cn } from "@/lib/utils";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
-  const { t } = useT();
+  const { t, locale } = useT();
+  const isRu = locale === "ru";
 
   return (
     <section className="relative overflow-hidden pt-32 pb-24 sm:pt-40">
-      {/* Pure white base + soft blue-white ambient glow on the right (no grid/pattern) */}
-      <div className="absolute inset-0 -z-20 bg-white" />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(58%_70%_at_80%_40%,hsl(var(--brand-blue)/0.1),transparent_62%)]" />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(42%_55%_at_92%_74%,hsl(var(--brand-cyan)/0.07),transparent_60%)]" />
+      {/* Theme-aware base: white in light, deep navy in dark — soft blue ambient glow on the right */}
+      <div className="absolute inset-0 -z-20 bg-background" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(58%_70%_at_80%_40%,hsl(var(--brand-blue)/0.1),transparent_62%)] dark:bg-[radial-gradient(60%_72%_at_80%_38%,hsl(var(--brand-blue)/0.2),transparent_64%)]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(42%_55%_at_92%_74%,hsl(var(--brand-cyan)/0.07),transparent_60%)] dark:bg-[radial-gradient(44%_58%_at_90%_72%,hsl(var(--brand-cyan)/0.12),transparent_62%)]" />
 
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[0.82fr_1.18fr]">
         {/* Copy */}
@@ -40,7 +41,14 @@ export function Hero() {
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease, delay: 0.06 }}
-            className="mt-6 font-display text-[2.7rem] font-medium leading-[1.03] tracking-[-0.025em] text-balance sm:text-6xl md:text-[4.4rem]"
+            className={cn(
+              "mt-6 max-w-[16ch] font-display font-medium tracking-[-0.025em] text-balance",
+              // Russian runs ~25% longer — step the scale down and tighten leading
+              // so it keeps the same vertical footprint and never crowds the constellation.
+              isRu
+                ? "text-[2.15rem] leading-[1.08] sm:text-5xl md:text-[3.3rem]"
+                : "text-[2.7rem] leading-[1.03] sm:text-6xl md:text-[4.4rem]",
+            )}
           >
             {t("hero.titleLead")}
             <span className="bg-[linear-gradient(100deg,hsl(var(--brand-indigo)),hsl(var(--brand-blue))_55%,hsl(var(--brand-cyan)))] bg-clip-text italic text-transparent">
@@ -99,22 +107,6 @@ export function Hero() {
         >
           <Constellation />
         </motion.div>
-      </div>
-
-      {/* Honor roll */}
-      <div className="mx-auto mt-20 max-w-5xl px-6">
-        <p className="text-center text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground/70">
-          {t("hero.admittedTo")}
-        </p>
-        <div className="mask-fade-x mt-5 flex gap-12 overflow-hidden">
-          <div className="flex shrink-0 animate-marquee items-center gap-12 pause-on-hover">
-            {[...universityLogos, ...universityLogos].map((name, i) => (
-              <span key={i} className="whitespace-nowrap font-display text-lg font-medium text-foreground/35">
-                {name}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

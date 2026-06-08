@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
+import { useTheme } from "next-themes";
 
 /**
  * University Constellation — a living, cinematic galaxy of elite universities.
@@ -73,6 +74,11 @@ const quad = (a: number, c: number, b: number, t: number) => {
 
 export function Constellation() {
   const reduce = useReducedMotion() ?? false;
+  const { resolvedTheme } = useTheme();
+  const darkRef = useRef(false);
+  useEffect(() => {
+    darkRef.current = resolvedTheme === "dark";
+  }, [resolvedTheme]);
   const wrapRef = useRef<HTMLDivElement>(null);
   const layerRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
@@ -162,6 +168,7 @@ export function Constellation() {
       if (!reduce) t += dt;
 
       const hv = hoverRef.current;
+      const dk = darkRef.current;
       const neighbors = hv ? ADJ[hv] : null;
       const breathe = reduce ? 1 : 1 + Math.sin(t * 0.5) * 0.006;
 
@@ -235,8 +242,10 @@ export function Constellation() {
         if (path) {
           path.setAttribute("d", `M ${pa.x.toFixed(1)} ${pa.y.toFixed(1)} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${pb.x.toFixed(1)} ${pb.y.toFixed(1)}`);
           const active = hv ? a === hv || b === hv : false;
-          path.style.strokeOpacity = active ? "0.55" : hv ? "0.05" : (0.1 + Math.sin(t * 0.6 + i * 0.9) * 0.045).toFixed(3);
-          path.style.strokeWidth = active ? "1.8" : "1";
+          path.style.strokeOpacity = active
+            ? dk ? "0.8" : "0.55"
+            : hv ? (dk ? "0.08" : "0.05") : ((dk ? 0.24 : 0.1) + Math.sin(t * 0.6 + i * 0.9) * (dk ? 0.07 : 0.045)).toFixed(3);
+          path.style.strokeWidth = active ? (dk ? "2" : "1.8") : dk ? "1.2" : "1";
         }
         const part = partEls.current[`${a}-${b}`];
         if (part && !reduce) {
@@ -361,7 +370,10 @@ export function Constellation() {
 
       {/* parallax layer: links + nodes + card move together */}
       <div ref={layerRef} className="absolute inset-0">
-        <svg className="absolute inset-0 h-full w-full overflow-visible" aria-hidden>
+        <svg
+          className="absolute inset-0 h-full w-full overflow-visible dark:[filter:drop-shadow(0_0_2.5px_hsl(var(--brand-blue)/0.5))]"
+          aria-hidden
+        >
           {AMBIENT.map((_, i) => (
             <circle
               key={`amb-${i}`}
@@ -435,7 +447,7 @@ export function Constellation() {
               >
                 <span
                   className={[
-                    "absolute rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.46),transparent_68%)] transition-all duration-300",
+                    "absolute rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.46),transparent_68%)] transition-all duration-300 dark:bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.62),transparent_70%)]",
                     active ? "inset-[-42%] opacity-100" : near ? "inset-[-32%] opacity-65" : "inset-[-30%] animate-pulse-glow opacity-40",
                   ].join(" ")}
                 />
@@ -488,7 +500,7 @@ export function Constellation() {
         <div
           ref={cardRef}
           style={{ opacity: 0, transform: "translate(0,0)" }}
-          className="pointer-events-none absolute left-0 top-0 z-[70] w-[336px] rounded-3xl border border-white/70 bg-white/80 p-5 shadow-[0_50px_110px_-40px_hsl(224_60%_30%/0.55),0_8px_24px_-12px_hsl(224_40%_30%/0.25)] backdrop-blur-2xl"
+          className="pointer-events-none absolute left-0 top-0 z-[70] w-[336px] rounded-3xl border border-white/70 bg-white/80 p-5 shadow-[0_50px_110px_-40px_hsl(224_60%_30%/0.55),0_8px_24px_-12px_hsl(224_40%_30%/0.25)] backdrop-blur-2xl dark:border-white/10 dark:bg-card/85 dark:shadow-[0_50px_120px_-40px_hsl(224_80%_2%/0.9),0_0_0_1px_hsl(var(--brand-blue)/0.12)]"
         >
           {cardNode && (
             <>

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { Hero } from "@/components/marketing/hero";
+import { LogoBridge } from "@/components/marketing/logo-bridge";
 import { AdmissionJourney } from "@/components/marketing/admission-journey";
 import { Features } from "@/components/marketing/features";
 import { AIShowcase } from "@/components/marketing/ai-showcase";
@@ -35,6 +36,7 @@ export default async function LandingPage({
   return (
     <>
       <Hero />
+      <LogoBridge />
       <AdmissionJourney />
       <Features />
       <AIShowcase />
