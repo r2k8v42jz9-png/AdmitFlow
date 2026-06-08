@@ -24,7 +24,8 @@ export function AdmissionJourney() {
 
   return (
     <section className="relative overflow-hidden py-28 sm:py-36">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(120%_90%_at_50%_0%,hsl(228_50%_7%),hsl(232_50%_3%))]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(120%_90%_at_50%_0%,hsl(214_44%_97%),hsl(220_30%_99%))]" />
+      <div className="absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-[0.4]" />
 
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
@@ -51,7 +52,7 @@ export function AdmissionJourney() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7, ease, delay: 0.12 }}
-            className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-foreground/60 text-pretty"
+            className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty"
           >
             One continuous path from where you stand today to where you&apos;ll study tomorrow.
           </motion.p>
@@ -60,7 +61,7 @@ export function AdmissionJourney() {
         {/* Flow */}
         <div ref={ref} className="relative mt-20">
           {/* connecting line (desktop) — fills as you scroll */}
-          <div className="absolute left-0 right-0 top-[34px] hidden h-px bg-white/10 lg:block">
+          <div className="absolute left-0 right-0 top-[34px] hidden h-px bg-border lg:block">
             <motion.div
               style={{ scaleX: lineScale }}
               className="h-full origin-left bg-[linear-gradient(90deg,hsl(var(--brand-indigo)),hsl(var(--brand-cyan)))]"
@@ -75,16 +76,16 @@ export function AdmissionJourney() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.6, ease, delay: i * 0.1 }}
-                className="relative text-center lg:text-left"
+                className="group relative text-center lg:text-left"
               >
-                <div className="relative z-10 mx-auto grid size-[68px] place-items-center rounded-2xl border border-white/10 bg-[hsl(228_40%_8%)] shadow-[0_18px_50px_-20px_hsl(230_80%_4%)] lg:mx-0">
+                <div className="relative z-10 mx-auto grid size-[68px] place-items-center rounded-2xl border border-border bg-card shadow-[0_18px_50px_-26px_hsl(224_50%_30%/0.4)] transition-transform duration-300 group-hover:-translate-y-1 lg:mx-0">
                   <s.icon className="size-7 text-primary" />
                   <span className="absolute -right-2 -top-2 grid size-6 place-items-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground tabular-nums">
                     {i + 1}
                   </span>
                 </div>
                 <h3 className="mt-5 font-display text-lg font-medium">{s.label}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-foreground/55">{s.desc}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
               </motion.li>
             ))}
           </ol>
