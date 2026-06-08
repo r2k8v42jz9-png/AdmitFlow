@@ -21,7 +21,7 @@ export function Hero() {
       <div className="absolute -right-40 -top-44 -z-10 h-[38rem] w-[38rem] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.15),transparent_70%)] blur-2xl" />
       <div className="absolute -left-48 top-48 -z-10 h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-cyan)/0.12),transparent_70%)] blur-2xl" />
 
-      <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 lg:grid-cols-[1.02fr_1fr]">
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[0.82fr_1.18fr]">
         {/* Copy */}
         <div className="text-center lg:text-left">
           <motion.div
@@ -96,7 +96,7 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease, delay: 0.15 }}
-          className="relative"
+          className="relative lg:-mr-6 xl:-mr-16"
         >
           <Constellation />
         </motion.div>
