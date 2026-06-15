@@ -151,7 +151,7 @@ export function Constellation() {
     let t = 0;
     let last = performance.now();
     let raf = 0;
-    const k = reduce ? 1 : 0.2;
+    const k = reduce ? 1 : 0.16;
 
     const driftOf = (n: CNode) => {
       if (reduce) return { dx: 0, dy: 0 };
@@ -172,12 +172,12 @@ export function Constellation() {
       const neighbors = hv ? ADJ[hv] : null;
       const breathe = reduce ? 1 : 1 + Math.sin(t * 0.5) * 0.006;
 
-      // camera parallax (depth layers react to cursor)
+      // camera parallax — atmospheric layer drifts slowly; nodes parallax
+      // per-depth below so the network reads as a 3D field, not a flat diagram.
       const cam = camRef.current;
       cam.x = lerp(cam.x, cam.tx, reduce ? 1 : 0.06);
       cam.y = lerp(cam.y, cam.ty, reduce ? 1 : 0.06);
-      if (layerRef.current) layerRef.current.style.transform = `translate(${cam.x.toFixed(2)}px,${cam.y.toFixed(2)}px)`;
-      if (bgRef.current) bgRef.current.style.transform = `translate(${(cam.x * 0.4).toFixed(2)}px,${(cam.y * 0.4).toFixed(2)}px)`;
+      if (bgRef.current) bgRef.current.style.transform = `translate(${(cam.x * 0.35).toFixed(2)}px,${(cam.y * 0.35).toFixed(2)}px)`;
 
       // base (drifted) positions
       const base: Record<string, { x: number; y: number }> = {};
@@ -196,13 +196,18 @@ export function Constellation() {
           const dx = b.x - f.x;
           const dy = b.y - f.y;
           const len = Math.hypot(dx, dy) || 1;
-          const push = neighbors!.has(n.id) ? 58 : 26;
+          const push = neighbors!.has(n.id) ? 84 : 46;
           tx = (dx / len) * push;
           ty = (dy / len) * push;
         }
         disp[n.id].x = lerp(disp[n.id].x, tx, k);
         disp[n.id].y = lerp(disp[n.id].y, ty, k);
-        live[n.id] = { x: base[n.id].x + disp[n.id].x, y: base[n.id].y + disp[n.id].y };
+        // depth: larger (closer) nodes parallax more than small (distant) ones
+        const depth = 0.6 + ((n.size - 70) / 24) * 0.5;
+        live[n.id] = {
+          x: base[n.id].x + disp[n.id].x + cam.x * depth,
+          y: base[n.id].y + disp[n.id].y + cam.y * depth,
+        };
       }
 
       // nodes — visual hierarchy: focus dominant, neighbours medium, rest recede
@@ -212,15 +217,16 @@ export function Constellation() {
         if (!el || !circle) continue;
         const isHv = hv === n.id;
         const isNear = hv ? neighbors!.has(n.id) : false;
-        const targetScale = isHv ? 2.28 : isNear ? 1.22 : hv ? 0.85 : 1;
-        const targetOp = !hv ? 1 : isHv || isNear ? 1 : 0.22;
+        const targetScale = isHv ? 2.32 : isNear ? 1.24 : hv ? 0.95 : 1;
+        // Keep non-selected universities clearly present — gently recede, never disappear.
+        const targetOp = !hv ? 1 : isHv || isNear ? 1 : 0.52;
         scale[n.id] = lerp(scale[n.id], targetScale * breathe, k);
         op[n.id] = lerp(op[n.id], targetOp, k);
         const p = live[n.id];
         el.style.transform = `translate(-50%,-50%) translate(${p.x.toFixed(2)}px,${p.y.toFixed(2)}px)`;
         el.style.opacity = op[n.id].toFixed(3);
         el.style.zIndex = isHv ? "60" : isNear ? "30" : "10";
-        const blur = hv && !isHv && !isNear ? (1 - op[n.id]) * 2.2 : 0;
+        const blur = hv && !isHv && !isNear ? (1 - op[n.id]) * 0.9 : 0;
         circle.style.transform = `scale(${scale[n.id].toFixed(3)})`;
         circle.style.filter = blur > 0.02 ? `blur(${blur.toFixed(2)}px)` : "none";
       }
@@ -321,7 +327,9 @@ export function Constellation() {
           const cw = card.offsetWidth || 300;
           const ch = card.offsetHeight || 240;
           const flipLeft = p.x + nodeR + cw + 16 > dims.W;
-          const cardX = flipLeft ? p.x - nodeR - cw - 14 : p.x + nodeR + 14;
+          const rawX = flipLeft ? p.x - nodeR - cw - 14 : p.x + nodeR + 14;
+          // keep the card inside the constellation field so it never spills onto the headline
+          const cardX = Math.min(Math.max(rawX, 6), Math.max(dims.W - cw - 6, 6));
           const cardY = Math.min(Math.max(p.y - ch / 2, 6), Math.max(dims.H - ch - 6, 6));
           const rise = (1 - cardVis) * 12;
           card.style.transform = `translate(${cardX.toFixed(1)}px,${(cardY + rise).toFixed(1)}px) scale(${(0.95 + 0.05 * cardVis).toFixed(3)})`;
@@ -344,8 +352,8 @@ export function Constellation() {
   const onPointerMove = (e: React.PointerEvent) => {
     if (reduce) return;
     const r = e.currentTarget.getBoundingClientRect();
-    camRef.current.tx = ((e.clientX - r.left) / r.width - 0.5) * 26;
-    camRef.current.ty = ((e.clientY - r.top) / r.height - 0.5) * 20;
+    camRef.current.tx = ((e.clientX - r.left) / r.width - 0.5) * 36;
+    camRef.current.ty = ((e.clientY - r.top) / r.height - 0.5) * 28;
   };
   const onPointerLeave = () => {
     camRef.current.tx = 0;
@@ -362,10 +370,10 @@ export function Constellation() {
       className="relative aspect-[1/0.92] w-full"
     >
       {/* atmospheric depth field — a faint glow that hugs the network (no grid/pattern) */}
-      <div ref={bgRef} className="pointer-events-none absolute inset-[-12%] -z-10">
-        <div className="absolute inset-[14%] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.06),transparent_68%)] blur-2xl" />
-        <div className="absolute left-[16%] top-[18%] h-72 w-72 rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.08),transparent_70%)] blur-3xl" />
-        <div className="absolute right-[10%] bottom-[14%] h-72 w-72 rounded-full bg-[radial-gradient(circle,hsl(var(--brand-cyan)/0.07),transparent_70%)] blur-3xl" />
+      <div ref={bgRef} className="pointer-events-none absolute inset-[-14%] -z-10">
+        <div className="absolute inset-[10%] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.1),transparent_66%)] blur-2xl dark:bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.16),transparent_66%)]" />
+        <div className="absolute left-[14%] top-[16%] h-80 w-80 rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.1),transparent_70%)] blur-3xl dark:bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.16),transparent_70%)]" />
+        <div className="absolute right-[8%] bottom-[12%] h-80 w-80 rounded-full bg-[radial-gradient(circle,hsl(var(--brand-cyan)/0.09),transparent_70%)] blur-3xl dark:bg-[radial-gradient(circle,hsl(var(--brand-cyan)/0.14),transparent_70%)]" />
       </div>
 
       {/* parallax layer: links + nodes + card move together */}
