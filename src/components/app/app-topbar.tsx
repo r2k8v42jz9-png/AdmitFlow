@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
+import { TrialBadge } from "@/components/billing/trial-badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -116,6 +117,7 @@ export function AppTopbar({
           <Search className="size-4" />
         </button>
 
+        <TrialBadge className="hidden md:inline-flex" />
         <LanguageSwitcher className="hidden sm:inline-flex" />
         <ThemeToggle />
 

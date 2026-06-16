@@ -9,11 +9,11 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
  *
  *   not signed in                         → /login
  *   signed in, onboarding NOT complete     → /onboarding
- *   onboarded, subscription NOT active     → /pricing
- *   onboarded + active sub                 → allowed
+ *   onboarded                              → allowed (free, trial or premium)
  *
- * Email verification is intentionally NOT required (disabled for now).
- * /onboarding itself only requires a signed-in user.
+ * The app is NOT paywalled at the door: free users get the explorer, shortlist
+ * and a limited mentor. Premium features are gated in-app via entitlements; the
+ * 7-day trial is derived from account age. Email verification not required.
  */
 
 const APP_PREFIXES = ["/dashboard", "/mentor", "/universities", "/roadmap", "/profile", "/settings"];
@@ -54,22 +54,14 @@ export async function proxy(request: NextRequest) {
   // /onboarding is allowed for any signed-in user.
   if (isOnboarding) return response;
 
-  // 2) Onboarding must be complete.
+  // 2) Onboarding must be complete. (No subscription gate — the app is free to
+  //    enter; Premium features are gated in-app via entitlements.)
   const { data: onboarding } = await supabase
     .from("onboarding_data")
     .select("completed")
     .eq("user_id", user.id)
     .maybeSingle();
   if (!onboarding?.completed) return redirect(request, "/onboarding");
-
-  // 3) Subscription must grant access (active OR trialing).
-  const { data: subscription } = await supabase
-    .from("subscriptions")
-    .select("status")
-    .eq("user_id", user.id)
-    .maybeSingle();
-  const access = subscription?.status === "active" || subscription?.status === "trialing";
-  if (!access) return redirect(request, "/pricing");
 
   return response;
 }
