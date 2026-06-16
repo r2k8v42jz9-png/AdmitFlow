@@ -106,6 +106,7 @@ export async function loadUserState(): Promise<Partial<UserState> | null> {
     onboarded: onboardingRow?.completed ?? false,
     plan: (subRes.data?.plan as Plan | null) ?? null,
     subscriptionActive: isAccessGranted(subRes.data?.status),
+    createdAt: user.created_at ?? null,
     onboarding: onboardingRow?.completed ? rowToOnboarding(onboardingRow) : null,
     streak: {
       count: streakRes.data?.count ?? 0,

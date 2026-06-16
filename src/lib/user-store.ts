@@ -38,6 +38,8 @@ export interface UserState {
   onboarded: boolean;
   plan: Plan | null;
   subscriptionActive: boolean;
+  /** ISO timestamp the account was created — drives the 7-day Premium trial. */
+  createdAt: string | null;
   onboarding: OnboardingData | null;
   streak: StreakState;
 }
@@ -63,6 +65,7 @@ const SERVER_STATE: UserState = {
   onboarded: false,
   plan: null,
   subscriptionActive: false,
+  createdAt: null,
   onboarding: null,
   streak: { count: 0, lastVisit: null },
 };

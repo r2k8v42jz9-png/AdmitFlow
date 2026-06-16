@@ -10,21 +10,23 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
  * Guards the authenticated app shell. Enforces the product flow:
  *   not authenticated  → /login
  *   not onboarded      → /onboarding
- *   no plan            → /pricing
- *   otherwise          → render the app (and record a daily visit for streaks)
+ *   otherwise          → render the app (free, trial or premium)
+ *
+ * The app is NOT paywalled at the door — free users get the explorer, shortlist
+ * and a limited mentor; Premium features are gated in-app via entitlements.
  *
  * When Supabase is configured, `proxy.ts` provides authoritative server-side
  * protection and `SessionSync` hydrates the store from the database; this gate
  * waits for that resolution before deciding, then mirrors the same rules.
  */
 export function AppGate({ children }: { children: ReactNode }) {
-  const { hydrated, remoteResolved, authenticated, onboarded, subscriptionActive } = useUser();
+  const { hydrated, remoteResolved, authenticated, onboarded } = useUser();
   const router = useRouter();
 
   const configured = isSupabaseConfigured();
   const ready = hydrated && (remoteResolved || !configured);
   // Email verification is intentionally not required.
-  const allowed = authenticated && onboarded && subscriptionActive;
+  const allowed = authenticated && onboarded;
 
   useEffect(() => {
     if (!ready) return;
@@ -33,8 +35,6 @@ export function AppGate({ children }: { children: ReactNode }) {
       router.replace("/login");
     } else if (!onboarded) {
       router.replace("/onboarding");
-    } else if (!subscriptionActive) {
-      router.replace("/pricing");
     } else {
       recordVisit();
       const s = getUserState();
@@ -44,7 +44,7 @@ export function AppGate({ children }: { children: ReactNode }) {
         );
       }
     }
-  }, [ready, authenticated, onboarded, subscriptionActive, router]);
+  }, [ready, authenticated, onboarded, router]);
 
   if (!ready || !allowed) {
     return (

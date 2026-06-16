@@ -205,10 +205,11 @@ export function OnboardingFlow() {
   };
   const back = () => setStep((s) => Math.max(0, s - 1));
 
-  // Wait for the onboarding write to land, then go to pricing. Prevents the
-  // proxy from bouncing back to /onboarding on a stale read. Capped at 8s so a
-  // hung write can never leave the button permanently disabled.
-  const goToPricing = async () => {
+  // Wait for the onboarding write to land, then enter the app. New accounts get
+  // a 7-day Premium trial automatically (derived from account age), so we land
+  // on the dashboard — no pricing wall. Capped at 8s so a hung write can never
+  // leave the button permanently disabled.
+  const goToDashboard = async () => {
     if (navigating) return;
     setNavigating(true);
     try {
@@ -220,11 +221,11 @@ export function OnboardingFlow() {
       /* even if the write errors, proceed — proxy will re-gate as needed */
     }
     // Full navigation so onboarding's own redirect effect can't race us back.
-    window.location.assign("/pricing");
+    window.location.assign("/dashboard");
   };
 
-  const skip = goToPricing;
-  const finish = goToPricing;
+  const skip = goToDashboard;
+  const finish = goToDashboard;
 
   const recommendations = [...uniList]
     .filter((u) => data.countries.length === 0 || data.countries.includes(u.country))

@@ -15,6 +15,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Markdown } from "@/components/mentor/markdown";
 import { suggestionChips } from "@/lib/data/mentor";
 import { useUser, nameFromEmail } from "@/lib/user-store";
+import { useMentorUsage } from "@/lib/entitlements";
+import { openUpgrade } from "@/lib/upgrade-store";
 import { generateMentorReply, buildWelcome, type MentorProfile } from "@/lib/mentor-engine";
 import { useT } from "@/lib/i18n";
 import { initials, cn } from "@/lib/utils";
@@ -26,6 +28,7 @@ const newId = () => `msg-${++idSeq}-${Date.now()}`;
 export function MentorChat() {
   const { t, locale } = useT();
   const { name, email, onboarding } = useUser();
+  const usage = useMentorUsage();
 
   const profile = useMemo<MentorProfile>(
     () => ({
@@ -106,6 +109,13 @@ export function MentorChat() {
   const send = (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || streaming) return;
+    // Free tier: a few mentor messages per day. At the limit, open the upgrade
+    // modal instead of sending (the user always gets *some* guidance first).
+    if (!usage.canSend) {
+      openUpgrade("mentor-limit");
+      return;
+    }
+    usage.record();
     const history = messages
       .filter((m) => m.id !== "welcome")
       .map((m) => ({ role: m.role, content: m.content }));
@@ -240,6 +250,26 @@ export function MentorChat() {
         {/* Composer */}
         <div className="border-t border-border/60 bg-background/60 px-4 py-3 backdrop-blur-sm sm:px-6">
           <div className="mx-auto max-w-3xl">
+            {!usage.unlimited && (
+              <div className="mb-2 text-center text-[11px]">
+                {usage.remaining > 0 ? (
+                  <span className="text-muted-foreground">
+                    {locale === "ru"
+                      ? `${usage.remaining} из ${usage.limit} бесплатных сообщений сегодня`
+                      : `${usage.remaining} of ${usage.limit} free messages left today`}
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => openUpgrade("mentor-limit")}
+                    className="cursor-pointer font-medium text-primary hover:underline"
+                  >
+                    {locale === "ru"
+                      ? "Дневной лимит исчерпан — открыть безлимит в Premium"
+                      : "Daily limit reached — upgrade for unlimited guidance"}
+                  </button>
+                )}
+              </div>
+            )}
             <div className="flex items-end gap-2 rounded-2xl border border-border/70 bg-card/60 p-2 shadow-card transition-colors focus-within:border-primary/50">
               <textarea
                 ref={inputRef}
