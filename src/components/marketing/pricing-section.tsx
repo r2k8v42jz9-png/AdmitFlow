@@ -137,7 +137,7 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
 
                   <div className="mt-5 flex items-end gap-1">
                     {isFree ? (
-                      <span className="text-4xl font-bold tracking-tight">{locale === "ru" ? "0 ₽" : "$0"}</span>
+                      <span className="text-4xl font-bold tracking-tight">$0</span>
                     ) : (
                       <>
                         <span className="text-4xl font-bold tabular-nums tracking-tight">${price}</span>

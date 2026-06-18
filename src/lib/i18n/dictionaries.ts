@@ -108,6 +108,10 @@ const en: Dict = {
   "pricing.billedAnnually": "billed annually",
   "pricing.billedMonthly": "billed monthly",
   "pricing.popular": "Most popular",
+  "pricingHero.titleLead": "Plans that grow",
+  "pricingHero.titleAccent": "with your ambition",
+  "pricingHero.subtitle":
+    "From your first shortlist to your final acceptance — pick the plan that matches your timeline. Upgrade or cancel anytime.",
   "plan.starter.cta": "Start with Starter",
   "plan.pro.cta": "Upgrade to Pro",
   "plan.premium.cta": "Talk to admissions",
@@ -404,6 +408,10 @@ const ru: Dict = {
   "pricing.billedAnnually": "оплата раз в год",
   "pricing.billedMonthly": "оплата помесячно",
   "pricing.popular": "Популярный",
+  "pricingHero.titleLead": "Тарифы, растущие",
+  "pricingHero.titleAccent": "вместе с вашими амбициями",
+  "pricingHero.subtitle":
+    "От первого списка вузов до финального зачисления — выберите тариф под свой график. Переход и отмена в любой момент.",
   "plan.starter.cta": "Выбрать Starter",
   "plan.pro.cta": "Перейти на Pro",
   "plan.premium.cta": "Связаться с приёмной",

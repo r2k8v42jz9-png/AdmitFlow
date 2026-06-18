@@ -13,7 +13,7 @@ export function CTA() {
             <div className="pointer-events-none absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-40" />
 
             <span className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-card/50 px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground backdrop-blur-sm">
-              <GraduationCap className="size-4 text-primary" /> Plans from $19/mo — cancel anytime
+              <GraduationCap className="size-4 text-primary" /> Plans from $15/mo — cancel anytime
             </span>
             <h2 className="mx-auto mt-6 max-w-2xl font-display text-3xl font-medium tracking-[-0.018em] text-balance sm:text-5xl">
               Your dream university is <span className="italic text-primary">closer than you think</span>

@@ -127,7 +127,7 @@ export const faqs = [
   },
   {
     q: "How much does AdmitFlow cost?",
-    a: "Plans start at $19/month for Starter, which includes your personalized roadmap, deadline tracker, profile analysis and 50 mentor messages. Pro ($49/mo) unlocks unlimited mentoring, the chance assessment and essay review, and Premium Mentor ($149/mo) adds a dedicated human counselor.",
+    a: "AdmitFlow is free forever for university search, your shortlist and a limited AI mentor. Premium is $15/month billed annually (or $19 month-to-month) and starts with a 7-day free trial — it unlocks the unlimited AI mentor, chance assessment, essay review, scholarship finder and roadmap. Concierge ($119/month) adds a dedicated human admissions counselor.",
   },
   {
     q: "Do you work with school counselors?",
@@ -154,7 +154,7 @@ export const faqsRu = [
   },
   {
     q: "Сколько стоит AdmitFlow?",
-    a: "Тарифы начинаются с $19/мес (Starter): персональный план, трекер дедлайнов, анализ профиля и 50 сообщений наставнику. Pro ($49/мес) открывает безлимитное наставничество, оценку шансов и проверку эссе, а Premium Mentor ($149/мес) добавляет персонального консультанта-человека.",
+    a: "AdmitFlow бесплатен навсегда для поиска вузов, шорт-листа и ограниченного AI-ментора. Premium стоит $15/мес при оплате за год (или $19/мес помесячно) и начинается с 7-дневного бесплатного периода — открывает безлимитного AI-ментора, оценку шансов, проверку эссе, поиск стипендий и роадмап. Консьерж ($119/мес) добавляет персонального консультанта по поступлению.",
   },
   {
     q: "Вы работаете со школьными консультантами?",
