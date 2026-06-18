@@ -166,55 +166,48 @@ export const faqsRu = [
   },
 ];
 
-export const pricingTiers: PricingTier[] = [
-  {
-    id: "starter",
-    name: "Starter",
-    price: { monthly: 19, yearly: 15 },
-    tagline: "Everything you need to start applying with a real plan.",
-    cta: "Start with Starter",
-    features: [
-      "50 mentor messages / month",
-      "20 university recommendations",
-      "Basic personalized roadmap",
-      "Deadline tracker",
-      "Profile analysis & admission score",
-    ],
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    price: { monthly: 49, yearly: 39 },
-    tagline: "Unlimited AI and the full toolkit to apply with confidence.",
-    highlight: true,
-    badge: "Most popular",
-    cta: "Upgrade to Pro",
-    features: [
-      "Unlimited mentor guidance",
-      "Full university database",
-      "Admission chance assessment",
-      "Essay review & feedback",
-      "Scholarship finder & alerts",
-      "Advanced roadmap",
-      "Application tracker",
-    ],
-  },
-  {
-    id: "premium",
-    name: "Premium Mentor",
-    price: { monthly: 149, yearly: 119 },
-    tagline: "AI plus a dedicated human admissions expert in your corner.",
-    cta: "Talk to admissions",
-    features: [
-      "Everything in Pro",
-      "1:1 human counselor support",
-      "Application review before submission",
-      "Hands-on essay review",
-      "Priority AI responses",
-      "Interview preparation",
-      "Visa & relocation guidance",
-    ],
-  },
-];
+/**
+ * The three AdmitFlow plans, localized. `id` doubles as the plan kind:
+ *   free      → start free (no checkout)
+ *   premium   → includes a 7-day free trial, then paid; the main plan
+ *   concierge → AI + a dedicated human admissions expert (contact sales)
+ */
+export function getPricingTiers(locale: "en" | "ru"): PricingTier[] {
+  const ru = locale === "ru";
+  return [
+    {
+      id: "free",
+      name: ru ? "Бесплатно" : "Free",
+      price: { monthly: 0, yearly: 0 },
+      tagline: ru ? "Изучайте вузы и составляйте список — бесплатно навсегда." : "Explore universities and build your shortlist — free forever.",
+      cta: ru ? "Начать бесплатно" : "Get started free",
+      features: ru
+        ? ["Поиск и обзор университетов", "Сохранение вузов и шорт-лист", "Базовый профиль и балл поступления", "Ограниченная оценка шансов", "5 сообщений ментору в день"]
+        : ["University search & explorer", "Save universities & shortlist", "Basic profile & admission score", "Limited chance assessment", "5 AI mentor messages / day"],
+    },
+    {
+      id: "premium",
+      name: "Premium",
+      price: { monthly: 19, yearly: 15 },
+      tagline: ru ? "Всё без ограничений. Начните с 7-дневного бесплатного периода." : "Everything, unlimited. Starts with a 7-day free trial.",
+      highlight: true,
+      badge: ru ? "7 дней бесплатно" : "7-day free trial",
+      cta: ru ? "Начать пробный период" : "Start your free trial",
+      features: ru
+        ? ["Безлимитный AI-ментор", "Безлимитная оценка шансов", "Проверка эссе с AI", "Поиск стипендий и уведомления", "Персональный роадмап", "Дедлайны и планировщик", "Полная база программ"]
+        : ["Unlimited AI Mentor", "Unlimited chance assessments", "Essay review & AI feedback", "Scholarship finder & alerts", "Personalized roadmap", "Deadline tracking & planner", "Full program database"],
+    },
+    {
+      id: "concierge",
+      name: ru ? "Консьерж" : "Concierge",
+      price: { monthly: 149, yearly: 119 },
+      tagline: ru ? "AI плюс персональный эксперт по поступлению." : "AI plus a dedicated human admissions expert.",
+      cta: ru ? "Связаться с приёмной" : "Talk to admissions",
+      features: ru
+        ? ["Всё из Premium", "Личный консультант 1:1", "Проверка заявки перед подачей", "Глубокая проверка эссе", "Подготовка к интервью", "Помощь с визой и переездом"]
+        : ["Everything in Premium", "1:1 human counselor", "Application review before submission", "Hands-on essay review", "Interview preparation", "Visa & relocation guidance"],
+    },
+  ];
+}
 
 export const trustBadges = ["SOC 2 Type II", "FERPA aligned", "GDPR ready", "256-bit encryption"];

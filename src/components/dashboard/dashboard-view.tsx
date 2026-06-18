@@ -9,14 +9,15 @@ import {
   ArrowRight,
   Target,
   GraduationCap,
-  Map,
-  ChevronRight,
 } from "lucide-react";
 import { PageContainer, PageHeader } from "@/components/app/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { EmptyState } from "@/components/shared/empty-state";
+import { PlanStatusCard } from "@/components/dashboard/plan-status-card";
+import { AdmissionSummary } from "@/components/dashboard/admission-summary";
+import { ApplicationProgress } from "@/components/dashboard/application-progress";
 import { useUser, deriveProfile } from "@/lib/user-store";
 import { useSavedUniversityDetails } from "@/lib/saved-universities";
 import { useT } from "@/lib/i18n";
@@ -150,30 +151,11 @@ export function DashboardView() {
             </CardContent>
           </Card>
 
-          {/* Application plan — empty until the user builds a roadmap */}
-          <Card>
-            <CardHeader className="flex-row items-center justify-between space-y-0">
-              <div>
-                <CardTitle>{t("dash.tracker")}</CardTitle>
-              </div>
-              {myUniversities.length > 0 && (
-                <Button asChild variant="ghost" size="sm">
-                  <Link href="/roadmap">
-                    {t("dash.viewAll")} <ChevronRight className="size-4" />
-                  </Link>
-                </Button>
-              )}
-            </CardHeader>
-            <CardContent>
-              <EmptyState
-                icon={Map}
-                title={t("empty.applications.title")}
-                body={t("empty.applications.body")}
-                ctaLabel={t("empty.applications.cta")}
-                ctaHref="/roadmap"
-              />
-            </CardContent>
-          </Card>
+          {/* Application progress — real stage tracker */}
+          <ApplicationProgress />
+
+          {/* Admission probability summary (gated for free) */}
+          <AdmissionSummary />
 
           {/* My universities — the real list the user selected, or an empty state */}
           <Card>
@@ -220,6 +202,9 @@ export function DashboardView() {
 
         {/* Right / aside */}
         <div className="space-y-6">
+          {/* Plan / trial status */}
+          <PlanStatusCard />
+
           {/* Profile completion — real, from deriveProfile */}
           <Card>
             <CardHeader className="pb-3">
