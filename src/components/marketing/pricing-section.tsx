@@ -7,33 +7,41 @@ import { Check, Sparkles, Loader2 } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { StaggerContainer, StaggerItem } from "@/components/shared/reveal";
 import { Button } from "@/components/ui/button";
-import { pricingTiers } from "@/lib/data/marketing";
+import { getPricingTiers } from "@/lib/data/marketing";
 import { getUserState, setSubscription, type Plan } from "@/lib/user-store";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+const CONCIERGE_EMAIL = "admissions@admitflow.org";
+
 export function PricingSection({ withHeading = true }: { withHeading?: boolean }) {
   const router = useRouter();
-  const { t } = useT();
+  const { t, locale } = useT();
   const [yearly, setYearly] = useState(true);
   const [selecting, setSelecting] = useState<string | null>(null);
+  const tiers = getPricingTiers(locale === "ru" ? "ru" : "en");
 
   const onSelect = async (tierId: string) => {
     if (selecting) return;
-    if (!getUserState().authenticated) {
+    const authed = getUserState().authenticated;
+
+    // Free → just enter (sign up if needed). No checkout.
+    if (tierId === "free") {
+      router.push(authed ? "/dashboard" : "/signup");
+      return;
+    }
+    // Concierge → contact admissions.
+    if (tierId === "concierge") {
+      window.location.assign(`mailto:${CONCIERGE_EMAIL}?subject=AdmitFlow%20Concierge`);
+      return;
+    }
+    // Premium → must be signed in; then start the trial.
+    if (!authed) {
       router.push("/login");
       return;
     }
     setSelecting(tierId);
-
-    // Start the trial immediately on plan selection.
-    // (Real checkout — Pricing → Payment → Success — is a separate billing batch;
-    // selecting a plan currently begins a trial directly.)
     setSubscription(tierId as Plan, true);
-
-    // CRITICAL: await the DB write, then re-hydrate the client store from the
-    // DB BEFORE navigating, so AppGate already sees subscriptionActive=true.
-    // Capped with an 8s timeout so a hung request can never spin forever.
     try {
       const { isSupabaseConfigured } = await import("@/lib/supabase/config");
       if (isSupabaseConfigured()) {
@@ -42,8 +50,6 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
           (async () => {
             const { savePlan } = await import("@/lib/supabase/data");
             await savePlan(tierId as Plan, "trialing");
-            // Re-read our own write so the local cache + the next proxy request
-            // both observe 'trialing' (avoids the read-after-write bounce).
             const { hydrateLocalFromProfile } = await import("@/lib/supabase/auth");
             await hydrateLocalFromProfile();
           })(),
@@ -51,11 +57,8 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
         ]);
       }
     } catch {
-      /* timed out or failed — proceed; the gate re-checks and the local store
-         already reflects the selection, so the user is never stuck here. */
+      /* proceed — the gate re-checks and the local store already reflects it */
     }
-    // Full navigation (not client push): guarantees the proxy runs with the
-    // freshly-committed session/cookies and the dashboard hydrates from scratch.
     window.location.assign("/dashboard");
   };
 
@@ -82,8 +85,6 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
             <span className={cn("text-sm transition-colors", !yearly ? "text-foreground" : "text-muted-foreground")}>
               {t("pricing.monthly")}
             </span>
-            {/* Flex track: items-center handles vertical centering; thumb travels
-                exactly track-width − thumb − 2×inset = 48 − 20 − 4 = 24px. */}
             <span
               className={cn(
                 "flex h-7 w-12 shrink-0 items-center rounded-full border p-0.5 transition-colors",
@@ -105,8 +106,9 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
         </div>
 
         <StaggerContainer className="mt-12 grid items-stretch gap-5 lg:grid-cols-3">
-          {pricingTiers.map((tier) => {
+          {tiers.map((tier) => {
             const price = yearly ? tier.price.yearly : tier.price.monthly;
+            const isFree = tier.price.monthly === 0;
             return (
               <StaggerItem key={tier.id} className="h-full">
                 <motion.div
@@ -119,11 +121,13 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
                       : "border-border/70 bg-card/40",
                   )}
                 >
-                  {tier.highlight && (
+                  {(tier.badge || tier.highlight) && (
                     <>
-                      <div className="pointer-events-none absolute inset-0 -z-10 rounded-3xl bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.14),transparent_60%)]" />
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[linear-gradient(110deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] px-3 py-1 text-xs font-semibold text-white shadow">
-                        {t("pricing.popular")}
+                      {tier.highlight && (
+                        <div className="pointer-events-none absolute inset-0 -z-10 rounded-3xl bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.14),transparent_60%)]" />
+                      )}
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[linear-gradient(110deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] px-3 py-1 text-xs font-semibold text-white shadow">
+                        {tier.badge ?? t("pricing.popular")}
                       </span>
                     </>
                   )}
@@ -132,11 +136,17 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
                   <p className="mt-1 min-h-[4rem] text-sm text-muted-foreground">{tier.tagline}</p>
 
                   <div className="mt-5 flex items-end gap-1">
-                    <span className="text-4xl font-bold tabular-nums tracking-tight">${price}</span>
-                    <span className="mb-1 text-sm text-muted-foreground">{t("pricing.perMonth")}</span>
+                    {isFree ? (
+                      <span className="text-4xl font-bold tracking-tight">{locale === "ru" ? "0 ₽" : "$0"}</span>
+                    ) : (
+                      <>
+                        <span className="text-4xl font-bold tabular-nums tracking-tight">${price}</span>
+                        <span className="mb-1 text-sm text-muted-foreground">{t("pricing.perMonth")}</span>
+                      </>
+                    )}
                   </div>
                   <p className="mt-1 h-4 text-xs text-muted-foreground">
-                    {yearly ? t("pricing.billedAnnually") : t("pricing.billedMonthly")}
+                    {isFree ? "" : yearly ? t("pricing.billedAnnually") : t("pricing.billedMonthly")}
                   </p>
 
                   <Button
@@ -146,7 +156,7 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
                     onClick={() => onSelect(tier.id)}
                     disabled={!!selecting}
                   >
-                    {selecting === tier.id ? <Loader2 className="size-4 animate-spin" /> : t(`plan.${tier.id}.cta`)}
+                    {selecting === tier.id ? <Loader2 className="size-4 animate-spin" /> : tier.cta}
                   </Button>
 
                   <ul className="mt-7 space-y-3">

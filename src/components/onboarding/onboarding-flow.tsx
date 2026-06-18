@@ -243,7 +243,12 @@ export function OnboardingFlow() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-3xl flex-col px-6 py-8">
+    <div className="relative mx-auto flex min-h-dvh max-w-3xl flex-col px-6 py-8">
+      {/* Premium ambient background */}
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-background" />
+      <div className="pointer-events-none fixed -right-40 -top-40 -z-10 h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.12),transparent_70%)] blur-2xl dark:bg-[radial-gradient(circle,hsl(var(--brand-blue)/0.18),transparent_70%)]" />
+      <div className="pointer-events-none fixed -left-40 bottom-0 -z-10 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,hsl(var(--brand-cyan)/0.1),transparent_70%)] blur-2xl" />
+
       {/* Top bar */}
       <div className="flex items-center justify-between">
         <Logo />
@@ -260,16 +265,41 @@ export function OnboardingFlow() {
       </div>
 
       {/* Progress */}
-      <div className="mt-6">
+      <div className="mt-7">
+        {/* Labeled stepper (desktop) */}
+        <div className="mb-4 hidden items-center sm:flex">
+          {steps.map((s, i) => {
+            const done = i < step || phase === "result";
+            const active = i === step && phase === "form";
+            return (
+              <div key={s.id} className="flex flex-1 items-center last:flex-none">
+                <span
+                  className={cn(
+                    "grid size-9 shrink-0 place-items-center rounded-full border transition-all duration-300",
+                    done
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : active
+                        ? "border-primary/50 text-primary shadow-[0_0_0_4px_hsl(var(--brand-blue)/0.12)]"
+                        : "border-border text-muted-foreground",
+                  )}
+                >
+                  {done ? <Check className="size-4" /> : <s.icon className="size-4" />}
+                </span>
+                {i < steps.length - 1 && (
+                  <span className={cn("mx-2 h-0.5 flex-1 rounded-full transition-colors duration-300", i < step || phase === "result" ? "bg-primary" : "bg-border")} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+
         <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>
-            {phase === "result" ? t("onb.complete") : t("onb.step", { n: step + 1, total })}
-          </span>
-          <span>{Math.round(progress)}%</span>
+          <span>{phase === "result" ? t("onb.complete") : t("onb.step", { n: step + 1, total })}</span>
+          <span className="tabular-nums">{Math.round(progress)}%</span>
         </div>
         <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
           <motion.div
-            className="h-full rounded-full bg-[linear-gradient(90deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)),hsl(var(--brand-pink)))]"
+            className="h-full rounded-full bg-[linear-gradient(90deg,hsl(var(--brand-indigo)),hsl(var(--brand-blue)),hsl(var(--brand-cyan)))]"
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           />
