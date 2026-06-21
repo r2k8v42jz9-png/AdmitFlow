@@ -5,7 +5,6 @@ import { AdmissionJourney } from "@/components/marketing/admission-journey";
 import { Features } from "@/components/marketing/features";
 import { AIShowcase } from "@/components/marketing/ai-showcase";
 import { StatsBand } from "@/components/marketing/stats-band";
-import { RoadmapPreview } from "@/components/marketing/roadmap-preview";
 import { Testimonials } from "@/components/marketing/testimonials";
 import { PricingSection } from "@/components/marketing/pricing-section";
 import { FAQ } from "@/components/marketing/faq";
@@ -41,7 +40,6 @@ export default async function LandingPage({
       <Features />
       <AIShowcase />
       <StatsBand />
-      <RoadmapPreview />
       <Testimonials />
       <PricingSection />
       <FAQ />

@@ -9,30 +9,26 @@ import { useT } from "@/lib/i18n";
 
 const COPY: Record<UpgradeReason, { en: { eyebrow: string; title: string; body: string }; ru: { eyebrow: string; title: string; body: string } }> = {
   "mentor-limit": {
-    en: { eyebrow: "Daily limit reached", title: "Unlimited guidance with Premium", body: "You've used today's free mentor messages. Upgrade for unlimited, always-on admissions guidance." },
-    ru: { eyebrow: "Дневной лимит исчерпан", title: "Безлимитный ментор в Premium", body: "Вы использовали бесплатные сообщения на сегодня. Откройте безлимитное общение с ментором." },
+    en: { eyebrow: "Daily limit reached", title: "Unlimited guidance with Pro", body: "You've used today's free mentor messages. Upgrade to Pro for unlimited, always-on admissions guidance." },
+    ru: { eyebrow: "Дневной лимит исчерпан", title: "Безлимитный наставник в Pro", body: "Вы использовали бесплатные сообщения на сегодня. Откройте безлимитное общение с наставником в Pro." },
   },
   "chance-limit": {
-    en: { eyebrow: "Free assessments used", title: "See every chance with Premium", body: "Run unlimited admission-chance assessments across all your target universities." },
-    ru: { eyebrow: "Бесплатные оценки использованы", title: "Все шансы в Premium", body: "Безлимитная оценка шансов поступления по всем вашим вузам." },
+    en: { eyebrow: "Free assessments used", title: "See every chance with Pro", body: "Run unlimited admission-chance assessments across all your target universities." },
+    ru: { eyebrow: "Бесплатные оценки использованы", title: "Все шансы в Pro", body: "Безлимитная оценка шансов поступления по всем вашим вузам." },
   },
   "premium-feature": {
-    en: { eyebrow: "Premium feature", title: "Unlock your full admissions toolkit", body: "Essay review, scholarship finder, deadline tracking and the full planner live in Premium." },
-    ru: { eyebrow: "Premium-функция", title: "Полный набор инструментов", body: "Проверка эссе, поиск стипендий, дедлайны и планировщик доступны в Premium." },
-  },
-  "trial-ending": {
-    en: { eyebrow: "Trial ending soon", title: "Keep your Premium access", body: "Don't lose unlimited mentor, essay review and your roadmap — continue with Premium." },
-    ru: { eyebrow: "Пробный период заканчивается", title: "Сохраните доступ Premium", body: "Не теряйте безлимитного ментора, проверку эссе и роадмап — продолжите с Premium." },
+    en: { eyebrow: "Pro feature", title: "Unlock your full admissions toolkit", body: "Your roadmap, scholarship finder, deadline tracking and application tracking live in Pro." },
+    ru: { eyebrow: "Функция Pro", title: "Полный набор инструментов", body: "Персональный план, поиск стипендий, дедлайны и трекер заявок доступны в Pro." },
   },
   generic: {
-    en: { eyebrow: "AdmitFlow Premium", title: "Your complete admissions advantage", body: "Everything you need to go from uncertain to admitted — without limits." },
-    ru: { eyebrow: "AdmitFlow Premium", title: "Полное преимущество в поступлении", body: "Всё, что нужно, чтобы дойти до зачисления — без ограничений." },
+    en: { eyebrow: "AdmitFlow Pro", title: "Your complete admissions advantage", body: "Everything you need to go from uncertain to admitted — without limits." },
+    ru: { eyebrow: "AdmitFlow Pro", title: "Полное преимущество в поступлении", body: "Всё, что нужно, чтобы дойти до зачисления — без ограничений." },
   },
 };
 
 const FEATURES = {
-  en: ["Unlimited AI Mentor", "Unlimited chance assessments", "Essay review & AI feedback", "Scholarship finder", "Deadline tracking & planner", "Personalized roadmap"],
-  ru: ["Безлимитный AI-ментор", "Безлимитная оценка шансов", "Проверка эссе с AI", "Поиск стипендий", "Дедлайны и планировщик", "Персональный роадмап"],
+  en: ["Unlimited AI Mentor", "Unlimited chance assessment", "Personalized roadmap", "Scholarship finder", "Deadline tracking", "Application tracking"],
+  ru: ["Безлимитный ИИ-наставник", "Безлимитная оценка шансов", "Персональный план", "Поиск стипендий", "Дедлайны и планировщик", "Трекер заявок"],
 };
 
 export function UpgradeModal() {
@@ -72,7 +68,7 @@ export function UpgradeModal() {
           <div className="mt-6 flex flex-col gap-2.5">
             <Button asChild variant="gradient" size="lg" className="w-full" onClick={() => closeUpgrade()}>
               <Link href="/pricing">
-                <Sparkles className="size-4" /> {lang === "ru" ? "Перейти на Premium" : "Upgrade to Premium"}
+                <Sparkles className="size-4" /> {lang === "ru" ? "Перейти на Pro" : "Upgrade to Pro"}
               </Link>
             </Button>
             <button

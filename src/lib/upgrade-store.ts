@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 /** Reason drives the upgrade modal's contextual headline/copy. */
-export type UpgradeReason = "mentor-limit" | "chance-limit" | "premium-feature" | "trial-ending" | "generic";
+export type UpgradeReason = "mentor-limit" | "chance-limit" | "premium-feature" | "generic";
 
 interface UpgradeState {
   open: boolean;

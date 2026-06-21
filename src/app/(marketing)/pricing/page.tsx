@@ -8,7 +8,7 @@ import { AuroraBackground } from "@/components/shared/aurora-background";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "Simple, transparent pricing for AdmitFlow — Free, Premium (7-day trial) and Concierge plans.",
+  description: "Simple, transparent pricing for AdmitFlow — Free, Pro and Max plans.",
 };
 
 export default function PricingPage() {

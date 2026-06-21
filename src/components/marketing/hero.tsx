@@ -28,12 +28,9 @@ export function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease }}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-3.5 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground shadow-sm backdrop-blur"
+            className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-primary/80"
           >
-            <span className="relative flex size-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60" />
-              <span className="relative inline-flex size-1.5 rounded-full bg-primary" />
-            </span>
+            <Sparkles className="size-3.5 text-primary" />
             {t("hero.rated")}
           </motion.div>
 

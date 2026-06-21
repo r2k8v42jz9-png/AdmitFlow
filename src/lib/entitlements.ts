@@ -6,60 +6,63 @@ import { useUser } from "@/lib/user-store";
 /**
  * Central monetization model for AdmitFlow.
  *
- *   free     — permanent. Explorer, search, shortlist, basic profile, limited
- *              chance assessment, limited AI Mentor.
- *   trial    — first 7 days of every new account → full Premium access. Derived
- *              from the account's createdAt, so it needs no extra DB column.
- *   premium  — active paid subscription → full access, no limits.
+ *   free  — permanent, no expiration. Explorer, search, shortlist, basic
+ *           dashboard, basic chance assessment, limited AI Mentor (3 / day).
+ *   pro   — $7.99/mo. Unlimited mentor & chance assessment, roadmap, deadlines,
+ *           scholarship finder, application tracking.
+ *   max   — $15/mo. Everything in Pro + priority AI, advanced analytics,
+ *           premium admissions tools and future features.
  *
- * `hasPremiumAccess` is the single flag features check (trial OR premium).
+ * There is NO trial. Plan comes straight from the subscription record (or the
+ * local store in the offline fallback); free is the default for everyone else.
+ *
+ * `hasPremiumAccess` is the single flag premium features check (pro OR max).
  */
 
-export const TRIAL_DAYS = 7;
-export const FREE_MENTOR_DAILY_LIMIT = 5;
+export const FREE_MENTOR_DAILY_LIMIT = 3;
 export const FREE_CHANCE_LIMIT = 3; // chance assessments before the free wall
 
-export type Tier = "free" | "trial" | "premium";
+export type Tier = "free" | "pro" | "max";
 
 export interface Entitlements {
   tier: Tier;
-  isPremium: boolean; // paid subscription
-  isTrial: boolean;
-  hasPremiumAccess: boolean; // trial OR premium → all premium features
-  trialDaysLeft: number; // 0 when not on trial
-  mentorDailyLimit: number; // Infinity with premium access
+  isFree: boolean;
+  isPro: boolean;
+  isMax: boolean;
+  /** Any paid plan (pro or max) — used to hide upgrade prompts. */
+  isPaid: boolean;
+  /** Pro-or-better features (unlimited mentor, roadmap, deadlines, etc.). */
+  hasPremiumAccess: boolean;
+  /** Max-only features (priority AI, advanced analytics, premium tools). */
+  hasMaxAccess: boolean;
+  mentorDailyLimit: number; // Infinity for any paid plan
 }
 
-function daysSince(iso: string | null, now: number): number {
-  if (!iso) return 0;
-  return (now - new Date(iso).getTime()) / 86_400_000;
+function normalizePlan(plan: string | null | undefined, active: boolean): Tier {
+  if (!active) return "free";
+  if (plan === "max") return "max";
+  if (plan === "pro") return "pro";
+  // Legacy paid plans (starter / premium / pro-mentor) map to Pro access.
+  if (plan && plan !== "free") return "pro";
+  return "free";
 }
 
-export function deriveEntitlements(
-  opts: { subscriptionActive: boolean; createdAt: string | null },
-  now: number = Date.now(),
-): Entitlements {
-  // Paid (or DB-trialing) subscription → full premium.
-  if (opts.subscriptionActive) {
-    return { tier: "premium", isPremium: true, isTrial: false, hasPremiumAccess: true, trialDaysLeft: 0, mentorDailyLimit: Infinity };
-  }
-  // First 7 days → automatic Premium trial.
-  const age = daysSince(opts.createdAt, now);
-  if (opts.createdAt && age < TRIAL_DAYS) {
-    return {
-      tier: "trial",
-      isPremium: false,
-      isTrial: true,
-      hasPremiumAccess: true,
-      trialDaysLeft: Math.max(1, Math.ceil(TRIAL_DAYS - age)),
-      mentorDailyLimit: Infinity,
-    };
-  }
-  // Permanent free.
-  return { tier: "free", isPremium: false, isTrial: false, hasPremiumAccess: false, trialDaysLeft: 0, mentorDailyLimit: FREE_MENTOR_DAILY_LIMIT };
+export function deriveEntitlements(opts: { plan: string | null; subscriptionActive: boolean }): Entitlements {
+  const tier = normalizePlan(opts.plan, opts.subscriptionActive);
+  const isPaid = tier !== "free";
+  return {
+    tier,
+    isFree: tier === "free",
+    isPro: tier === "pro",
+    isMax: tier === "max",
+    isPaid,
+    hasPremiumAccess: isPaid,
+    hasMaxAccess: tier === "max",
+    mentorDailyLimit: isPaid ? Infinity : FREE_MENTOR_DAILY_LIMIT,
+  };
 }
 
-// Dev/QA only: force a tier via localStorage("admitflow:dev-tier") = free|trial|premium.
+// Dev/QA only: force a tier via localStorage("admitflow:dev-tier") = free|pro|max.
 // Read once at module load (never during render); never active in production.
 const DEV_TIER: string | null =
   process.env.NODE_ENV !== "production" && typeof window !== "undefined"
@@ -67,18 +70,16 @@ const DEV_TIER: string | null =
     : null;
 
 export function useEntitlements(): Entitlements {
-  const { subscriptionActive, createdAt } = useUser();
-  // Capture "now" once per mount so the render stays pure (no Date.now() in render).
-  const [now] = useState(() => Date.now());
-  if (DEV_TIER === "free") return deriveEntitlements({ subscriptionActive: false, createdAt: new Date(now - 30 * 86_400_000).toISOString() }, now);
-  if (DEV_TIER === "trial") return deriveEntitlements({ subscriptionActive: false, createdAt: new Date(now).toISOString() }, now);
-  if (DEV_TIER === "premium") return deriveEntitlements({ subscriptionActive: true, createdAt }, now);
-  return deriveEntitlements({ subscriptionActive, createdAt }, now);
+  const { plan, subscriptionActive } = useUser();
+  if (DEV_TIER === "free") return deriveEntitlements({ plan: "free", subscriptionActive: false });
+  if (DEV_TIER === "pro") return deriveEntitlements({ plan: "pro", subscriptionActive: true });
+  if (DEV_TIER === "max") return deriveEntitlements({ plan: "max", subscriptionActive: true });
+  return deriveEntitlements({ plan, subscriptionActive });
 }
 
 /* -------------------------------------------------------------------------- */
 /*  AI Mentor usage — free tier: a few messages per day (resets daily).       */
-/*  Client-side counter (localStorage) for the UX; premium = unlimited.       */
+/*  Client-side counter (localStorage) for the UX; paid = unlimited.          */
 /* -------------------------------------------------------------------------- */
 
 const USAGE_KEY = "admitflow:mentor-usage";

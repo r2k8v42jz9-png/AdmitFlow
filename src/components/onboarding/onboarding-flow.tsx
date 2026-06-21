@@ -25,9 +25,10 @@ import { Slider } from "@/components/ui/slider";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { searchUniversities, getUniversityFacets } from "@/lib/supabase/universities";
 import type { University } from "@/lib/types";
-import { useUser, saveOnboarding, type OnboardingData } from "@/lib/user-store";
+import { useUser, saveOnboarding, setSubscription, type OnboardingData, type Plan } from "@/lib/user-store";
+import { getPricingTiers } from "@/lib/data/marketing";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { useT, type TFunction } from "@/lib/i18n";
+import { useT, type Locale, type TFunction } from "@/lib/i18n";
 import { cn, formatCurrency } from "@/lib/utils";
 
 /**
@@ -108,12 +109,13 @@ const steps = [
 
 export function OnboardingFlow() {
   const router = useRouter();
-  const { t } = useT();
+  const { t, locale } = useT();
   const { hydrated, remoteResolved, authenticated, onboarded, onboarding } = useUser();
   const ready = hydrated && (remoteResolved || !isSupabaseConfigured());
   const [step, setStep] = useState(0);
-  const [phase, setPhase] = useState<"form" | "generating" | "result">("form");
+  const [phase, setPhase] = useState<"form" | "generating" | "result" | "plan">("form");
   const [navigating, setNavigating] = useState(false);
+  const [choosingPlan, setChoosingPlan] = useState<Plan | null>(null);
   const persistPromiseRef = useRef<Promise<void> | null>(null);
   // University catalog + country facets for the picker steps, sourced from
   // Supabase (the data layer falls back to the bundled catalog internally).
@@ -181,7 +183,7 @@ export function OnboardingFlow() {
   }, []);
 
   const total = steps.length;
-  const progress = phase === "result" ? 100 : ((step + (phase === "generating" ? 1 : 0)) / total) * 100;
+  const progress = phase === "result" || phase === "plan" ? 100 : ((step + (phase === "generating" ? 1 : 0)) / total) * 100;
 
   const update = (patch: Partial<Data>) => setData((d) => ({ ...d, ...patch }));
   const toggle = (key: "countries" | "strengths" | "dreams", value: string) =>
@@ -205,10 +207,8 @@ export function OnboardingFlow() {
   };
   const back = () => setStep((s) => Math.max(0, s - 1));
 
-  // Wait for the onboarding write to land, then enter the app. New accounts get
-  // a 7-day Premium trial automatically (derived from account age), so we land
-  // on the dashboard — no pricing wall. Capped at 8s so a hung write can never
-  // leave the button permanently disabled.
+  // Wait for the onboarding write to land, then enter the app. Capped at 8s so a
+  // hung write can never leave the button permanently disabled.
   const goToDashboard = async () => {
     if (navigating) return;
     setNavigating(true);
@@ -224,8 +224,24 @@ export function OnboardingFlow() {
     window.location.assign("/dashboard");
   };
 
+  // Plan selection (shown after the result). Free is always selectable — this is
+  // a choice, not a paywall. Paid plans set the subscription locally + remotely.
+  const choosePlan = async (planId: Plan) => {
+    if (navigating || choosingPlan) return;
+    setChoosingPlan(planId);
+    if (planId === "free") {
+      setSubscription("free", false);
+    } else {
+      setSubscription(planId, true);
+      void import("@/lib/supabase/data")
+        .then(({ savePlan }) => savePlan(planId, "active"))
+        .catch(() => {});
+    }
+    await goToDashboard();
+  };
+
   const skip = goToDashboard;
-  const finish = goToDashboard;
+  const finish = () => setPhase("plan");
 
   const recommendations = [...uniList]
     .filter((u) => data.countries.length === 0 || data.countries.includes(u.country))
@@ -335,6 +351,10 @@ export function OnboardingFlow() {
 
           {phase === "result" && (
             <Result key="res" data={data} recommendations={recommendations} onContinue={finish} navigating={navigating} t={t} />
+          )}
+
+          {phase === "plan" && (
+            <PlanSelect key="plan" onChoose={choosePlan} choosing={choosingPlan} t={t} locale={locale} />
           )}
         </AnimatePresence>
       </div>
@@ -674,6 +694,79 @@ function Result({
           {navigating ? <Loader2 className="size-4 animate-spin" /> : <>{t("onb.result.continue")} <ArrowRight className="size-4" /></>}
         </Button>
       </div>
+    </motion.div>
+  );
+}
+
+function PlanSelect({
+  onChoose,
+  choosing,
+  t,
+  locale,
+}: {
+  onChoose: (plan: Plan) => void;
+  choosing: Plan | null;
+  t: TFunction;
+  locale: Locale;
+}) {
+  const tiers = getPricingTiers(locale === "ru" ? "ru" : "en");
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="flex flex-col items-center text-center">
+        <span className="inline-flex items-center gap-2 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-medium text-success">
+          <Check className="size-3.5" /> {t("onb.result.ready")}
+        </span>
+        <h1 className="mt-4 font-display text-3xl font-bold tracking-tight sm:text-4xl">{t("onb.plan.title")}</h1>
+        <p className="mt-2 max-w-md text-sm text-muted-foreground">{t("onb.plan.subtitle")}</p>
+      </div>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+        {tiers.map((tier) => {
+          const isFree = tier.price.monthly === 0;
+          const busy = choosing === tier.id;
+          return (
+            <div
+              key={tier.id}
+              className={cn(
+                "relative flex flex-col rounded-2xl border p-5",
+                tier.highlight ? "border-primary/50 bg-primary/[0.04]" : "border-border/70 bg-card/50",
+              )}
+            >
+              {tier.highlight && (
+                <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[linear-gradient(110deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+                  {t("onb.plan.recommended")}
+                </span>
+              )}
+              <h3 className="font-display text-lg font-semibold">{tier.name}</h3>
+              <div className="mt-2 flex items-end gap-1">
+                <span className="text-3xl font-bold tabular-nums tracking-tight">${isFree ? 0 : tier.price.monthly}</span>
+                {!isFree && <span className="mb-1 text-xs text-muted-foreground">{t("pricing.perMonth")}</span>}
+              </div>
+              <p className="mt-2 min-h-[2.5rem] text-xs text-muted-foreground">{tier.tagline}</p>
+              <ul className="mt-3 flex-1 space-y-1.5">
+                {tier.features.slice(0, 5).map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-xs text-foreground/80">
+                    <Check className="mt-0.5 size-3 shrink-0 text-success" /> {f}
+                  </li>
+                ))}
+              </ul>
+              <Button
+                variant={tier.highlight ? "gradient" : "outline"}
+                className="mt-4 w-full"
+                onClick={() => onChoose(tier.id as Plan)}
+                disabled={!!choosing}
+              >
+                {busy ? <Loader2 className="size-4 animate-spin" /> : tier.cta}
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+      <p className="mt-5 text-center text-xs text-muted-foreground">{t("onb.plan.note")}</p>
     </motion.div>
   );
 }
