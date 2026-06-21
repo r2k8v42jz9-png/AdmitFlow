@@ -356,11 +356,17 @@ export function generateMentorReply(prompt: string, profile?: MentorProfile): st
   }
 }
 
-export function buildWelcome(p: MentorProfile): string {
+export function buildWelcome(p: MentorProfile, lang: "en" | "ru" = "en"): string {
   const bits: string[] = [];
   if (p.gpa != null) bits.push(`${p.gpa} GPA`);
   if (p.ielts != null) bits.push(`IELTS ${p.ielts}`);
   if (p.sat != null) bits.push(`SAT ${p.sat}`);
+  if (lang === "ru") {
+    const summary = bits.length
+      ? ` Я изучил ваш профиль — ${bits.join(", ")}, направление «${p.major}», набор ${p.intake}.`
+      : "";
+    return `Привет, ${p.name} 👋 Я ваш наставник AdmitFlow.${summary} Спрашивайте о вузах, эссе, стипендиях и дедлайнах — на русском или English — и я отвечу на вашем языке.`;
+  }
   const summary = bits.length ? ` I've reviewed your profile — ${bits.join(", ")}, targeting ${p.major} for ${p.intake}.` : "";
-  return `Hi ${p.name} 👋 I'm your AdmitFlow mentor.${summary} Ask me anything about universities, essays, scholarships or deadlines — in English, Русский or O'zbek — and I'll reply in your language.`;
+  return `Hi ${p.name} 👋 I'm your AdmitFlow mentor.${summary} Ask me anything about universities, essays, scholarships or deadlines — in English or Русский — and I'll reply in your language.`;
 }

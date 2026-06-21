@@ -28,9 +28,9 @@ export function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease }}
-            className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-primary/80"
+            className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary/80 sm:text-[11px] sm:tracking-[0.24em] lg:justify-start"
           >
-            <Sparkles className="size-3.5 text-primary" />
+            <Sparkles className="size-3.5 shrink-0 text-primary" />
             {t("hero.rated")}
           </motion.div>
 

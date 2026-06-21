@@ -68,7 +68,7 @@ export function AppTopbar({
   const crumbs = segments.map((seg, i) => {
     const href = "/" + segments.slice(0, i + 1).join("/");
     const navMatch = allNav.find((n) => n.href === href);
-    const label = navMatch?.label ?? labelMap[seg] ?? decodeURIComponent(seg).replace(/-/g, " ");
+    const label = navMatch ? t(navMatch.key) : (labelMap[seg] ?? decodeURIComponent(seg).replace(/-/g, " "));
     return { href, label };
   });
 

@@ -17,16 +17,18 @@ import { useTheme } from "next-themes";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { allNav } from "@/components/app/nav-config";
 import { searchUniversities } from "@/lib/supabase/universities";
+import { useT } from "@/lib/i18n";
 import type { University } from "@/lib/types";
 
 const quickActions = [
-  { id: "ask", label: "Ask the AI Mentor", icon: Sparkles, href: "/mentor" },
-  { id: "add-uni", label: "Add a university to your list", icon: Plus, href: "/universities" },
-  { id: "roadmap", label: "Open my roadmap", icon: ArrowRight, href: "/roadmap" },
+  { id: "ask", key: "cmd.ask", icon: Sparkles, href: "/mentor" },
+  { id: "add-uni", key: "cmd.addUni", icon: Plus, href: "/universities" },
+  { id: "roadmap", key: "cmd.roadmap", icon: ArrowRight, href: "/roadmap" },
 ];
 
 export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const router = useRouter();
+  const { t } = useT();
   const { resolvedTheme, setTheme } = useTheme();
   const [search, setSearch] = useState("");
   const [unis, setUnis] = useState<University[]>([]);
@@ -53,14 +55,14 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent hideClose className="max-w-xl overflow-hidden p-0 gap-0">
-        <DialogTitle className="sr-only">Command palette</DialogTitle>
+        <DialogTitle className="sr-only">{t("cmd.title")}</DialogTitle>
         <Command className="[&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground">
           <div className="flex items-center gap-2.5 border-b border-border px-4">
             <Search className="size-4 shrink-0 text-muted-foreground" />
             <Command.Input
               value={search}
               onValueChange={setSearch}
-              placeholder="Search universities, pages, actions…"
+              placeholder={t("cmd.placeholder")}
               className="h-12 w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/70"
             />
             <kbd className="hidden rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground sm:block">
@@ -70,29 +72,29 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
 
           <Command.List className="max-h-[22rem] overflow-y-auto p-2">
             <Command.Empty className="py-8 text-center text-sm text-muted-foreground">
-              No results found.
+              {t("cmd.noResults")}
             </Command.Empty>
 
-            <Command.Group heading="Quick actions">
+            <Command.Group heading={t("cmd.quickActions")}>
               {quickActions.map((a) => (
                 <Item key={a.id} onSelect={() => go(a.href)}>
                   <a.icon className="size-4 text-primary" />
-                  {a.label}
+                  {t(a.key)}
                 </Item>
               ))}
             </Command.Group>
 
-            <Command.Group heading="Navigate">
+            <Command.Group heading={t("cmd.navigate")}>
               {allNav.map((n) => (
                 <Item key={n.href} onSelect={() => go(n.href)}>
                   <n.icon className="size-4 text-muted-foreground" />
-                  {n.label}
+                  {t(n.key)}
                 </Item>
               ))}
             </Command.Group>
 
             {unis.length > 0 && (
-              <Command.Group heading="Universities">
+              <Command.Group heading={t("app.universities")}>
                 {unis.map((u) => (
                   // value includes the live search text so server-matched rows are
                   // never hidden by cmdk's own client-side filtering.
@@ -109,21 +111,21 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
               </Command.Group>
             )}
 
-            <Command.Group heading="Preferences">
+            <Command.Group heading={t("cmd.preferences")}>
               <Item onSelect={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
                 {resolvedTheme === "dark" ? <Sun className="size-4 text-muted-foreground" /> : <Moon className="size-4 text-muted-foreground" />}
-                Toggle theme
+                {t("cmd.toggleTheme")}
               </Item>
               <Item onSelect={() => go("/")}>
                 <LogOut className="size-4 text-muted-foreground" />
-                Sign out
+                {t("common.signOut")}
               </Item>
             </Command.Group>
           </Command.List>
 
           <div className="flex items-center justify-between border-t border-border px-4 py-2.5 text-[11px] text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <CornerDownLeft className="size-3" /> to select
+              <CornerDownLeft className="size-3" /> {t("cmd.toSelect")}
             </span>
             <span>AdmitFlow Command</span>
           </div>

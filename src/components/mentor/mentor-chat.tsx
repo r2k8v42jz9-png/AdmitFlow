@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Markdown } from "@/components/mentor/markdown";
-import { suggestionChips } from "@/lib/data/mentor";
+import { getSuggestionChips } from "@/lib/data/mentor";
 import { useUser, nameFromEmail } from "@/lib/user-store";
 import { useMentorUsage } from "@/lib/entitlements";
 import { openUpgrade } from "@/lib/upgrade-store";
@@ -46,7 +46,8 @@ export function MentorChat() {
     }),
     [name, email, onboarding],
   );
-  const welcome = useMemo(() => buildWelcome(profile), [profile]);
+  const welcome = useMemo(() => buildWelcome(profile, locale === "ru" ? "ru" : "en"), [profile, locale]);
+  const chips = getSuggestionChips(locale === "ru" ? "ru" : "en");
   const userInitials = initials(name || nameFromEmail(email) || "You");
 
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -232,7 +233,7 @@ export function MentorChat() {
                   {t("mentor.tryAsking")}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {suggestionChips.map((chip) => (
+                  {chips.map((chip) => (
                     <button
                       key={chip}
                       onClick={() => send(chip)}

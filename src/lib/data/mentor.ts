@@ -9,6 +9,20 @@ export const suggestionChips = [
   "What's a balanced university list for me?",
 ];
 
+const suggestionChipsRu = [
+  "Оцени мои шансы в Stanford",
+  "Построй план на набор Fall 2027",
+  "Какие стипендии мне подходят?",
+  "Проверь вступление моего эссе",
+  "Сравни ETH Zürich и TUM",
+  "Какой сбалансированный список вузов для меня?",
+];
+
+/** Locale-aware prompt starters for the empty mentor chat. */
+export function getSuggestionChips(locale: "en" | "ru"): string[] {
+  return locale === "ru" ? suggestionChipsRu : suggestionChips;
+}
+
 export const welcomeMessage =
   "Hi Aziz 👋 I'm your AdmitFlow mentor. I've reviewed your profile — 3.84 GPA, IELTS 7.5, SAT 1520, targeting Computer Science for Fall 2027. Ask me anything about universities, essays, scholarships or deadlines, and I'll tailor every answer to you.";
 

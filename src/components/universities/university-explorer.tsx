@@ -16,12 +16,14 @@ import {
 import { UniversityCard } from "@/components/universities/university-card";
 import { useSavedUniversities } from "@/lib/saved-universities";
 import { searchUniversities, getUniversityFacets } from "@/lib/supabase/universities";
+import { useT } from "@/lib/i18n";
 import type { University } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 24;
 
 export function UniversityExplorer() {
+  const { t } = useT();
   const { ids: savedIds, toggle, isSaved, count } = useSavedUniversities();
 
   // Filters (country/field are single-select to match the search_universities RPC).
@@ -142,7 +144,7 @@ export function UniversityExplorer() {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search universities, countries, fields…"
+            placeholder={t("uni.searchPlaceholder")}
             className="h-11 pl-10"
           />
           {query && (
@@ -160,7 +162,7 @@ export function UniversityExplorer() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="h-11">
-                <SlidersHorizontal className="size-4" /> Filters
+                <SlidersHorizontal className="size-4" /> {t("uni.filters")}
                 {activeFilters > 0 && (
                   <span className="ml-1 grid size-5 place-items-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
                     {activeFilters}
@@ -169,7 +171,7 @@ export function UniversityExplorer() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="max-h-96 w-64 overflow-y-auto">
-              <DropdownMenuLabel>Country</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("uni.country")}</DropdownMenuLabel>
               {facets.countries.map((c) => (
                 <DropdownMenuCheckboxItem
                   key={c}
@@ -181,7 +183,7 @@ export function UniversityExplorer() {
                 </DropdownMenuCheckboxItem>
               ))}
               <DropdownMenuSeparator />
-              <DropdownMenuLabel>Focus area</DropdownMenuLabel>
+              <DropdownMenuLabel>{t("uni.focusArea")}</DropdownMenuLabel>
               {facets.fields.map((f) => (
                 <DropdownMenuCheckboxItem
                   key={f}
@@ -198,7 +200,7 @@ export function UniversityExplorer() {
                 onCheckedChange={() => setNeedsScholarship((v) => !v)}
                 onSelect={(e) => e.preventDefault()}
               >
-                Offers scholarships
+                {t("uni.offersScholarships")}
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -209,7 +211,7 @@ export function UniversityExplorer() {
             className="h-11"
             onClick={() => setSavedOnly((v) => !v)}
           >
-            <Bookmark className={cn("size-4", savedOnly && "fill-current")} /> Saved
+            <Bookmark className={cn("size-4", savedOnly && "fill-current")} /> {t("uni.saved")}
             <span className={cn("ml-0.5 text-xs", savedOnly ? "text-primary-foreground/80" : "text-muted-foreground")}>
               {count}
             </span>
@@ -222,10 +224,10 @@ export function UniversityExplorer() {
         <div className="mt-3 flex flex-wrap items-center gap-2">
           {country && <FilterChip label={country} onClear={() => setCountry(null)} />}
           {field && <FilterChip label={field} onClear={() => setField(null)} />}
-          {needsScholarship && <FilterChip label="Offers scholarships" onClear={() => setNeedsScholarship(false)} />}
-          {savedOnly && <FilterChip label="Saved only" onClear={() => setSavedOnly(false)} />}
+          {needsScholarship && <FilterChip label={t("uni.offersScholarships")} onClear={() => setNeedsScholarship(false)} />}
+          {savedOnly && <FilterChip label={t("uni.savedOnly")} onClear={() => setSavedOnly(false)} />}
           <button onClick={clearAll} className="text-xs font-medium text-primary hover:underline">
-            Clear all
+            {t("uni.clearAll")}
           </button>
         </div>
       )}
@@ -233,8 +235,8 @@ export function UniversityExplorer() {
       {/* Result count */}
       <p className="mt-5 text-sm text-muted-foreground">
         <span className="font-medium text-foreground">{visible.length}</span>{" "}
-        {savedOnly ? "saved" : `universities loaded${hasMore ? "+" : ""}`}
-        <span className="ml-2 text-xs">· ranked by world ranking</span>
+        {savedOnly ? t("uni.savedCount") : `${t("uni.loaded")}${hasMore ? "+" : ""}`}
+        <span className="ml-2 text-xs">{t("uni.rankedBy")}</span>
       </p>
 
       {/* Grid */}
@@ -259,10 +261,10 @@ export function UniversityExplorer() {
             <div ref={sentinelRef} className="mt-6 flex justify-center py-4">
               {loadingMore ? (
                 <span className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="size-4 animate-spin" /> Loading more…
+                  <Loader2 className="size-4 animate-spin" /> {t("uni.loadingMore")}
                 </span>
               ) : !hasMore ? (
-                <span className="text-xs text-muted-foreground">You&apos;ve reached the end.</span>
+                <span className="text-xs text-muted-foreground">{t("uni.end")}</span>
               ) : null}
             </div>
           )}
@@ -272,14 +274,12 @@ export function UniversityExplorer() {
           <span className="grid size-14 place-items-center rounded-2xl bg-muted text-muted-foreground">
             <Telescope className="size-7" />
           </span>
-          <h3 className="mt-4 font-display text-lg font-semibold">No universities match</h3>
+          <h3 className="mt-4 font-display text-lg font-semibold">{t("uni.noMatch")}</h3>
           <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-            {savedOnly
-              ? "You haven't saved any universities in this view yet."
-              : "Try adjusting your filters or search terms to discover more options."}
+            {savedOnly ? t("uni.noMatchSavedBody") : t("uni.noMatchBody")}
           </p>
           <Button variant="outline" className="mt-5" onClick={clearAll}>
-            Clear filters
+            {t("uni.clearFilters")}
           </Button>
         </div>
       )}
