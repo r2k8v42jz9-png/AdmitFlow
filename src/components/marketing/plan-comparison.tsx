@@ -41,7 +41,6 @@ function Cell({ value, lang }: { value: Val; lang: "en" | "ru" }) {
 export function PlanComparison() {
   const { locale } = useT();
   const lang = locale === "ru" ? "ru" : "en";
-  const per = lang === "ru" ? "/мес" : "/mo";
 
   return (
     <section className="relative py-12 sm:py-16">
@@ -49,9 +48,9 @@ export function PlanComparison() {
         <div className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 backdrop-blur-sm">
           <div className="grid grid-cols-4 border-b border-border/70 bg-card/40 px-6 py-4 text-sm font-semibold">
             <span className="col-span-1">{lang === "ru" ? "Сравнение планов" : "Compare plans"}</span>
-            <span className="text-center">{lang === "ru" ? "Бесплатно" : "Free"}<span className="block text-xs font-normal text-muted-foreground">$0</span></span>
-            <span className="text-center text-primary">Premium<span className="block text-xs font-normal text-muted-foreground">$15{per}</span></span>
-            <span className="text-center">{lang === "ru" ? "Консьерж" : "Concierge"}<span className="block text-xs font-normal text-muted-foreground">$119{per}</span></span>
+            <span className="text-center">{lang === "ru" ? "Бесплатно" : "Free"}<span className="block text-xs font-normal text-muted-foreground">{lang === "ru" ? "0 ₽" : "$0"}</span></span>
+            <span className="text-center text-primary">Premium<span className="block text-xs font-normal text-muted-foreground">$15/mo</span></span>
+            <span className="text-center">{lang === "ru" ? "Консьерж" : "Concierge"}<span className="block text-xs font-normal text-muted-foreground">$119/mo</span></span>
           </div>
           {ROWS.map((row, i) => (
             <div key={row.label.en} className={cn("grid grid-cols-4 items-center px-6 py-3.5 text-sm", i % 2 && "bg-card/20")}>
