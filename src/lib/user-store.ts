@@ -6,7 +6,7 @@ import { useSyncExternalStore } from "react";
 /*  Types                                                                     */
 /* -------------------------------------------------------------------------- */
 
-export type Plan = "free" | "starter" | "pro" | "premium";
+export type Plan = "free" | "pro" | "max";
 
 export interface OnboardingData {
   degreeLevel: string;
@@ -38,7 +38,7 @@ export interface UserState {
   onboarded: boolean;
   plan: Plan | null;
   subscriptionActive: boolean;
-  /** ISO timestamp the account was created — drives the 7-day Premium trial. */
+  /** ISO timestamp the account was created. */
   createdAt: string | null;
   onboarding: OnboardingData | null;
   streak: StreakState;
@@ -150,16 +150,13 @@ function toDateStr(d: Date): string {
 
 export function planLabel(plan: Plan | null): string {
   switch (plan) {
-    case "free":
-      return "Explorer";
-    case "starter":
-      return "Starter";
     case "pro":
       return "Pro";
-    case "premium":
-      return "Premium Mentor";
+    case "max":
+      return "Max";
+    case "free":
     default:
-      return "No plan";
+      return "Free";
   }
 }
 

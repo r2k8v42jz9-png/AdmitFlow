@@ -31,7 +31,7 @@ export function RoadmapTimeline() {
   const [overrides, setOverrides] = useState<Record<string, boolean>>({});
   const [generating, setGenerating] = useState(false);
 
-  const intake = onboarding?.targetIntake || "Not set";
+  const intake = onboarding?.targetIntake || t("rm.notSet");
   const major = onboarding?.intendedMajor || "your field";
 
   const generated = useMemo(
@@ -157,6 +157,7 @@ function MilestoneCard({
   index: number;
   onToggle: (milestoneId: string, taskId: string) => void;
 }) {
+  const { t: tr } = useT();
   const doneCount = m.tasks.filter((t) => t.done).length;
   const pct = m.tasks.length ? Math.round((doneCount / m.tasks.length) * 100) : 0;
 
@@ -182,10 +183,10 @@ function MilestoneCard({
           <div className="flex items-center gap-2">
             <h3 className="font-display font-semibold">{m.title}</h3>
             {m.status === "active" && (
-              <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary">In progress</span>
+              <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary">{tr("rm.inProgress")}</span>
             )}
             {m.status === "done" && (
-              <span className="rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-medium text-success">Complete</span>
+              <span className="rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-medium text-success">{tr("rm.complete")}</span>
             )}
           </div>
           <span className="text-xs text-muted-foreground">{m.window}</span>

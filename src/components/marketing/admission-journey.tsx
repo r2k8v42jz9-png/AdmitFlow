@@ -3,18 +3,20 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { UserRound, Telescope, Gauge, Send, GraduationCap } from "lucide-react";
+import { useT } from "@/lib/i18n";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const STEPS = [
-  { icon: UserRound, label: "Your profile", desc: "Grades, tests, ambitions — captured once." },
-  { icon: Telescope, label: "Discover", desc: "Search 60+ universities by fit, not noise." },
-  { icon: Gauge, label: "Know your odds", desc: "Honest admission probability for every target." },
-  { icon: Send, label: "Apply with a plan", desc: "Deadlines, essays and scholarships, sequenced." },
-  { icon: GraduationCap, label: "Get admitted", desc: "Turn uncertainty into a decision letter." },
+  { icon: UserRound, key: "profile" },
+  { icon: Telescope, key: "discover" },
+  { icon: Gauge, key: "odds" },
+  { icon: Send, key: "apply" },
+  { icon: GraduationCap, key: "admitted" },
 ];
 
 export function AdmissionJourney() {
+  const { t } = useT();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -36,7 +38,7 @@ export function AdmissionJourney() {
             transition={{ duration: 0.5, ease }}
             className="text-[11px] font-medium uppercase tracking-[0.22em] text-primary/80"
           >
-            The journey
+            {t("journey.eyebrow")}
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 18 }}
@@ -45,7 +47,7 @@ export function AdmissionJourney() {
             transition={{ duration: 0.7, ease, delay: 0.05 }}
             className="mt-4 font-display text-4xl font-medium leading-[1.05] tracking-[-0.02em] text-balance sm:text-6xl"
           >
-            Admissions, <span className="italic text-gradient">visualized.</span>
+            {t("journey.title")} <span className="italic text-gradient">{t("journey.titleAccent")}</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 18 }}
@@ -54,7 +56,7 @@ export function AdmissionJourney() {
             transition={{ duration: 0.7, ease, delay: 0.12 }}
             className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty"
           >
-            One continuous path from where you stand today to where you&apos;ll study tomorrow.
+            {t("journey.subtitle")}
           </motion.p>
         </div>
 
@@ -71,7 +73,7 @@ export function AdmissionJourney() {
           <ol className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
             {STEPS.map((s, i) => (
               <motion.li
-                key={s.label}
+                key={s.key}
                 initial={{ opacity: 0, y: 26 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
@@ -84,8 +86,8 @@ export function AdmissionJourney() {
                     {i + 1}
                   </span>
                 </div>
-                <h3 className="mt-5 font-display text-lg font-medium">{s.label}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
+                <h3 className="mt-5 font-display text-lg font-medium">{t(`journey.${s.key}.label`)}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{t(`journey.${s.key}.desc`)}</p>
               </motion.li>
             ))}
           </ol>

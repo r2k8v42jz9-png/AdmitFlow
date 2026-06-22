@@ -1,10 +1,10 @@
 import type { PricingTier } from "@/lib/types";
 
 export const heroStats = [
-  { label: "Students guided", value: 128000, suffix: "+" },
-  { label: "Acceptance rate uplift", value: 3.2, suffix: "×" },
-  { label: "Partner universities", value: 1400, suffix: "+" },
-  { label: "Scholarships unlocked", value: 92, suffix: "M", prefix: "$" },
+  { key: "students", value: 128000, suffix: "+" },
+  { key: "uplift", value: 3.2, suffix: "×" },
+  { key: "partners", value: 1400, suffix: "+" },
+  { key: "scholarships", value: 92, suffix: "M", prefix: "$" },
 ];
 
 export const universityLogos = [
@@ -23,93 +23,21 @@ export const universityLogos = [
 ];
 
 export const featureCards = [
-  {
-    icon: "MessageSquare",
-    title: "Personal admissions mentor",
-    description: "Guidance on every program, deadline and essay — informed by what admissions committees actually reward.",
-    accent: "from-brand-blue/20 to-brand-indigo/5",
-  },
-  {
-    icon: "Target",
-    title: "Honest chance assessment",
-    description: "A calibrated read on every university — safe, target or reach — based on your real academics, not guesswork.",
-    accent: "from-brand-indigo/20 to-brand-blue/5",
-  },
-  {
-    icon: "Map",
-    title: "Month-by-month plan",
-    description: "A clear application timeline with milestones, tasks and exam dates tailored to your target intake.",
-    accent: "from-brand-blue/20 to-brand-indigo/5",
-  },
-  {
-    icon: "Building2",
-    title: "University shortlist",
-    description: "A balanced list across 1,400+ universities with fit, tuition, scholarships and live deadlines.",
-    accent: "from-brand-indigo/20 to-brand-blue/5",
-  },
-  {
-    icon: "FileText",
-    title: "Essay review",
-    description: "Paragraph-level feedback on tone, structure and impact — the way an admissions reader would assess it.",
-    accent: "from-brand-blue/20 to-brand-indigo/5",
-  },
-  {
-    icon: "CalendarClock",
-    title: "Deadline tracking",
-    description: "Every round, scholarship and document tracked in one place, with timely reminders so nothing slips.",
-    accent: "from-brand-indigo/20 to-brand-blue/5",
-  },
+  { key: "mentor", icon: "MessageSquare", accent: "from-brand-blue/20 to-brand-indigo/5" },
+  { key: "chance", icon: "Target", accent: "from-brand-indigo/20 to-brand-blue/5" },
+  { key: "plan", icon: "Map", accent: "from-brand-blue/20 to-brand-indigo/5" },
+  { key: "shortlist", icon: "Building2", accent: "from-brand-indigo/20 to-brand-blue/5" },
+  { key: "essay", icon: "FileText", accent: "from-brand-blue/20 to-brand-indigo/5" },
+  { key: "deadlines", icon: "CalendarClock", accent: "from-brand-indigo/20 to-brand-blue/5" },
 ];
 
 export const testimonials = [
-  {
-    quote:
-      "AdmitFlow's admission estimator told me exactly where I stood. I rebuilt my list and got into ETH Zürich with a scholarship I didn't know existed.",
-    name: "Maya Rashidova",
-    role: "Admitted · ETH Zürich '27",
-    avatar: "MR",
-    accent: "from-brand-blue to-brand-cyan",
-  },
-  {
-    quote:
-      "The AI mentor felt like having a private counselor at 2am. It outlined my Common App essay and the feedback was sharper than my school's advisor.",
-    name: "Daniel Okafor",
-    role: "Admitted · MIT '27",
-    avatar: "DO",
-    accent: "from-brand-violet to-brand-pink",
-  },
-  {
-    quote:
-      "I was overwhelmed by deadlines across 9 schools. The roadmap broke everything into weekly tasks. I submitted every application early.",
-    name: "Sofia Bianchi",
-    role: "Admitted · Oxford '27",
-    avatar: "SB",
-    accent: "from-brand-indigo to-brand-violet",
-  },
-  {
-    quote:
-      "As a first-gen student abroad, I had no one to ask. AdmitFlow's roadmap and scholarship finder genuinely changed my life trajectory.",
-    name: "Arjun Mehta",
-    role: "Admitted · NUS '27",
-    avatar: "AM",
-    accent: "from-brand-cyan to-brand-blue",
-  },
-  {
-    quote:
-      "The fit scores were uncannily accurate. I trusted the platform with my reach list and landed two acceptances out of three.",
-    name: "Lina Hofmann",
-    role: "Admitted · TUM '27",
-    avatar: "LH",
-    accent: "from-brand-pink to-brand-violet",
-  },
-  {
-    quote:
-      "It's the only tool that felt built for international students. Currency, visas, scholarships — everything was in one place.",
-    name: "Chen Wei",
-    role: "Admitted · Toronto '27",
-    avatar: "CW",
-    accent: "from-brand-blue to-brand-indigo",
-  },
+  { key: "maya", name: "Maya Rashidova", avatar: "MR", accent: "from-brand-blue to-brand-cyan" },
+  { key: "daniel", name: "Daniel Okafor", avatar: "DO", accent: "from-brand-violet to-brand-pink" },
+  { key: "sofia", name: "Sofia Bianchi", avatar: "SB", accent: "from-brand-indigo to-brand-violet" },
+  { key: "arjun", name: "Arjun Mehta", avatar: "AM", accent: "from-brand-cyan to-brand-blue" },
+  { key: "lina", name: "Lina Hofmann", avatar: "LH", accent: "from-brand-pink to-brand-violet" },
+  { key: "chen", name: "Chen Wei", avatar: "CW", accent: "from-brand-blue to-brand-indigo" },
 ];
 
 export const faqs = [
@@ -127,7 +55,7 @@ export const faqs = [
   },
   {
     q: "How much does AdmitFlow cost?",
-    a: "AdmitFlow is free forever for university search, your shortlist and a limited AI mentor. Premium is $15/month billed annually (or $19 month-to-month) and starts with a 7-day free trial — it unlocks the unlimited AI mentor, chance assessment, essay review, scholarship finder and roadmap. Concierge ($119/month) adds a dedicated human admissions counselor.",
+    a: "AdmitFlow is free forever for university search, saving universities, a basic dashboard and a limited AI mentor (3 messages a day). Pro is $7.99/month (or $83.88/year) and unlocks the unlimited AI mentor, unlimited chance assessment, your roadmap, deadlines, scholarship finder and application tracking. Max ($15/month or $156/year) adds priority AI, advanced analytics and premium admissions tools.",
   },
   {
     q: "Do you work with school counselors?",
@@ -154,7 +82,7 @@ export const faqsRu = [
   },
   {
     q: "Сколько стоит AdmitFlow?",
-    a: "AdmitFlow бесплатен навсегда для поиска вузов, шорт-листа и ограниченного AI-ментора. Premium стоит $15/мес при оплате за год (или $19/мес помесячно) и начинается с 7-дневного бесплатного периода — открывает безлимитного AI-ментора, оценку шансов, проверку эссе, поиск стипендий и роадмап. Консьерж ($119/мес) добавляет персонального консультанта по поступлению.",
+    a: "AdmitFlow бесплатен навсегда: поиск вузов, сохранение университетов, базовая панель и ограниченный ИИ-наставник (3 сообщения в день). Pro стоит $7.99/мес (или $83.88/год) и открывает безлимитного ИИ-наставника, безлимитную оценку шансов, персональный план, дедлайны, поиск стипендий и трекер заявок. Max ($15/мес или $156/год) добавляет приоритетный ИИ, расширенную аналитику и премиум-инструменты поступления.",
   },
   {
     q: "Вы работаете со школьными консультантами?",
@@ -168,9 +96,9 @@ export const faqsRu = [
 
 /**
  * The three AdmitFlow plans, localized. `id` doubles as the plan kind:
- *   free      → start free (no checkout)
- *   premium   → includes a 7-day free trial, then paid; the main plan
- *   concierge → AI + a dedicated human admissions expert (contact sales)
+ *   free → permanent free access (no checkout, no expiration)
+ *   pro  → $7.99/mo · $83.88/yr — full admissions toolkit
+ *   max  → $15/mo · $156/yr — Pro + priority AI, advanced analytics, premium tools
  */
 export function getPricingTiers(locale: "en" | "ru"): PricingTier[] {
   const ru = locale === "ru";
@@ -179,33 +107,32 @@ export function getPricingTiers(locale: "en" | "ru"): PricingTier[] {
       id: "free",
       name: ru ? "Бесплатно" : "Free",
       price: { monthly: 0, yearly: 0 },
-      tagline: ru ? "Изучайте вузы и составляйте список — бесплатно навсегда." : "Explore universities and build your shortlist — free forever.",
+      tagline: ru ? "Изучайте вузы и планируйте — бесплатно навсегда." : "Explore universities and plan — free forever.",
       cta: ru ? "Начать бесплатно" : "Get started free",
       features: ru
-        ? ["Поиск и обзор университетов", "Сохранение вузов и шорт-лист", "Базовый профиль и балл поступления", "Ограниченная оценка шансов", "5 сообщений ментору в день"]
-        : ["University search & explorer", "Save universities & shortlist", "Basic profile & admission score", "Limited chance assessment", "5 AI mentor messages / day"],
+        ? ["Поиск университетов", "Обзор университетов", "Сохранение вузов", "Базовая панель", "Базовая оценка шансов", "ИИ-наставник (3 в день)"]
+        : ["University search", "University explorer", "Save universities", "Basic dashboard", "Basic chance assessment", "AI Mentor (3 / day)"],
     },
     {
-      id: "premium",
-      name: "Premium",
-      price: { monthly: 19, yearly: 15 },
-      tagline: ru ? "Всё без ограничений. Начните с 7-дневного бесплатного периода." : "Everything, unlimited. Starts with a 7-day free trial.",
+      id: "pro",
+      name: "Pro",
+      price: { monthly: 7.99, yearly: 83.88 },
+      tagline: ru ? "Всё необходимое, чтобы подавать заявки уверенно." : "Everything you need to apply with confidence.",
       highlight: true,
-      badge: ru ? "7 дней бесплатно" : "7-day free trial",
-      cta: ru ? "Начать пробный период" : "Start your free trial",
+      cta: ru ? "Выбрать Pro" : "Choose Pro",
       features: ru
-        ? ["Безлимитный AI-ментор", "Безлимитная оценка шансов", "Проверка эссе с AI", "Поиск стипендий и уведомления", "Персональный роадмап", "Дедлайны и планировщик", "Полная база программ"]
-        : ["Unlimited AI Mentor", "Unlimited chance assessments", "Essay review & AI feedback", "Scholarship finder & alerts", "Personalized roadmap", "Deadline tracking & planner", "Full program database"],
+        ? ["Безлимитный ИИ-наставник", "Безлимитная оценка шансов", "Персональный план поступления", "Дедлайны и планировщик", "Поиск стипендий", "Трекер заявок"]
+        : ["Unlimited AI Mentor", "Unlimited chance assessment", "Personalized roadmap", "Deadline tracking", "Scholarship finder", "Application tracking"],
     },
     {
-      id: "concierge",
-      name: ru ? "Консьерж" : "Concierge",
-      price: { monthly: 149, yearly: 119 },
-      tagline: ru ? "AI плюс персональный эксперт по поступлению." : "AI plus a dedicated human admissions expert.",
-      cta: ru ? "Связаться с приёмной" : "Talk to admissions",
+      id: "max",
+      name: "Max",
+      price: { monthly: 15, yearly: 156 },
+      tagline: ru ? "Максимум возможностей для поступления." : "Maximum power for your admissions.",
+      cta: ru ? "Выбрать Max" : "Choose Max",
       features: ru
-        ? ["Всё из Premium", "Личный консультант 1:1", "Проверка заявки перед подачей", "Глубокая проверка эссе", "Подготовка к интервью", "Помощь с визой и переездом"]
-        : ["Everything in Premium", "1:1 human counselor", "Application review before submission", "Hands-on essay review", "Interview preparation", "Visa & relocation guidance"],
+        ? ["Всё из Pro", "Приоритетный ИИ", "Расширенная аналитика", "Премиум-инструменты поступления", "Ранний доступ к новым функциям"]
+        : ["Everything in Pro", "Priority AI", "Advanced analytics", "Premium admissions tools", "Early access to new features"],
     },
   ];
 }

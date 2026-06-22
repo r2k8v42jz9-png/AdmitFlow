@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { LanguageSwitcher } from "@/components/shared/language-switcher";
-import { TrialBadge } from "@/components/billing/trial-badge";
+import { PlanBadge } from "@/components/billing/plan-badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { allNav } from "@/components/app/nav-config";
 import { useUser, signOut, nameFromEmail } from "@/lib/user-store";
+import { useEntitlements } from "@/lib/entitlements";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { useT } from "@/lib/i18n";
 import { initials } from "@/lib/utils";
@@ -49,7 +50,8 @@ export function AppTopbar({
   const pathname = usePathname();
   const router = useRouter();
   const { t } = useT();
-  const { name, email, plan } = useUser();
+  const { name, email } = useUser();
+  const ent = useEntitlements();
   const displayName = name || nameFromEmail(email) || "You";
   const segments = pathname.split("/").filter(Boolean);
 
@@ -66,7 +68,7 @@ export function AppTopbar({
   const crumbs = segments.map((seg, i) => {
     const href = "/" + segments.slice(0, i + 1).join("/");
     const navMatch = allNav.find((n) => n.href === href);
-    const label = navMatch?.label ?? labelMap[seg] ?? decodeURIComponent(seg).replace(/-/g, " ");
+    const label = navMatch ? t(navMatch.key) : (labelMap[seg] ?? decodeURIComponent(seg).replace(/-/g, " "));
     return { href, label };
   });
 
@@ -117,7 +119,7 @@ export function AppTopbar({
           <Search className="size-4" />
         </button>
 
-        <TrialBadge className="hidden md:inline-flex" />
+        <PlanBadge className="hidden md:inline-flex" />
         <LanguageSwitcher className="hidden sm:inline-flex" />
         <ThemeToggle />
 
@@ -169,7 +171,7 @@ export function AppTopbar({
             <DropdownMenuItem asChild>
               <Link href="/settings"><Settings /> {t("topbar.settings")}</Link>
             </DropdownMenuItem>
-            {plan !== "premium" && (
+            {ent.isFree && (
               <DropdownMenuItem asChild>
                 <Link href="/pricing"><Crown /> {t("topbar.upgrade")}</Link>
               </DropdownMenuItem>

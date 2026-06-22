@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
+import { useT } from "@/lib/i18n";
 
 /**
  * University Constellation — a living, cinematic galaxy of elite universities.
@@ -75,6 +76,7 @@ const quad = (a: number, c: number, b: number, t: number) => {
 export function Constellation() {
   const reduce = useReducedMotion() ?? false;
   const { resolvedTheme } = useTheme();
+  const { t } = useT();
   const darkRef = useRef(false);
   useEffect(() => {
     darkRef.current = resolvedTheme === "dark";
@@ -527,16 +529,16 @@ export function Constellation() {
 
               <div className="mt-4 grid grid-cols-2 gap-2.5">
                 <div className="rounded-xl bg-muted/60 px-3 py-2.5">
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">QS Ranking</p>
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{t("const.qsRanking")}</p>
                   <p className="mt-0.5 font-display text-xl font-semibold tabular-nums">#{cardNode.qs}</p>
                 </div>
                 <div className="rounded-xl bg-muted/60 px-3 py-2.5">
-                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Acceptance</p>
+                  <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{t("const.acceptance")}</p>
                   <p className="mt-0.5 font-display text-xl font-semibold tabular-nums">{cardNode.accept}</p>
                 </div>
               </div>
 
-              <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Top programs</p>
+              <p className="mt-4 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{t("const.topPrograms")}</p>
               <ul className="mt-2 space-y-1.5">
                 {cardNode.programs.map((p) => (
                   <li key={p} className="flex items-center gap-2 text-[14px] text-foreground/85">
@@ -547,7 +549,7 @@ export function Constellation() {
 
               {cardNode.scholarships && (
                 <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-success/12 px-3 py-1.5 text-[12px] font-medium text-success">
-                  <span className="size-1.5 rounded-full bg-success" /> Scholarships available
+                  <span className="size-1.5 rounded-full bg-success" /> {t("const.scholarships")}
                 </div>
               )}
             </>

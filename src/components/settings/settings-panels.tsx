@@ -1,16 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useTheme } from "next-themes";
-import { Monitor, Moon, Sun, Check, Crown, ShieldAlert, Loader2, LogOut } from "lucide-react";
+import { Monitor, Moon, Sun, Check, Crown, ShieldAlert, Loader2, LogOut, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -19,29 +17,32 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useUser, deriveProfile, nameFromEmail, signOut } from "@/lib/user-store";
+import { useUser, nameFromEmail, signOut, setSubscription, type Plan } from "@/lib/user-store";
+import { useEntitlements, type Tier } from "@/lib/entitlements";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { useT, type TFunction } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-
-const themeOptions = [
-  { value: "light", label: "Light", icon: Sun },
-  { value: "dark", label: "Dark", icon: Moon },
-  { value: "system", label: "System", icon: Monitor },
-];
-
-const notificationDefaults = [
-  { id: "deadlines", label: "Deadline reminders", desc: "Get notified before application and scholarship deadlines.", on: true },
-  { id: "ai", label: "AI suggestions", desc: "New recommendations and insights from your mentor.", on: true },
-  { id: "digest", label: "Weekly digest", desc: "A Monday summary of your progress and next steps.", on: true },
-  { id: "product", label: "Product updates", desc: "Occasional news about new AdmitFlow features.", on: false },
-];
 
 export function SettingsPanels() {
   const { theme, setTheme } = useTheme();
+  const { t } = useT();
   const user = useUser();
-  const { planLabel } = deriveProfile(user);
   const displayName = user.name || nameFromEmail(user.email) || "";
   const [mounted, setMounted] = useState(false);
+
+  const themeOptions = [
+    { value: "light", label: t("settings.theme.light"), icon: Sun },
+    { value: "dark", label: t("settings.theme.dark"), icon: Moon },
+    { value: "system", label: t("settings.theme.system"), icon: Monitor },
+  ];
+
+  const notificationDefaults = [
+    { id: "deadlines", label: t("settings.notif.deadlines"), desc: t("settings.notif.deadlines.desc"), on: true },
+    { id: "ai", label: t("settings.notif.ai"), desc: t("settings.notif.ai.desc"), on: true },
+    { id: "digest", label: t("settings.notif.digest"), desc: t("settings.notif.digest.desc"), on: true },
+    { id: "product", label: t("settings.notif.product"), desc: t("settings.notif.product.desc"), on: false },
+  ];
+
   const [notifications, setNotifications] = useState(notificationDefaults);
   const [saved, setSaved] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -86,7 +87,6 @@ export function SettingsPanels() {
       } else {
         signOut();
       }
-      // Hard navigation clears all in-memory + cookie state.
       window.location.assign("/?deleted=1");
     } catch {
       setDeleting(false);
@@ -102,40 +102,40 @@ export function SettingsPanels() {
   return (
     <div className="space-y-6">
       {/* Account */}
-      <SettingsSection title="Account" description="Update your personal information.">
+      <SettingsSection title={t("settings.account.title")} description={t("settings.account.desc")}>
         <div key={displayName + user.email} className="grid gap-4 sm:grid-cols-2">
-          <Field label="Full name">
+          <Field label={t("settings.fullName")}>
             <Input defaultValue={displayName} />
           </Field>
-          <Field label="Email address">
+          <Field label={t("settings.email")}>
             <Input type="email" defaultValue={user.email} />
           </Field>
-          <Field label="Intended major">
+          <Field label={t("settings.major")}>
             <Input defaultValue={user.onboarding?.intendedMajor ?? ""} />
           </Field>
-          <Field label="Target intake">
+          <Field label={t("settings.intake")}>
             <Input defaultValue={user.onboarding?.targetIntake ?? ""} />
           </Field>
         </div>
-        <Field label="Bio" className="mt-4">
-          <Textarea defaultValue="" placeholder="Tell us about your goals…" rows={3} />
+        <Field label={t("settings.bio")} className="mt-4">
+          <Textarea defaultValue="" placeholder={t("settings.bioPlaceholder")} rows={3} />
         </Field>
         <div className="mt-4 flex items-center gap-3">
           <Button variant="gradient" onClick={save}>
             {saved ? (
               <>
-                <Check className="size-4" /> Saved
+                <Check className="size-4" /> {t("settings.saved")}
               </>
             ) : (
-              "Save changes"
+              t("settings.save")
             )}
           </Button>
         </div>
       </SettingsSection>
 
       {/* Appearance */}
-      <SettingsSection title="Appearance" description="Customize how AdmitFlow looks on your device.">
-        <Label className="text-sm">Theme</Label>
+      <SettingsSection title={t("settings.appearance.title")} description={t("settings.appearance.desc")}>
+        <Label className="text-sm">{t("settings.theme")}</Label>
         <div className="mt-2 grid max-w-md grid-cols-3 gap-2">
           {themeOptions.map((opt) => {
             const Icon = opt.icon;
@@ -160,7 +160,7 @@ export function SettingsPanels() {
       </SettingsSection>
 
       {/* Notifications */}
-      <SettingsSection title="Notifications" description="Choose what you want to hear about.">
+      <SettingsSection title={t("settings.notifications.title")} description={t("settings.notifications.desc")}>
         <div className="divide-y divide-border/60">
           {notifications.map((item) => (
             <div key={item.id} className="flex items-center justify-between gap-4 py-3.5 first:pt-0 last:pb-0">
@@ -175,39 +175,14 @@ export function SettingsPanels() {
       </SettingsSection>
 
       {/* Subscription */}
-      <SettingsSection title="Subscription" description="Manage your plan and billing.">
-        <div className="flex flex-col gap-4 rounded-xl border border-primary/30 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <span className="grid size-11 place-items-center rounded-xl bg-[linear-gradient(135deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] text-white shadow-glow">
-              <Crown className="size-5" />
-            </span>
-            <div>
-              <div className="flex items-center gap-2 font-medium">
-                AdmitFlow {planLabel} <Badge variant="gradient">Current</Badge>
-              </div>
-              <p className="text-sm text-muted-foreground">Renews monthly · Unlimited AI mentor & roadmaps</p>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" asChild>
-              <Link href="/pricing">Change plan</Link>
-            </Button>
-            {/* Premium Mentor is the top tier — no upgrade prompt. */}
-            {user.plan !== "premium" && (
-              <Button variant="gradient" asChild>
-                <Link href="/pricing">
-                  <Crown className="size-4" /> Upgrade
-                </Link>
-              </Button>
-            )}
-          </div>
-        </div>
+      <SettingsSection title={t("settings.subscription.title")} description={t("settings.subscription.desc")}>
+        <SubscriptionPanel t={t} />
       </SettingsSection>
 
       {/* Session */}
-      <SettingsSection title="Session" description="Sign out of your account on this device.">
+      <SettingsSection title={t("settings.session.title")} description={t("settings.session.desc")}>
         <Button variant="outline" onClick={handleSignOut} disabled={signingOut}>
-          {signingOut ? <Loader2 className="size-4 animate-spin" /> : <LogOut className="size-4" />} Sign out
+          {signingOut ? <Loader2 className="size-4 animate-spin" /> : <LogOut className="size-4" />} {t("common.signOut")}
         </Button>
       </SettingsSection>
 
@@ -218,13 +193,11 @@ export function SettingsPanels() {
             <ShieldAlert className="size-5" />
           </span>
           <div className="flex-1">
-            <h3 className="font-display text-lg font-semibold">Danger zone</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Permanently delete your account and all associated data. This action cannot be undone.
-            </p>
+            <h3 className="font-display text-lg font-semibold">{t("settings.danger.title")}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">{t("settings.danger.desc")}</p>
             <Separator className="my-4" />
             <Button variant="destructive" onClick={() => { setDeleteError(null); setConfirmOpen(true); }}>
-              Delete account
+              {t("settings.delete")}
             </Button>
           </div>
         </div>
@@ -234,27 +207,125 @@ export function SettingsPanels() {
       <Dialog open={confirmOpen} onOpenChange={(o) => !deleting && setConfirmOpen(o)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete your account?</DialogTitle>
-            <DialogDescription>
-              This permanently deletes your profile, onboarding data, plan, roadmap progress and
-              streak. This cannot be undone.
-            </DialogDescription>
+            <DialogTitle>{t("settings.delete.confirmTitle")}</DialogTitle>
+            <DialogDescription>{t("settings.delete.confirmDesc")}</DialogDescription>
           </DialogHeader>
           {deleteError && (
             <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-              Couldn&apos;t delete your account. Please try again.
+              {t("settings.delete.error")}
             </p>
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setConfirmOpen(false)} disabled={deleting}>
-              Cancel
+              {t("settings.cancel")}
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={deleting}>
-              {deleting ? <Loader2 className="size-4 animate-spin" /> : "Delete account"}
+              {deleting ? <Loader2 className="size-4 animate-spin" /> : t("settings.delete")}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Subscription management — view current plan, upgrade / downgrade, billing  */
+/* -------------------------------------------------------------------------- */
+
+const PLAN_META: { id: Plan; tier: Tier; name: string; price: string }[] = [
+  { id: "free", tier: "free", name: "Free", price: "$0" },
+  { id: "pro", tier: "pro", name: "Pro", price: "$7.99" },
+  { id: "max", tier: "max", name: "Max", price: "$15" },
+];
+
+function SubscriptionPanel({ t }: { t: TFunction }) {
+  const ent = useEntitlements();
+  const [busy, setBusy] = useState<Plan | null>(null);
+
+  const switchPlan = async (p: Plan) => {
+    if (p === ent.tier || busy) return;
+    setBusy(p);
+    if (p === "free") setSubscription("free", false);
+    else setSubscription(p, true);
+    try {
+      if (isSupabaseConfigured()) {
+        const { savePlan } = await import("@/lib/supabase/data");
+        await savePlan(p, p === "free" ? "canceled" : "active");
+      }
+    } catch {
+      /* local store already reflects the change */
+    }
+    setBusy(null);
+  };
+
+  const order: Record<Tier, number> = { free: 0, pro: 1, max: 2 };
+  const currentName = ent.isMax ? "Max" : ent.isPro ? "Pro" : "Free";
+  const currentDesc = ent.isMax ? t("plan.subDesc.max") : ent.isPro ? t("plan.subDesc.pro") : t("plan.subDesc.free");
+
+  return (
+    <div className="space-y-4">
+      {/* Current plan banner */}
+      <div className="flex flex-col gap-3 rounded-xl border border-primary/30 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <span className="grid size-11 place-items-center rounded-xl bg-[linear-gradient(135deg,hsl(var(--brand-blue)),hsl(var(--brand-violet)))] text-white shadow-glow">
+            <Crown className="size-5" />
+          </span>
+          <div>
+            <div className="flex items-center gap-2 font-medium">
+              AdmitFlow {currentName}
+              <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-medium text-primary">{t("plan.current")}</span>
+            </div>
+            <p className="text-sm text-muted-foreground">{currentDesc}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Plan options — upgrade / downgrade */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        {PLAN_META.map((p) => {
+          const isCurrent = p.tier === ent.tier;
+          const isUpgrade = order[p.tier] > order[ent.tier];
+          return (
+            <div
+              key={p.id}
+              className={cn(
+                "flex flex-col rounded-xl border p-4",
+                isCurrent ? "border-primary/50 bg-primary/[0.04]" : "border-border/70 bg-card/40",
+              )}
+            >
+              <div className="flex items-baseline justify-between">
+                <span className="font-display text-base font-semibold">{p.name}</span>
+                <span className="text-sm text-muted-foreground">
+                  {p.price}
+                  {p.id !== "free" && <span className="text-xs">{t("pricing.perMonth")}</span>}
+                </span>
+              </div>
+              <Button
+                variant={isCurrent ? "outline" : isUpgrade ? "gradient" : "outline"}
+                size="sm"
+                className="mt-3 w-full"
+                disabled={isCurrent || !!busy}
+                onClick={() => switchPlan(p.id)}
+              >
+                {busy === p.id ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : isCurrent ? (
+                  t("plan.current")
+                ) : isUpgrade ? (
+                  <>
+                    <Sparkles className="size-4" /> {t("plan.upgrade")}
+                  </>
+                ) : (
+                  t("plan.changePlan")
+                )}
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="text-xs text-muted-foreground">{t("plan.billingNote")}</p>
     </div>
   );
 }

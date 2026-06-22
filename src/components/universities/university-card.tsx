@@ -5,13 +5,15 @@ import { motion } from "framer-motion";
 import { Bookmark, MapPin, TrendingUp } from "lucide-react";
 import { SpotlightCard } from "@/components/shared/spotlight-card";
 import { Badge } from "@/components/ui/badge";
+import { useT } from "@/lib/i18n";
 import { formatCurrency, cn } from "@/lib/utils";
 import type { University } from "@/lib/types";
 
+/** Returns an i18n key (`uni.band.*`) + chip class for an admission probability. */
 export function admissionBand(p: number) {
-  if (p < 35) return { label: "Reach", className: "bg-destructive/15 text-destructive" };
-  if (p <= 65) return { label: "Target", className: "bg-warning/15 text-warning" };
-  return { label: "Likely", className: "bg-success/15 text-success" };
+  if (p < 35) return { key: "uni.band.reach", className: "bg-destructive/15 text-destructive" };
+  if (p <= 65) return { key: "uni.band.target", className: "bg-warning/15 text-warning" };
+  return { key: "uni.band.likely", className: "bg-success/15 text-success" };
 }
 
 export function UniversityCard({
@@ -25,6 +27,7 @@ export function UniversityCard({
   onToggleSave: (id: string) => void;
   index?: number;
 }) {
+  const { t } = useT();
   const u = university;
   const band = admissionBand(u.admissionProbability);
 
@@ -57,7 +60,7 @@ export function UniversityCard({
             </div>
             <button
               onClick={() => onToggleSave(u.id)}
-              aria-label={saved ? "Remove bookmark" : "Save university"}
+              aria-label={saved ? t("uni.removeBookmark") : t("uni.saveUniversity")}
               className={cn(
                 "grid size-8 place-items-center rounded-lg border transition-colors",
                 saved
@@ -72,11 +75,11 @@ export function UniversityCard({
           <p className="relative mt-3.5 line-clamp-2 text-sm text-muted-foreground">{u.blurb}</p>
 
           <div className="relative mt-4 grid grid-cols-3 gap-2 rounded-xl border border-border/50 bg-background/30 p-3 text-center">
-            <Metric label="Fit" value={`${u.fitScore}`} tone="text-success" />
-            <Metric label="Accept" value={`${u.acceptanceRate}%`} />
+            <Metric label={t("uni.fit")} value={`${u.fitScore}`} tone="text-success" />
+            <Metric label={t("uni.accept")} value={`${u.acceptanceRate}%`} />
             <Metric
-              label="Tuition"
-              value={u.tuitionPerYear === 0 ? "Free" : formatCurrency(u.tuitionPerYear, u.currency).replace(/\.00$/, "")}
+              label={t("uni.tuition")}
+              value={u.tuitionPerYear === 0 ? t("uni.free") : formatCurrency(u.tuitionPerYear, u.currency).replace(/\.00$/, "")}
               small
             />
           </div>
@@ -91,13 +94,13 @@ export function UniversityCard({
 
           <div className="relative mt-auto flex items-center justify-between pt-4">
             <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium", band.className)}>
-              <TrendingUp className="size-3" /> {band.label} · {u.admissionProbability}%
+              <TrendingUp className="size-3" /> {t(band.key)} · {u.admissionProbability}%
             </span>
             <Link
               href={`/universities/${u.id}`}
               className="inline-flex items-center gap-1 text-sm font-medium text-primary transition-colors hover:text-primary/80"
             >
-              Details
+              {t("uni.details")}
               <span aria-hidden>→</span>
             </Link>
           </div>

@@ -8,7 +8,7 @@ import { Logo, LogoMark } from "@/components/shared/logo";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { mainNav, secondaryNav, type NavItem } from "@/components/app/nav-config";
 import { useT } from "@/lib/i18n";
-import { useUser } from "@/lib/user-store";
+import { useEntitlements } from "@/lib/entitlements";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -21,9 +21,10 @@ export function AppSidebar({
   onToggleCollapse?: () => void;
   onNavigate?: () => void;
 }) {
-  // Premium Mentor is the highest tier — never show upgrade prompts to them.
-  const { plan } = useUser();
-  const showUpgrade = plan !== "premium";
+  // Only Free users see upgrade prompts; Pro/Max never do.
+  const ent = useEntitlements();
+  const { t } = useT();
+  const showUpgrade = ent.isFree;
   return (
     <TooltipProvider delayDuration={0}>
       <div className="flex h-full flex-col gap-2 p-3">
@@ -49,7 +50,7 @@ export function AppSidebar({
 
         {/* Main nav */}
         <nav className="flex flex-col gap-1">
-          {!collapsed && <SectionLabel>Menu</SectionLabel>}
+          {!collapsed && <SectionLabel>{t("sidebar.menu")}</SectionLabel>}
           {mainNav.map((item) => (
             <NavLink key={item.href} item={item} collapsed={collapsed} onNavigate={onNavigate} />
           ))}
@@ -58,7 +59,7 @@ export function AppSidebar({
         <div className="my-1 h-px bg-border/70" />
 
         <nav className="flex flex-col gap-1">
-          {!collapsed && <SectionLabel>Account</SectionLabel>}
+          {!collapsed && <SectionLabel>{t("sidebar.account")}</SectionLabel>}
           {secondaryNav.map((item) => (
             <NavLink key={item.href} item={item} collapsed={collapsed} onNavigate={onNavigate} />
           ))}
@@ -135,18 +136,19 @@ function NavLink({ item, collapsed, onNavigate }: { item: NavItem; collapsed: bo
 }
 
 function UpgradeCard() {
+  const { t } = useT();
   return (
     <div className="relative overflow-hidden rounded-xl border border-primary/30 bg-card/60 p-4">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.18),transparent_70%)]" />
       <div className="relative">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-semibold text-warning">
-          <Crown className="size-3" /> Premium Mentor
+          <Crown className="size-3" /> AdmitFlow Pro
         </span>
-        <p className="mt-2.5 text-sm font-medium leading-snug">Get a dedicated human counselor</p>
-        <p className="mt-1 text-xs text-muted-foreground">Essay & interview coaching, 1:1 sessions.</p>
+        <p className="mt-2.5 text-sm font-medium leading-snug">{t("sidebar.upgrade.title")}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{t("sidebar.upgrade.body")}</p>
         <Button asChild variant="gradient" size="sm" className="mt-3 w-full">
           <Link href="/pricing">
-            <Sparkles className="size-3.5" /> Upgrade
+            <Sparkles className="size-3.5" /> {t("plan.upgrade")}
           </Link>
         </Button>
       </div>

@@ -12,8 +12,6 @@ import { getUserState, setSubscription, type Plan } from "@/lib/user-store";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-const CONCIERGE_EMAIL = "admissions@admitflow.org";
-
 export function PricingSection({ withHeading = true }: { withHeading?: boolean }) {
   const router = useRouter();
   const { t, locale } = useT();
@@ -27,15 +25,11 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
 
     // Free → just enter (sign up if needed). No checkout.
     if (tierId === "free") {
+      if (authed) setSubscription("free", false);
       router.push(authed ? "/dashboard" : "/signup");
       return;
     }
-    // Concierge → contact admissions.
-    if (tierId === "concierge") {
-      window.location.assign(`mailto:${CONCIERGE_EMAIL}?subject=AdmitFlow%20Concierge`);
-      return;
-    }
-    // Premium → must be signed in; then start the trial.
+    // Pro / Max → must be signed in; then activate the plan.
     if (!authed) {
       router.push("/login");
       return;
@@ -49,7 +43,7 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
         await Promise.race([
           (async () => {
             const { savePlan } = await import("@/lib/supabase/data");
-            await savePlan(tierId as Plan, "trialing");
+            await savePlan(tierId as Plan, "active");
             const { hydrateLocalFromProfile } = await import("@/lib/supabase/auth");
             await hydrateLocalFromProfile();
           })(),
@@ -137,16 +131,20 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
 
                   <div className="mt-5 flex items-end gap-1">
                     {isFree ? (
-                      <span className="text-4xl font-bold tracking-tight">{locale === "ru" ? "0 ₽" : "$0"}</span>
+                      <span className="text-4xl font-bold tracking-tight">$0</span>
                     ) : (
                       <>
                         <span className="text-4xl font-bold tabular-nums tracking-tight">${price}</span>
-                        <span className="mb-1 text-sm text-muted-foreground">{t("pricing.perMonth")}</span>
+                        <span className="mb-1 text-sm text-muted-foreground">{yearly ? t("pricing.perYear") : t("pricing.perMonth")}</span>
                       </>
                     )}
                   </div>
                   <p className="mt-1 h-4 text-xs text-muted-foreground">
-                    {isFree ? "" : yearly ? t("pricing.billedAnnually") : t("pricing.billedMonthly")}
+                    {isFree
+                      ? ""
+                      : yearly
+                        ? `${t("pricing.or")} $${tier.price.monthly}${t("pricing.perMonth")}`
+                        : `${t("pricing.or")} $${tier.price.yearly}${t("pricing.perYear")}`}
                   </p>
 
                   <Button
