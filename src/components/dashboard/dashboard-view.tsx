@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { EmptyState } from "@/components/shared/empty-state";
 import { PlanStatusCard } from "@/components/dashboard/plan-status-card";
+import { AmbientLayer } from "@/components/shared/ambient-layer";
 import { AdmissionSummary } from "@/components/dashboard/admission-summary";
 import { ApplicationProgress } from "@/components/dashboard/application-progress";
 import { useUser, deriveProfile } from "@/lib/user-store";
@@ -85,8 +86,16 @@ export function DashboardView() {
   ];
 
   return (
-    <PageContainer>
-      <PageHeader
+    <>
+      {/* Ambient wash — full viewport, 4% opacity, behind all cards. Static
+          (reduced-motion safe); never affects layout. */}
+      <AmbientLayer
+        light="/assets/ambient/dashboard/dashboard-light.webp"
+        dark="/assets/ambient/dashboard/dashboard-dark.webp"
+        className="fixed inset-0 -z-10 opacity-[0.04]"
+      />
+      <PageContainer>
+        <PageHeader
         title={
           <>
             {t("dash.welcome", { name: firstName })} <span className="align-middle text-2xl">👋</span>
@@ -259,6 +268,7 @@ export function DashboardView() {
           </Card>
         </div>
       </div>
-    </PageContainer>
+      </PageContainer>
+    </>
   );
 }

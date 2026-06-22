@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Constellation } from "@/components/marketing/constellation";
+import { AmbientLayer } from "@/components/shared/ambient-layer";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -102,6 +103,14 @@ export function Hero() {
           transition={{ duration: 1, ease, delay: 0.15 }}
           className="relative lg:-mr-6 xl:-mr-16"
         >
+          {/* Ambient atmosphere — behind the constellation only, feathered so it
+              reads as soft depth rather than a rectangle. Static (reduced-motion safe). */}
+          <AmbientLayer
+            eager
+            light="/assets/ambient/hero/hero-light.webp"
+            dark="/assets/ambient/hero/hero-dark.webp"
+            className="absolute inset-0 -z-10 scale-110 opacity-70 [mask-image:radial-gradient(62%_62%_at_58%_42%,#000_22%,transparent_72%)]"
+          />
           <Constellation />
         </motion.div>
       </div>
