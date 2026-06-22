@@ -4,31 +4,29 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Constellation } from "@/components/marketing/constellation";
-import { AmbientLayer } from "@/components/shared/ambient-layer";
+import { fadeIn, fadeUp, scaleIn, transitions } from "@/lib/motion";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-
-const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
   const { t, locale } = useT();
   const isRu = locale === "ru";
 
   return (
-    <section className="relative overflow-hidden pt-32 pb-24 sm:pt-40">
+    <section className="relative flex min-h-[85vh] items-center overflow-hidden pt-32 pb-24 sm:pt-40">
       {/* Theme-aware base: white in light, deep navy in dark — soft blue ambient glow on the right */}
       <div className="absolute inset-0 -z-20 bg-background" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(58%_70%_at_80%_40%,hsl(var(--brand-blue)/0.1),transparent_62%)] dark:bg-[radial-gradient(60%_72%_at_80%_38%,hsl(var(--brand-blue)/0.2),transparent_64%)]" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(42%_55%_at_92%_74%,hsl(var(--brand-cyan)/0.07),transparent_60%)] dark:bg-[radial-gradient(44%_58%_at_90%_72%,hsl(var(--brand-cyan)/0.12),transparent_62%)]" />
 
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 lg:grid-cols-[0.82fr_1.18fr]">
+      <div className="mx-auto grid w-full max-w-7xl items-center gap-10 px-6 lg:grid-cols-[0.82fr_1.18fr]">
         {/* Copy */}
         <div className="text-center lg:text-left">
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease }}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            transition={transitions.base}
             className="flex flex-wrap items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary/80 sm:text-[11px] sm:tracking-[0.24em] lg:justify-start"
           >
             <Sparkles className="size-3.5 shrink-0 text-primary" />
@@ -36,9 +34,10 @@ export function Hero() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease, delay: 0.06 }}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            transition={{ ...transitions.slow, delay: 0.06 }}
             className={cn(
               "mt-6 max-w-[16ch] font-display font-medium tracking-[-0.025em] text-balance",
               // Russian runs ~25% longer — step the scale down and tighten leading
@@ -56,18 +55,20 @@ export function Hero() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease, delay: 0.14 }}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            transition={{ ...transitions.slow, delay: 0.14 }}
             className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty lg:mx-0"
           >
             {t("hero.subtitle")}
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease, delay: 0.22 }}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            transition={{ ...transitions.slow, delay: 0.22 }}
             className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start"
           >
             <Button asChild variant="gradient" size="xl" className="group w-full sm:w-auto">
@@ -82,9 +83,10 @@ export function Hero() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.34 }}
+            variants={fadeIn}
+            initial="hidden"
+            animate="show"
+            transition={{ ...transitions.slow, delay: 0.34 }}
             className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground lg:justify-start"
           >
             <span className="inline-flex items-center gap-2">
@@ -96,22 +98,68 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Signature element — the living University Constellation */}
+        {/* Signature element — cinematic campus video with a floating glass card */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease, delay: 0.15 }}
+          variants={scaleIn}
+          initial="hidden"
+          animate="show"
+          transition={{ ...transitions.slow, delay: 0.15 }}
           className="relative lg:-mr-6 xl:-mr-16"
         >
-          {/* Ambient atmosphere — behind the constellation only, feathered so it
-              reads as soft depth rather than a rectangle. Static (reduced-motion safe). */}
-          <AmbientLayer
-            eager
-            light="/assets/ambient/hero/hero-light.webp"
-            dark="/assets/ambient/hero/hero-dark.webp"
-            className="absolute inset-0 -z-10 scale-110 opacity-70 [mask-image:radial-gradient(62%_62%_at_58%_42%,#000_22%,transparent_72%)]"
-          />
-          <Constellation />
+          <video
+            className="aspect-video w-full rounded-2xl border border-border/60 object-cover shadow-[0_30px_80px_-32px_hsl(var(--primary)/0.5)]"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          >
+            <source src="/assets/hero/campus.mp4" type="video/mp4" />
+          </video>
+
+          {/* Floating glass admission card */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            transition={{ ...transitions.base, delay: 0.5 }}
+            className="absolute -bottom-6 -left-4 w-[16.5rem] rounded-2xl border border-white/40 bg-white/75 p-4 shadow-[0_24px_70px_-28px_hsl(230_50%_20%/0.55)] backdrop-blur-xl dark:border-white/10 dark:bg-card/70 sm:-left-6"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white text-[11px] font-bold tracking-tight text-foreground shadow ring-1 ring-black/5">
+                MIT
+              </span>
+              <div className="min-w-0">
+                <p className="font-display text-sm font-semibold leading-none">MIT</p>
+                <p className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <span aria-hidden>🇺🇸</span> Cambridge, USA
+                </p>
+              </div>
+              <span className="ml-auto shrink-0 rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                QS #1
+              </span>
+            </div>
+
+            <div className="mt-3 space-y-2.5">
+              <div>
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="text-muted-foreground">Admission chance</span>
+                  <span className="font-semibold tabular-nums text-success">78%</span>
+                </div>
+                <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-success" style={{ width: "78%" }} />
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-muted-foreground">IELTS</span>
+                <span className="font-semibold tabular-nums">7.0</span>
+              </div>
+            </div>
+
+            <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-success/12 px-2.5 py-1 text-[11px] font-medium text-success">
+              <span className="size-1.5 rounded-full bg-success" /> Scholarship available
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

@@ -1,19 +1,15 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-
-const variants: Variants = {
-  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
-  show: { opacity: 1, y: 0, filter: "blur(0px)" },
-};
+import { fadeUp, staggerContainer, transitions, viewportOnce } from "@/lib/motion";
 
 export function Reveal({
   children,
   delay = 0,
   className,
   as = "div",
-  y = 24,
+  y = 16,
 }: {
   children: ReactNode;
   delay?: number;
@@ -27,9 +23,9 @@ export function Reveal({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: "-60px" }}
-      variants={{ hidden: { opacity: 0, y, filter: "blur(6px)" }, show: { opacity: 1, y: 0, filter: "blur(0px)" } }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      viewport={viewportOnce}
+      variants={{ hidden: { opacity: 0, y }, show: { opacity: 1, y: 0 } }}
+      transition={{ ...transitions.base, delay }}
     >
       {children}
     </MotionTag>
@@ -52,8 +48,8 @@ export function StaggerContainer({
       className={className}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: "-60px" }}
-      variants={{ show: { transition: { staggerChildren: stagger, delayChildren } } }}
+      viewport={viewportOnce}
+      variants={staggerContainer(stagger, delayChildren)}
     >
       {children}
     </motion.div>
@@ -62,11 +58,7 @@ export function StaggerContainer({
 
 export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <motion.div
-      className={className}
-      variants={variants}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <motion.div className={className} variants={fadeUp} transition={transitions.base}>
       {children}
     </motion.div>
   );

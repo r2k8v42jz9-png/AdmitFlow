@@ -3,9 +3,8 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { UserRound, Telescope, Gauge, Send, GraduationCap } from "lucide-react";
+import { fadeUp, fadeUpLg, staggerContainer, transitions, viewportOnce } from "@/lib/motion";
 import { useT } from "@/lib/i18n";
-
-const ease = [0.22, 1, 0.36, 1] as const;
 
 const STEPS = [
   { icon: UserRound, key: "profile" },
@@ -32,28 +31,31 @@ export function AdmissionJourney() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">
           <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, ease }}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            transition={transitions.snappy}
             className="text-[11px] font-medium uppercase tracking-[0.22em] text-primary/80"
           >
             {t("journey.eyebrow")}
           </motion.span>
           <motion.h2
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, ease, delay: 0.05 }}
+            variants={fadeUpLg}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            transition={{ ...transitions.slow, delay: 0.05 }}
             className="mt-4 font-display text-4xl font-medium leading-[1.05] tracking-[-0.02em] text-balance sm:text-6xl"
           >
             {t("journey.title")} <span className="italic text-gradient">{t("journey.titleAccent")}</span>
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, ease, delay: 0.12 }}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            transition={{ ...transitions.slow, delay: 0.12 }}
             className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty"
           >
             {t("journey.subtitle")}
@@ -70,14 +72,18 @@ export function AdmissionJourney() {
             />
           </div>
 
-          <ol className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5">
+          <motion.ol
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
+            variants={staggerContainer(0.1)}
+            className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-5"
+          >
             {STEPS.map((s, i) => (
               <motion.li
                 key={s.key}
-                initial={{ opacity: 0, y: 26 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.6, ease, delay: i * 0.1 }}
+                variants={fadeUpLg}
+                transition={transitions.base}
                 className="group relative text-center lg:text-left"
               >
                 <div className="relative z-10 mx-auto grid size-[68px] place-items-center rounded-2xl border border-border bg-card shadow-[0_18px_50px_-26px_hsl(224_50%_30%/0.4)] transition-transform duration-300 group-hover:-translate-y-1 lg:mx-0">
@@ -90,7 +96,7 @@ export function AdmissionJourney() {
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{t(`journey.${s.key}.desc`)}</p>
               </motion.li>
             ))}
-          </ol>
+          </motion.ol>
         </div>
       </div>
     </section>

@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
 import { Reveal } from "@/components/shared/reveal";
 import { faqs, faqsRu } from "@/lib/data/marketing";
+import { easeOut } from "@/lib/motion";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 export function FAQ() {
   const { t, locale } = useT();
+  const reduce = useReducedMotion();
   const [open, setOpen] = useState<number | null>(0);
   const items = locale === "ru" ? faqsRu : faqs;
 
@@ -54,7 +56,7 @@ export function FAQ() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: reduce ? 0 : 0.3, ease: easeOut }}
                         className="overflow-hidden"
                       >
                         <p className="px-5 pb-5 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
