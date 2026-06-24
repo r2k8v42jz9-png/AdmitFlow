@@ -95,10 +95,11 @@ export const faqsRu = [
 ];
 
 /**
- * The three AdmitFlow plans, localized. `id` doubles as the plan kind:
- *   free → permanent free access (no checkout, no expiration)
- *   pro  → $7.99/mo · $83.88/yr — full admissions toolkit
- *   max  → $15/mo · $156/yr — Pro + priority AI, advanced analytics, premium tools
+ * The three AdmitFlow plans, localized. `id` doubles as the plan kind (kept
+ * stable so entitlements + checkout logic are unaffected):
+ *   free → FREE    · $0      — explore universities
+ *   pro  → PREMIUM · $9/mo   — full applications toolkit (recommended)
+ *   max  → ELITE   · $49/mo  — expert-led admission support (contact sales)
  */
 export function getPricingTiers(locale: "en" | "ru"): PricingTier[] {
   const ru = locale === "ru";
@@ -107,32 +108,38 @@ export function getPricingTiers(locale: "en" | "ru"): PricingTier[] {
       id: "free",
       name: ru ? "Бесплатно" : "Free",
       price: { monthly: 0, yearly: 0 },
-      tagline: ru ? "Изучайте вузы и планируйте — бесплатно навсегда." : "Explore universities and plan — free forever.",
-      cta: ru ? "Начать бесплатно" : "Get started free",
+      tagline: ru ? "Изучайте университеты и рассчитывайте свои шансы на поступление." : "Explore universities and calculate your admission chances.",
+      cta: ru ? "Начать бесплатно" : "Start Free",
+      variant: "secondary",
       features: ru
-        ? ["Поиск университетов", "Обзор университетов", "Сохранение вузов", "Базовая панель", "Базовая оценка шансов", "ИИ-наставник (3 в день)"]
-        : ["University search", "University explorer", "Save universities", "Basic dashboard", "Basic chance assessment", "AI Mentor (3 / day)"],
+        ? ["Поиск университетов", "Калькулятор шансов на поступление", "Базовый ИИ-наставник", "Сохранение до 5 университетов", "Доступ к панели"]
+        : ["University Search", "Admission Chance Calculator", "Basic AI Mentor", "Save up to 5 Universities", "Dashboard Access"],
     },
     {
       id: "pro",
-      name: "Pro",
-      price: { monthly: 7.99, yearly: 83.88 },
-      tagline: ru ? "Всё необходимое, чтобы подавать заявки уверенно." : "Everything you need to apply with confidence.",
+      name: ru ? "Премиум" : "Premium",
+      price: { monthly: 9, yearly: 108 },
+      tagline: ru ? "Всё необходимое для серьёзного поступления в университет." : "Everything needed for serious university admissions.",
       highlight: true,
-      cta: ru ? "Выбрать Pro" : "Choose Pro",
+      popular: true,
+      badge: ru ? "⭐ Рекомендуем" : "⭐ Recommended",
+      cta: ru ? "Выбрать Премиум" : "Choose Premium",
+      variant: "primary",
       features: ru
-        ? ["Безлимитный ИИ-наставник", "Безлимитная оценка шансов", "Персональный план поступления", "Дедлайны и планировщик", "Поиск стипендий", "Трекер заявок"]
-        : ["Unlimited AI Mentor", "Unlimited chance assessment", "Personalized roadmap", "Deadline tracking", "Scholarship finder", "Application tracking"],
+        ? ["Безлимитный ИИ-наставник", "Поиск стипендий", "Персональный план поступления", "Отслеживание дедлайнов", "Неограниченно университетов", "Трекер прогресса заявок"]
+        : ["Unlimited AI Mentor", "Scholarship Finder", "Personalized Admission Plan", "Deadline Tracking", "Unlimited Universities", "Application Progress Tracker"],
     },
     {
       id: "max",
-      name: "Max",
-      price: { monthly: 15, yearly: 156 },
-      tagline: ru ? "Максимум возможностей для поступления." : "Maximum power for your admissions.",
-      cta: ru ? "Выбрать Max" : "Choose Max",
+      name: ru ? "Элит" : "Elite",
+      price: { monthly: 49, yearly: 588 },
+      tagline: ru ? "Полное сопровождение поступления от экспертов." : "Full admissions support from experts.",
+      cta: ru ? "Связаться с нами" : "Contact Us",
+      variant: "primary",
+      contact: true,
       features: ru
-        ? ["Всё из Pro", "Приоритетный ИИ", "Расширенная аналитика", "Премиум-инструменты поступления", "Ранний доступ к новым функциям"]
-        : ["Everything in Pro", "Priority AI", "Advanced analytics", "Premium admissions tools", "Early access to new features"],
+        ? ["Проверка эссе", "Консультант 1-на-1", "Стратегия поступления", "Приоритетная поддержка", "Подготовка к собеседованию", "Личный коуч по поступлению"]
+        : ["Essay Review", "1-on-1 Consultant", "Admission Strategy", "Priority Support", "Interview Preparation", "Personal Admissions Coach"],
     },
   ];
 }

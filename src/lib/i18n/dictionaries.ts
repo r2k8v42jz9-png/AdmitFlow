@@ -210,11 +210,11 @@ const en: Dict = {
   "pricing.or": "or",
   "pricing.billedAnnually": "billed annually",
   "pricing.billedMonthly": "billed monthly",
-  "pricing.popular": "Most popular",
-  "pricingHero.titleLead": "Plans that grow",
-  "pricingHero.titleAccent": "with your ambition",
+  "pricing.popular": "⭐ Recommended",
+  "pricingHero.titleLead": "Choose Your",
+  "pricingHero.titleAccent": "Admission Plan",
   "pricingHero.subtitle":
-    "Start free and stay free for as long as you like. Upgrade to Pro or Max whenever you're ready — cancel anytime.",
+    "Start free and stay free for as long as you like. Upgrade to Premium or Elite whenever you're ready — cancel anytime.",
 
   // plan / subscription
   "plan.free": "Free plan",
@@ -405,7 +405,7 @@ const en: Dict = {
   "onb.result.fit": "fit",
   "onb.result.continue": "Continue to plans",
   "onb.plan.title": "Choose your plan",
-  "onb.plan.subtitle": "Start free forever, or unlock everything with Pro or Max. You can change anytime.",
+  "onb.plan.subtitle": "Start free forever, or unlock everything with Premium or Elite. You can change anytime.",
   "onb.plan.recommended": "Recommended",
   "onb.plan.note": "No credit card required for Free. Change or cancel anytime.",
   "onb.admission": "Admission",
@@ -751,11 +751,11 @@ const ru: Dict = {
   "pricing.or": "или",
   "pricing.billedAnnually": "оплата раз в год",
   "pricing.billedMonthly": "оплата помесячно",
-  "pricing.popular": "Популярный",
-  "pricingHero.titleLead": "Тарифы, растущие",
-  "pricingHero.titleAccent": "вместе с вашими амбициями",
+  "pricing.popular": "⭐ Рекомендуем",
+  "pricingHero.titleLead": "Выберите свой",
+  "pricingHero.titleAccent": "план поступления",
   "pricingHero.subtitle":
-    "Начните бесплатно и оставайтесь на бесплатном плане сколько угодно. Перейдите на Pro или Max, когда будете готовы — отмена в любой момент.",
+    "Начните бесплатно и оставайтесь на бесплатном плане сколько угодно. Перейдите на Премиум или Элит, когда будете готовы — отмена в любой момент.",
 
   // plan / subscription
   "plan.free": "Бесплатный план",
@@ -946,7 +946,7 @@ const ru: Dict = {
   "onb.result.fit": "соответствие",
   "onb.result.continue": "Перейти к тарифам",
   "onb.plan.title": "Выберите тариф",
-  "onb.plan.subtitle": "Начните бесплатно навсегда или откройте всё с Pro или Max. Менять можно в любой момент.",
+  "onb.plan.subtitle": "Начните бесплатно навсегда или откройте всё с Премиум или Элит. Менять можно в любой момент.",
   "onb.plan.recommended": "Рекомендуем",
   "onb.plan.note": "Для Free карта не нужна. Смена и отмена тарифа в любой момент.",
   "onb.admission": "Поступление",

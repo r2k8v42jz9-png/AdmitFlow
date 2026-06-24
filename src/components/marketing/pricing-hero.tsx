@@ -16,12 +16,15 @@ export function PricingHero() {
         </Eyebrow>
       </Reveal>
       <Reveal delay={0.06}>
-        <h1 className="mt-5 font-display text-4xl font-bold tracking-tight text-balance sm:text-6xl">
-          {t("pricingHero.titleLead")} <span className="text-gradient">{t("pricingHero.titleAccent")}</span>
+        <h1 className="mt-8 font-display text-[3.1rem] font-medium leading-[1.02] tracking-[-0.032em] text-balance sm:text-[4.5rem]">
+          {t("pricingHero.titleLead")}{" "}
+          <span className="bg-[linear-gradient(100deg,#4F7CFF,#7AA2FF)] bg-clip-text italic text-transparent">
+            {t("pricingHero.titleAccent")}
+          </span>
         </h1>
       </Reveal>
       <Reveal delay={0.12}>
-        <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">{t("pricingHero.subtitle")}</p>
+        <p className="mx-auto mt-7 max-w-xl text-lg text-muted-foreground text-pretty">{t("pricingHero.subtitle")}</p>
       </Reveal>
     </div>
   );

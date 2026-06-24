@@ -8,13 +8,13 @@ import { AuroraBackground } from "@/components/shared/aurora-background";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "Simple, transparent pricing for AdmitFlow — Free, Pro and Max plans.",
+  description: "Simple, transparent pricing for AdmitFlow — Free, Premium and Elite plans.",
 };
 
 export default function PricingPage() {
   return (
     <>
-      <section className="relative overflow-hidden pt-36 pb-4 sm:pt-44">
+      <section className="relative overflow-hidden pt-32 pb-12 sm:pt-40">
         <AuroraBackground variant="subtle" />
         <PricingHero />
       </section>

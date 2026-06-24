@@ -28,9 +28,7 @@ export function LogoBridge() {
   const row = [...LOGOS, ...LOGOS];
 
   return (
-    <section className="relative bg-background py-14">
-      {/* hairline continuity into the next section */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[hsl(214_44%_97%)] dark:to-transparent" />
+    <section className="relative py-14">
 
       <p className="relative text-center text-[11px] font-medium uppercase tracking-[0.22em] text-muted-foreground/70">
         {t("hero.admittedTo")}

@@ -135,7 +135,7 @@
   --animate-marquee: marquee 38s linear infinite;
   --animate-marquee-slow: marquee 60s linear infinite;
   --animate-float: float 7s ease-in-out infinite;
-  --animate-aurora: aurora 18s ease-in-out infinite alternate;
+  --animate-aurora: aurora 36s ease-in-out infinite alternate;
   --animate-shimmer: shimmer 2.2s linear infinite;
   --animate-pulse-glow: pulse-glow 3.5s ease-in-out infinite;
   --animate-spin-slow: spin 14s linear infinite;

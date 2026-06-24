@@ -1,0 +1,38 @@
+# Graphify ignore file (gitignore syntax) — keeps the knowledge graph focused on
+# AdmitFlow source code, excluding dependencies, build output, and binary media.
+
+# Dependencies & lockfiles
+node_modules/
+package-lock.json
+.pnp.*
+
+# Build / framework output
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# Tooling / local
+.git/
+.claude/
+.vercel/
+.cursor/
+.tmp/
+coverage/
+
+# Graphify's own output
+graphify-out/
+
+# Binary / large media assets (not source)
+public/assets/**/*.mp4
+public/assets/**/*.webm
+public/assets/**/*.webp
+public/assets/**/*.png
+public/assets/**/*.jpg
+*.woff
+*.woff2
+
+# Environment files
+.env
+.env.*

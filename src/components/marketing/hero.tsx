@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AuroraLayer } from "@/components/shared/aurora";
 import { fadeIn, fadeUp, scaleIn, transitions } from "@/lib/motion";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -13,11 +14,13 @@ export function Hero() {
   const isRu = locale === "ru";
 
   return (
-    <section className="relative flex min-h-[85vh] items-center overflow-hidden pt-32 pb-24 sm:pt-40">
+    <section className="relative flex min-h-[85vh] items-center overflow-hidden pt-32 pb-24 sm:pt-28">
       {/* Theme-aware base: white in light, deep navy in dark — soft blue ambient glow on the right */}
       <div className="absolute inset-0 -z-20 bg-background" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(58%_70%_at_80%_40%,hsl(var(--brand-blue)/0.1),transparent_62%)] dark:bg-[radial-gradient(60%_72%_at_80%_38%,hsl(var(--brand-blue)/0.2),transparent_64%)]" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(42%_55%_at_92%_74%,hsl(var(--brand-cyan)/0.07),transparent_60%)] dark:bg-[radial-gradient(44%_58%_at_90%_72%,hsl(var(--brand-cyan)/0.12),transparent_62%)]" />
+      {/* Ambient AdmitFlow aurora — behind content, above the base */}
+      <AuroraLayer className="-z-10" />
 
       <div className="mx-auto grid w-full max-w-7xl items-center gap-10 px-6 lg:grid-cols-[0.82fr_1.18fr]">
         {/* Copy */}
@@ -77,7 +80,12 @@ export function Hero() {
                 <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="xl" className="w-full sm:w-auto">
+            <Button
+              asChild
+              variant="outline"
+              size="xl"
+              className="w-full border-foreground/25 bg-card/70 backdrop-blur-sm hover:border-foreground/45 hover:bg-card sm:w-auto dark:border-white/30 dark:bg-white/[0.06] dark:hover:bg-white/[0.12]"
+            >
               <Link href="/pricing">{t("hero.ctaSecondary")}</Link>
             </Button>
           </motion.div>

@@ -25,8 +25,6 @@ export function AdmissionJourney() {
 
   return (
     <section className="relative overflow-hidden py-28 sm:py-36">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(120%_90%_at_50%_0%,hsl(214_44%_97%),hsl(220_30%_99%))] dark:bg-[radial-gradient(120%_90%_at_50%_0%,hsl(222_42%_7%),hsl(224_48%_5%))]" />
-      <div className="absolute inset-0 -z-10 bg-grid bg-grid-fade opacity-[0.4] dark:opacity-[0.18]" />
 
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto max-w-2xl text-center">

@@ -13,27 +13,29 @@ interface Row {
 }
 
 const ROWS: Row[] = [
-  { label: { en: "University search & explorer", ru: "Поиск и обзор вузов" }, free: true, pro: true, max: true },
-  { label: { en: "Save universities", ru: "Сохранение вузов" }, free: true, pro: true, max: true },
-  { label: { en: "Basic dashboard", ru: "Базовая панель" }, free: true, pro: true, max: true },
-  { label: { en: "AI mentor messages", ru: "Сообщения ИИ-наставнику" }, free: { en: "3 / day", ru: "3 / день" }, pro: { en: "Unlimited", ru: "Безлимит" }, max: { en: "Unlimited", ru: "Безлимит" } },
-  { label: { en: "Admission chance assessment", ru: "Оценка шансов" }, free: { en: "Basic", ru: "Базовая" }, pro: { en: "Unlimited", ru: "Безлимит" }, max: { en: "Unlimited", ru: "Безлимит" } },
-  { label: { en: "Personalized roadmap", ru: "Персональный план" }, free: false, pro: true, max: true },
-  { label: { en: "Deadline tracking", ru: "Дедлайны и планировщик" }, free: false, pro: true, max: true },
-  { label: { en: "Scholarship finder", ru: "Поиск стипендий" }, free: false, pro: true, max: true },
-  { label: { en: "Application tracking", ru: "Трекер заявок" }, free: false, pro: true, max: true },
-  { label: { en: "Priority AI", ru: "Приоритетный ИИ" }, free: false, pro: false, max: true },
-  { label: { en: "Advanced analytics", ru: "Расширенная аналитика" }, free: false, pro: false, max: true },
-  { label: { en: "Premium admissions tools", ru: "Премиум-инструменты поступления" }, free: false, pro: false, max: true },
-  { label: { en: "Early access to new features", ru: "Ранний доступ к новым функциям" }, free: false, pro: false, max: true },
+  { label: { en: "University Search", ru: "Поиск университетов" }, free: true, pro: true, max: true },
+  { label: { en: "Admission Chance Calculator", ru: "Калькулятор шансов на поступление" }, free: true, pro: true, max: true },
+  { label: { en: "Dashboard Access", ru: "Доступ к панели" }, free: true, pro: true, max: true },
+  { label: { en: "AI Mentor", ru: "ИИ-наставник" }, free: { en: "Basic", ru: "Базовый" }, pro: { en: "Unlimited", ru: "Безлимит" }, max: { en: "Unlimited", ru: "Безлимит" } },
+  { label: { en: "Saved Universities", ru: "Сохранённые университеты" }, free: { en: "Up to 5", ru: "До 5" }, pro: { en: "Unlimited", ru: "Безлимит" }, max: { en: "Unlimited", ru: "Безлимит" } },
+  { label: { en: "Scholarship Finder", ru: "Поиск стипендий" }, free: false, pro: true, max: true },
+  { label: { en: "Personalized Admission Plan", ru: "Персональный план поступления" }, free: false, pro: true, max: true },
+  { label: { en: "Deadline Tracking", ru: "Отслеживание дедлайнов" }, free: false, pro: true, max: true },
+  { label: { en: "Application Progress Tracker", ru: "Трекер прогресса заявок" }, free: false, pro: true, max: true },
+  { label: { en: "Essay Review", ru: "Проверка эссе" }, free: false, pro: false, max: true },
+  { label: { en: "1-on-1 Consultant", ru: "Консультант 1-на-1" }, free: false, pro: false, max: true },
+  { label: { en: "Admission Strategy", ru: "Стратегия поступления" }, free: false, pro: false, max: true },
+  { label: { en: "Interview Preparation", ru: "Подготовка к собеседованию" }, free: false, pro: false, max: true },
+  { label: { en: "Personal Admissions Coach", ru: "Личный коуч по поступлению" }, free: false, pro: false, max: true },
+  { label: { en: "Priority Support", ru: "Приоритетная поддержка" }, free: false, pro: false, max: true },
 ];
 
 function Cell({ value, lang }: { value: Val; lang: "en" | "ru" }) {
-  if (typeof value === "object") return <span className="text-sm text-foreground/80">{value[lang]}</span>;
+  if (typeof value === "object") return <span className="text-[15px] font-medium text-foreground/80">{value[lang]}</span>;
   return value ? (
-    <Check className="mx-auto size-4 text-success" />
+    <Check className="mx-auto size-[18px] text-success" />
   ) : (
-    <Minus className="mx-auto size-4 text-muted-foreground/50" />
+    <Minus className="mx-auto size-[18px] text-muted-foreground/40" />
   );
 }
 
@@ -43,17 +45,24 @@ export function PlanComparison() {
   const per = lang === "ru" ? "/мес" : "/mo";
 
   return (
-    <section className="relative py-12 sm:py-16">
+    <section className="relative pt-2 pb-16 sm:pt-4 sm:pb-20">
       <div className="mx-auto max-w-5xl px-6">
-        <div className="overflow-hidden rounded-3xl border border-border/70 bg-card/40 backdrop-blur-sm">
-          <div className="grid grid-cols-4 border-b border-border/70 bg-card/40 px-6 py-4 text-sm font-semibold">
+        <div className="overflow-hidden rounded-[1.75rem] border border-white/60 bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.85),0_30px_74px_-30px_rgba(20,30,60,0.42)] backdrop-blur-[32px] dark:border-white/12 dark:bg-white/[0.05] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_38px_88px_-30px_rgba(0,0,0,0.85)]">
+          <div className="grid grid-cols-4 border-b border-black/[0.07] bg-white/40 px-8 py-5 text-[15px] font-semibold dark:border-white/10 dark:bg-white/[0.05]">
             <span className="col-span-1">{lang === "ru" ? "Сравнение планов" : "Compare plans"}</span>
-            <span className="text-center">{lang === "ru" ? "Бесплатно" : "Free"}<span className="block text-xs font-normal text-muted-foreground">$0</span></span>
-            <span className="text-center text-primary">Pro<span className="block text-xs font-normal text-muted-foreground">$7.99{per}</span></span>
-            <span className="text-center">Max<span className="block text-xs font-normal text-muted-foreground">$15{per}</span></span>
+            <span className="text-center">{lang === "ru" ? "Бесплатно" : "Free"}<span className="mt-0.5 block text-[13px] font-normal text-muted-foreground">$0</span></span>
+            <span className="text-center text-primary">{lang === "ru" ? "Премиум" : "Premium"}<span className="mt-0.5 block text-[13px] font-normal text-muted-foreground">$9{per}</span></span>
+            <span className="text-center">{lang === "ru" ? "Элит" : "Elite"}<span className="mt-0.5 block text-[13px] font-normal text-muted-foreground">$49{per}</span></span>
           </div>
           {ROWS.map((row, i) => (
-            <div key={row.label.en} className={cn("grid grid-cols-4 items-center px-6 py-3.5 text-sm", i % 2 && "bg-card/20")}>
+            <div
+              key={row.label.en}
+              className={cn(
+                "grid grid-cols-4 items-center px-8 py-[18px] text-[15px] transition-colors",
+                i !== 0 && "border-t border-black/[0.06] dark:border-white/[0.07]",
+                i % 2 === 1 && "bg-white/25 dark:bg-white/[0.02]",
+              )}
+            >
               <span className="text-foreground/85">{row.label[lang]}</span>
               <div className="text-center"><Cell value={row.free} lang={lang} /></div>
               <div className="text-center"><Cell value={row.pro} lang={lang} /></div>

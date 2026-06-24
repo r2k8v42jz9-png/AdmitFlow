@@ -113,7 +113,12 @@ export interface PricingTier {
   price: { monthly: number; yearly: number };
   tagline: string;
   highlight?: boolean;
+  popular?: boolean;
   badge?: string;
   cta: string;
+  /** Button style: "primary" (brand CTA) or "secondary" (low-emphasis). */
+  variant?: "primary" | "secondary";
+  /** When true the CTA is a contact action (mailto) rather than checkout. */
+  contact?: boolean;
   features: string[];
 }
