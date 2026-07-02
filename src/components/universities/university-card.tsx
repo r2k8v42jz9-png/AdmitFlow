@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useT } from "@/lib/i18n";
 import { formatCurrency, cn } from "@/lib/utils";
 import type { University } from "@/lib/types";
+import type { MatchClassification } from "@/lib/supabase/match";
 
 /** Returns an i18n key (`uni.band.*`) + chip class for an admission probability. */
 export function admissionBand(p: number) {
@@ -16,20 +17,34 @@ export function admissionBand(p: number) {
   return { key: "uni.band.likely", className: "bg-success/15 text-success" };
 }
 
+/** Same chip styling as admissionBand(), keyed off a Smart Match classification instead. */
+function matchBand(c: MatchClassification) {
+  if (c === "reach") return { key: "uni.band.reach", className: "bg-destructive/15 text-destructive" };
+  if (c === "target") return { key: "uni.band.target", className: "bg-warning/15 text-warning" };
+  return { key: "uni.band.likely", className: "bg-success/15 text-success" };
+}
+
 export function UniversityCard({
   university,
   saved,
   onToggleSave,
   index = 0,
+  classification,
+  matchScore,
 }: {
   university: University;
   saved: boolean;
   onToggleSave: (id: string) => void;
   index?: number;
+  /** When provided (Smart Match), overrides the generic fit/band with a personalized one. */
+  classification?: MatchClassification;
+  matchScore?: number;
 }) {
   const { t } = useT();
   const u = university;
-  const band = admissionBand(u.admissionProbability);
+  const band = classification ? matchBand(classification) : admissionBand(u.admissionProbability);
+  const bandPercent = matchScore ?? u.admissionProbability;
+  const fitValue = matchScore ?? u.fitScore;
 
   return (
     <motion.div
@@ -75,7 +90,7 @@ export function UniversityCard({
           <p className="relative mt-3.5 line-clamp-2 text-sm text-muted-foreground">{u.blurb}</p>
 
           <div className="relative mt-4 grid grid-cols-3 gap-2 rounded-xl border border-border/50 bg-background/30 p-3 text-center">
-            <Metric label={t("uni.fit")} value={`${u.fitScore}`} tone="text-success" />
+            <Metric label={t("uni.fit")} value={`${fitValue}`} tone="text-success" />
             <Metric label={t("uni.accept")} value={`${u.acceptanceRate}%`} />
             <Metric
               label={t("uni.tuition")}
@@ -94,7 +109,7 @@ export function UniversityCard({
 
           <div className="relative mt-auto flex items-center justify-between pt-4">
             <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium", band.className)}>
-              <TrendingUp className="size-3" /> {t(band.key)} · {u.admissionProbability}%
+              <TrendingUp className="size-3" /> {t(band.key)} · {bandPercent}%
             </span>
             <Link
               href={`/universities/${u.id}`}

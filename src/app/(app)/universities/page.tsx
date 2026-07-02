@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageContainer } from "@/components/app/page-header";
 import { LocalizedPageHeader } from "@/components/app/localized-page-header";
-import { UniversityExplorer } from "@/components/universities/university-explorer";
+import { UniversitiesTabs } from "@/components/universities/universities-tabs";
 
 export const metadata: Metadata = {
   title: "Universities",
@@ -13,7 +13,7 @@ export default function UniversitiesPage() {
     <PageContainer>
       <LocalizedPageHeader titleKey="page.universities.title" descKey="page.universities.desc" />
       <div className="mt-7">
-        <UniversityExplorer />
+        <UniversitiesTabs />
       </div>
     </PageContainer>
   );

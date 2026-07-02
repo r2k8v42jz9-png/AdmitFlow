@@ -23,6 +23,7 @@ interface OnboardingRow {
   target_intake: string | null;
   career_goals: string | null;
   completed: boolean;
+  exclude_countries: string[] | null;
 }
 
 export type SubscriptionStatus = "inactive" | "trialing" | "active" | "past_due" | "canceled";
@@ -45,8 +46,7 @@ function rowToOnboarding(r: OnboardingRow): OnboardingData {
     strengths: r.strengths ?? [],
     dreamUniversities: r.dream_universities ?? [],
     targetIntake: r.target_intake ?? "",
-    // No exclude_countries column in this checkout's OnboardingRow/migrations yet — default empty.
-    excludeCountries: [],
+    excludeCountries: r.exclude_countries ?? [],
   };
 }
 
@@ -65,6 +65,7 @@ function onboardingToRow(o: OnboardingData): Omit<OnboardingRow, "user_id"> {
     target_intake: o.targetIntake || null,
     career_goals: null,
     completed: true,
+    exclude_countries: o.excludeCountries,
   };
 }
 
@@ -103,6 +104,7 @@ export async function loadUserState(): Promise<Partial<UserState> | null> {
 
   return {
     authenticated: true,
+    id: user.id,
     name: profileRes.data?.full_name ?? metaName,
     email: user.email ?? "",
     onboarded: onboardingRow?.completed ?? false,
@@ -136,6 +138,16 @@ export async function saveOnboarding(o: OnboardingData): Promise<void> {
   await supabase
     .from("onboarding_data")
     .upsert({ user_id: user.id, ...onboardingToRow(o) }, { onConflict: "user_id" });
+}
+
+/** Partial upsert — only touches exclude_countries, leaves the rest of the row alone. */
+export async function saveExcludeCountries(countries: string[]): Promise<void> {
+  if (!isSupabaseConfigured()) return;
+  const { supabase, user } = await uid();
+  if (!user) return;
+  await supabase
+    .from("onboarding_data")
+    .upsert({ user_id: user.id, exclude_countries: countries }, { onConflict: "user_id" });
 }
 
 export async function savePlan(plan: Plan, status: SubscriptionStatus, provider = "mock"): Promise<void> {
