@@ -135,9 +135,17 @@ export async function saveOnboarding(o: OnboardingData): Promise<void> {
   if (!isSupabaseConfigured()) return;
   const { supabase, user } = await uid();
   if (!user) return;
-  await supabase
+  const { error } = await supabase
     .from("onboarding_data")
     .upsert({ user_id: user.id, ...onboardingToRow(o) }, { onConflict: "user_id" });
+  if (error) {
+    // Surfaced loudly: a swallowed failure here (e.g. RLS rejecting the write
+    // because the access token was stale) leaves onboarding_data.completed
+    // false forever, and the proxy bounces the user back to /onboarding on
+    // every request with no visible reason.
+    console.error("[saveOnboarding] onboarding_data upsert failed — completed will stay false", error);
+    throw new Error(`saveOnboarding failed: ${error.message}`);
+  }
 }
 
 /** Partial upsert — only touches exclude_countries, leaves the rest of the row alone. */
