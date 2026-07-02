@@ -6,7 +6,7 @@ import { useSyncExternalStore } from "react";
 /*  Types                                                                     */
 /* -------------------------------------------------------------------------- */
 
-export type Plan = "free" | "starter" | "pro" | "premium";
+export type Plan = "free" | "pro" | "max";
 
 export interface OnboardingData {
   degreeLevel: string;
@@ -20,6 +20,8 @@ export interface OnboardingData {
   strengths: string[];
   dreamUniversities: string[];
   targetIntake: string;
+  /** Countries to exclude from Smart Match results (settings-managed). */
+  excludeCountries: string[];
 }
 
 export interface StreakState {
@@ -33,11 +35,15 @@ export interface UserState {
   remoteResolved: boolean;
   authenticated: boolean;
   emailVerified: boolean;
+  /** Supabase auth user id (null until the remote session resolves). */
+  id: string | null;
   name: string;
   email: string;
   onboarded: boolean;
   plan: Plan | null;
   subscriptionActive: boolean;
+  /** ISO timestamp the account was created. */
+  createdAt: string | null;
   onboarding: OnboardingData | null;
   streak: StreakState;
 }
@@ -58,11 +64,13 @@ const SERVER_STATE: UserState = {
   remoteResolved: false,
   authenticated: false,
   emailVerified: false,
+  id: null,
   name: "",
   email: "",
   onboarded: false,
   plan: null,
   subscriptionActive: false,
+  createdAt: null,
   onboarding: null,
   streak: { count: 0, lastVisit: null },
 };
@@ -147,16 +155,13 @@ function toDateStr(d: Date): string {
 
 export function planLabel(plan: Plan | null): string {
   switch (plan) {
-    case "free":
-      return "Explorer";
-    case "starter":
-      return "Starter";
     case "pro":
       return "Pro";
-    case "premium":
-      return "Premium Mentor";
+    case "max":
+      return "Max";
+    case "free":
     default:
-      return "No plan";
+      return "Free";
   }
 }
 
