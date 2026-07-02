@@ -60,6 +60,7 @@ function toOnboarding(d: Data): OnboardingData {
     strengths: d.strengths,
     dreamUniversities: d.dreams,
     targetIntake: d.intake,
+    excludeCountries: [],
   };
 }
 

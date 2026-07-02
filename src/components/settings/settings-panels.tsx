@@ -2,13 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { Monitor, Moon, Sun, Check, Crown, ShieldAlert, Loader2, LogOut, Sparkles } from "lucide-react";
+import { Monitor, Moon, Sun, Check, Crown, ShieldAlert, Loader2, LogOut, Sparkles, Globe, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuCheckboxItem,
+} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -17,9 +24,10 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useUser, nameFromEmail, signOut, setSubscription, type Plan } from "@/lib/user-store";
+import { useUser, nameFromEmail, signOut, setSubscription, saveOnboarding, type Plan } from "@/lib/user-store";
 import { useEntitlements, type Tier } from "@/lib/entitlements";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { getUniversityFacets } from "@/lib/supabase/universities";
 import { useT, type TFunction } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -133,6 +141,9 @@ export function SettingsPanels() {
         </div>
       </SettingsSection>
 
+      {/* Smart Match preferences */}
+      <SmartMatchPreferences t={t} />
+
       {/* Appearance */}
       <SettingsSection title={t("settings.appearance.title")} description={t("settings.appearance.desc")}>
         <Label className="text-sm">{t("settings.theme")}</Label>
@@ -226,6 +237,94 @@ export function SettingsPanels() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Smart Match preferences — excluded-countries filter (drives match.ts)      */
+/* -------------------------------------------------------------------------- */
+
+function SmartMatchPreferences({ t }: { t: TFunction }) {
+  const user = useUser();
+  const [countries, setCountries] = useState<string[]>([]);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    getUniversityFacets().then((f) => {
+      if (active) setCountries(f.countries);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const excluded = user.onboarding?.excludeCountries ?? [];
+
+  const toggleCountry = async (country: string) => {
+    if (!user.onboarding) return;
+    const next = excluded.includes(country) ? excluded.filter((c) => c !== country) : [...excluded, country];
+    saveOnboarding({ ...user.onboarding, excludeCountries: next });
+    setSaving(true);
+    try {
+      if (isSupabaseConfigured()) {
+        const { saveExcludeCountries } = await import("@/lib/supabase/data");
+        await saveExcludeCountries(next);
+      }
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <SettingsSection title={t("settings.smartMatch.title")} description={t("settings.smartMatch.desc")}>
+      <Label className="text-sm">{t("settings.smartMatch.excludeLabel")}</Label>
+      <p className="mt-1 text-xs text-muted-foreground">{t("settings.smartMatch.excludeHint")}</p>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" disabled={saving || !user.onboarding}>
+              {saving ? <Loader2 className="size-4 animate-spin" /> : <Globe className="size-4" />}
+              {t("settings.smartMatch.excludeLabel")}
+              {excluded.length > 0 && (
+                <span className="ml-1 grid size-5 place-items-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
+                  {excluded.length}
+                </span>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="max-h-72 w-64 overflow-y-auto">
+            <DropdownMenuLabel>{t("uni.country")}</DropdownMenuLabel>
+            {countries.map((c) => (
+              <DropdownMenuCheckboxItem
+                key={c}
+                checked={excluded.includes(c)}
+                onCheckedChange={() => toggleCountry(c)}
+                onSelect={(e) => e.preventDefault()}
+              >
+                {c}
+              </DropdownMenuCheckboxItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        {excluded.length === 0 && <span className="text-xs text-muted-foreground">{t("settings.smartMatch.none")}</span>}
+      </div>
+      {excluded.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {excluded.map((c) => (
+            <span
+              key={c}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/50 px-2.5 py-1 text-xs"
+            >
+              {c}
+              <button onClick={() => toggleCountry(c)}>
+                <X className="size-3 text-muted-foreground hover:text-foreground" />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+    </SettingsSection>
   );
 }
 

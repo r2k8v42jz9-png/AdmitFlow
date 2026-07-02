@@ -20,6 +20,8 @@ export interface OnboardingData {
   strengths: string[];
   dreamUniversities: string[];
   targetIntake: string;
+  /** Countries to exclude from Smart Match results (settings-managed). */
+  excludeCountries: string[];
 }
 
 export interface StreakState {
@@ -33,6 +35,8 @@ export interface UserState {
   remoteResolved: boolean;
   authenticated: boolean;
   emailVerified: boolean;
+  /** Supabase auth user id (null until the remote session resolves). */
+  id: string | null;
   name: string;
   email: string;
   onboarded: boolean;
@@ -60,6 +64,7 @@ const SERVER_STATE: UserState = {
   remoteResolved: false,
   authenticated: false,
   emailVerified: false,
+  id: null,
   name: "",
   email: "",
   onboarded: false,
