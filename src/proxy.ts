@@ -22,12 +22,24 @@ function matches(path: string, prefixes: string[]) {
   return prefixes.some((p) => path === p || path.startsWith(`${p}/`));
 }
 
-function redirect(request: NextRequest, pathname: string, withNext = false) {
+/**
+ * `from` should be the response returned by updateSession() when one is
+ * available — NextResponse.redirect() builds a brand-new response, so without
+ * copying `from`'s cookies over, a just-refreshed session token never reaches
+ * the browser and the next request sees the old (possibly expired) cookie.
+ */
+function redirect(request: NextRequest, pathname: string, withNext = false, from?: NextResponse) {
   const url = request.nextUrl.clone();
   url.pathname = pathname;
   url.search = "";
   if (withNext) url.searchParams.set("next", request.nextUrl.pathname);
-  return NextResponse.redirect(url);
+  const res = NextResponse.redirect(url);
+  if (from) {
+    for (const cookie of from.cookies.getAll()) {
+      res.cookies.set(cookie);
+    }
+  }
+  return res;
 }
 
 export async function proxy(request: NextRequest) {
@@ -49,7 +61,7 @@ export async function proxy(request: NextRequest) {
   if (!isApp && !isOnboarding) return response;
 
   // 1) Must be signed in.
-  if (!user) return redirect(request, "/login", true);
+  if (!user) return redirect(request, "/login", true, response);
 
   // /onboarding is allowed for any signed-in user.
   if (isOnboarding) return response;
@@ -61,7 +73,7 @@ export async function proxy(request: NextRequest) {
     .select("completed")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!onboarding?.completed) return redirect(request, "/onboarding");
+  if (!onboarding?.completed) return redirect(request, "/onboarding", false, response);
 
   return response;
 }
