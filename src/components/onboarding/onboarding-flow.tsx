@@ -218,8 +218,11 @@ export function OnboardingFlow() {
       saveOnboarding(mapped);
       const timeout = new Promise((res) => setTimeout(res, 8000));
       await Promise.race([persistPromiseRef.current ?? persistOnboardingRemote(mapped), timeout]);
-    } catch {
-      /* even if the write errors, proceed — proxy will re-gate as needed */
+    } catch (err) {
+      // Surfaced for debugging (e.g. RLS blocking the onboarding_data upsert) —
+      // we still proceed so the proxy can re-gate the user back to /onboarding
+      // instead of leaving them stuck on a disabled button.
+      console.error("[onboarding] failed to persist onboarding_data — completed may still be false", err);
     }
     // Full navigation so onboarding's own redirect effect can't race us back.
     window.location.assign("/dashboard");
