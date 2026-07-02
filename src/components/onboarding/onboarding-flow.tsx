@@ -60,7 +60,8 @@ function toOnboarding(d: Data): OnboardingData {
     strengths: d.strengths,
     dreamUniversities: d.dreams,
     targetIntake: d.intake,
-  };
+  excludeCountries: [],
+};
 }
 
 // Stored value stays stable (English, for the DB); only the display label is translated.

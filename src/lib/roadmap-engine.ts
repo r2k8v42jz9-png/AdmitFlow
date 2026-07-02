@@ -19,6 +19,7 @@ const DEFAULT_ONBOARDING: OnboardingData = {
   strengths: [],
   dreamUniversities: [],
   targetIntake: "Fall 2027",
+  excludeCountries: [],
 };
 
 function parseIntake(intake: string): Date {

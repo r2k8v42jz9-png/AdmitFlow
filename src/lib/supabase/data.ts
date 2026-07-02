@@ -45,6 +45,8 @@ function rowToOnboarding(r: OnboardingRow): OnboardingData {
     strengths: r.strengths ?? [],
     dreamUniversities: r.dream_universities ?? [],
     targetIntake: r.target_intake ?? "",
+    // No exclude_countries column in this checkout's OnboardingRow/migrations yet — default empty.
+    excludeCountries: [],
   };
 }
 
