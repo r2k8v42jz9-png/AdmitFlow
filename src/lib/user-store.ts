@@ -6,7 +6,7 @@ import { useSyncExternalStore } from "react";
 /*  Types                                                                     */
 /* -------------------------------------------------------------------------- */
 
-export type Plan = "free" | "pro" | "max";
+export type Plan = "free" | "pro" | "max" | "premium";
 
 export interface OnboardingData {
   degreeLevel: string;
