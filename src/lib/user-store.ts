@@ -178,12 +178,6 @@ export function saveOnboarding(data: OnboardingData, name?: string) {
   });
 }
 
-/** Marks a plan selected + (mock) active in the UI cache; the DB write is the source of truth. */
-export function setSubscription(plan: Plan, active: boolean) {
-  ensureHydrated();
-  setState({ plan, subscriptionActive: active });
-}
-
 /**
  * Populates the local UI cache from a remote (Supabase) profile after login.
  * Lets the existing components keep reading the synchronous store while the

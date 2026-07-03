@@ -16,7 +16,11 @@ lemonSqueezySetup({ apiKey: process.env.LEMON_SQUEEZY_API_KEY });
  * createClient()/auth.getUser() pattern as src/lib/supabase/match.ts) and
  * refuse to build a checkout if they don't match.
  */
-export async function createCheckoutSession(userId: string, variantId?: string): Promise<{ url: string }> {
+export async function createCheckoutSession(
+  userId: string,
+  variantId?: string,
+  plan: "pro" | "max" = "pro",
+): Promise<{ url: string }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -26,7 +30,16 @@ export async function createCheckoutSession(userId: string, variantId?: string):
   }
 
   const storeId = process.env.LEMON_SQUEEZY_STORE_ID;
-  const resolvedVariantId = variantId ?? process.env.LEMON_SQUEEZY_VARIANT_ID;
+  // Variant ids are server env — clients pass a plan tier instead. An explicit
+  // variantId still wins for future one-off products.
+  if (plan === "max" && !variantId && !process.env.LEMON_SQUEEZY_VARIANT_ID_MAX) {
+    // Never silently sell the Pro variant to someone who clicked Max.
+    throw new Error("createCheckoutSession: LEMON_SQUEEZY_VARIANT_ID_MAX is not configured");
+  }
+  const resolvedVariantId =
+    variantId ??
+    (plan === "max" ? process.env.LEMON_SQUEEZY_VARIANT_ID_MAX : undefined) ??
+    process.env.LEMON_SQUEEZY_VARIANT_ID;
   if (!storeId || !resolvedVariantId) {
     throw new Error("createCheckoutSession: LEMON_SQUEEZY_STORE_ID / variant id is not configured");
   }

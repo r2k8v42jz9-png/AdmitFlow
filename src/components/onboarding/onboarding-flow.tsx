@@ -25,7 +25,8 @@ import { Slider } from "@/components/ui/slider";
 import { ScoreRing } from "@/components/shared/score-ring";
 import { searchUniversities, getUniversityFacets } from "@/lib/supabase/universities";
 import type { University } from "@/lib/types";
-import { useUser, saveOnboarding, setSubscription, type OnboardingData, type Plan } from "@/lib/user-store";
+import { useUser, saveOnboarding, type OnboardingData, type Plan } from "@/lib/user-store";
+import { createCheckoutSession } from "@/lib/payments/lemonsqueezy";
 import { getPricingTiers } from "@/lib/data/marketing";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { useT, type Locale, type TFunction } from "@/lib/i18n";
@@ -111,7 +112,7 @@ const steps = [
 export function OnboardingFlow() {
   const router = useRouter();
   const { t, locale } = useT();
-  const { hydrated, remoteResolved, authenticated, onboarded, onboarding } = useUser();
+  const { hydrated, remoteResolved, authenticated, onboarded, onboarding, id: userId } = useUser();
   const ready = hydrated && (remoteResolved || !isSupabaseConfigured());
   const [step, setStep] = useState(0);
   const [phase, setPhase] = useState<"form" | "generating" | "result" | "plan">("form");
@@ -212,9 +213,10 @@ export function OnboardingFlow() {
   };
   const back = () => setStep((s) => Math.max(0, s - 1));
 
-  // Wait for the onboarding write to land, then enter the app. Capped at 8s so a
-  // hung write can never leave the button permanently disabled.
-  const goToDashboard = async () => {
+  // Wait for the onboarding write to land, then enter the app (or an external
+  // destination, e.g. Lemon Squeezy checkout). Capped at 8s so a hung write can
+  // never leave the button permanently disabled.
+  const goToDashboard = async (redirectTo = "/dashboard") => {
     if (navigating) return;
     setNavigating(true);
     setSaveError(null);
@@ -232,29 +234,40 @@ export function OnboardingFlow() {
       // is actually visible (a redirect would wipe it before it could be read).
       setSaveError(message);
       setNavigating(false);
+      setChoosingPlan(null);
       return;
     }
     // Full navigation so onboarding's own redirect effect can't race us back.
-    window.location.assign("/dashboard");
+    window.location.assign(redirectTo);
   };
 
   // Plan selection (shown after the result). Free is always selectable — this is
-  // a choice, not a paywall. Paid plans set the subscription locally + remotely.
+  // a choice, not a paywall. Paid plans route through Lemon Squeezy checkout;
+  // subscriptions.plan/status is written only by the verified payment webhook.
   const choosePlan = async (planId: Plan) => {
     if (navigating || choosingPlan) return;
     setChoosingPlan(planId);
-    // Local/optimistic only. subscriptions is read-only for clients (RLS,
-    // 0005_secure_subscriptions.sql): the DB row is set exclusively by the
-    // payment webhook via the service-role key after a real checkout.
-    if (planId === "free") {
-      setSubscription("free", false);
-    } else {
-      setSubscription(planId, true);
+    if (planId === "free" || !userId) {
+      await goToDashboard();
+      return;
     }
-    await goToDashboard();
+    // Fetch the checkout URL first (no side effects), THEN persist onboarding
+    // and leave. Persisting before leaving is critical: the post-payment
+    // return passes through the proxy, which bounces incomplete onboarding.
+    let checkoutUrl: string | null = null;
+    try {
+      const { url } = await createCheckoutSession(userId, undefined, planId === "max" ? "max" : "pro");
+      checkoutUrl = url;
+    } catch (err) {
+      // Checkout unavailable → enter the app on the free tier; upgrading stays
+      // possible from Settings / the Smart Match paywall.
+      console.error("[onboarding] checkout unavailable, continuing on free tier", err);
+    }
+    await goToDashboard(checkoutUrl ?? "/dashboard");
   };
 
-  const skip = goToDashboard;
+  // Wrapped so the click event never leaks into goToDashboard's redirectTo param.
+  const skip = () => goToDashboard();
   const finish = () => setPhase("plan");
 
   const recommendations = [...uniList]
