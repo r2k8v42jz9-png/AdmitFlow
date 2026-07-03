@@ -79,5 +79,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.).*)"],
+  // The static-asset exclusion is anchored to known file extensions. The old
+  // pattern (`.*\\.`) skipped ANY path containing a dot, so an app route like
+  // /universities/st.andrews would silently bypass auth gating and cookie
+  // refresh entirely.
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|txt|xml)$).*)",
+  ],
 };

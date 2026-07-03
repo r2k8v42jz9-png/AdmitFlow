@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSyncExternalStore } from "react";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { getUserState } from "@/lib/user-store";
 import {
   getSavedUniversities,
   getUniversitiesByIds,
@@ -31,8 +32,16 @@ export interface SavedEntry {
   category: UniCategory;
 }
 
-const LS_KEY = "admitflow:saved-universities"; // richer {id,category}[] store
-const LEGACY_KEY = "admitflow:bookmarks"; // old string[] bookmarks (migrated)
+// Namespaced per signed-in user so entries never bleed across accounts on a
+// shared device (an un-namespaced key let user A's picks get pushed up into
+// user B's user_universities rows on B's first sign-in).
+const LS_KEY_BASE = "admitflow:saved-universities"; // richer {id,category}[] store
+const LEGACY_KEY = "admitflow:bookmarks"; // old string[] bookmarks (anon-only migration)
+
+function lsKey(): string {
+  const uid = getUserState().id;
+  return uid ? `${LS_KEY_BASE}:${uid}` : LS_KEY_BASE;
+}
 
 interface SavedState {
   hydrated: boolean;
@@ -62,7 +71,7 @@ function normalizeCategory(c: unknown): UniCategory {
 function readLocal(): SavedEntry[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(LS_KEY);
+    const raw = localStorage.getItem(lsKey());
     if (raw) {
       const parsed: unknown = JSON.parse(raw);
       if (Array.isArray(parsed)) {
@@ -73,11 +82,15 @@ function readLocal(): SavedEntry[] {
       }
     }
     // Migrate legacy bookmarks (a plain string[] of ids) → default "target".
-    const legacy = localStorage.getItem(LEGACY_KEY);
-    if (legacy) {
-      const ids: unknown = JSON.parse(legacy);
-      if (Array.isArray(ids)) {
-        return ids.map((id) => ({ id: String(id), category: "target" as UniCategory })).filter((e) => e.id);
+    // Anon-only: the legacy key is global, so reading it for a signed-in user
+    // would resurrect a previous account's picks (the exact bleed we're fixing).
+    if (!getUserState().id) {
+      const legacy = localStorage.getItem(LEGACY_KEY);
+      if (legacy) {
+        const ids: unknown = JSON.parse(legacy);
+        if (Array.isArray(ids)) {
+          return ids.map((id) => ({ id: String(id), category: "target" as UniCategory })).filter((e) => e.id);
+        }
       }
     }
   } catch {
@@ -89,9 +102,12 @@ function readLocal(): SavedEntry[] {
 function writeLocal(entries: SavedEntry[]) {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(LS_KEY, JSON.stringify(entries));
-    // Keep the legacy key mirrored (ids only) for any older code path.
-    localStorage.setItem(LEGACY_KEY, JSON.stringify(entries.map((e) => e.id)));
+    localStorage.setItem(lsKey(), JSON.stringify(entries));
+    // Legacy mirror only while anonymous — the key is global (not per-user),
+    // so mirroring a signed-in user's ids there would leak them across accounts.
+    if (!getUserState().id) {
+      localStorage.setItem(LEGACY_KEY, JSON.stringify(entries.map((e) => e.id)));
+    }
   } catch {
     /* quota / unavailable → ignore */
   }

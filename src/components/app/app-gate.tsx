@@ -23,6 +23,18 @@ export function AppGate({ children }: { children: ReactNode }) {
   const { hydrated, remoteResolved, authenticated, onboarded } = useUser();
   const router = useRouter();
 
+  // bfcache guard: Back after sign-out can restore this page from the browser's
+  // back/forward cache with the old in-memory state (authenticated=true) and NO
+  // server request — so proxy.ts never gets a chance to re-gate. Restoring from
+  // bfcache (e.persisted) forces a real reload, which re-runs the proxy.
+  useEffect(() => {
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) window.location.reload();
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
+
   const configured = isSupabaseConfigured();
   const ready = hydrated && (remoteResolved || !configured);
   // Email verification is intentionally not required.

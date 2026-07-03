@@ -13,6 +13,21 @@ import { signUpWithEmail, signInWithEmail, signInWithGoogle, fetchEnabledProvide
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+/**
+ * Maps known raw Supabase auth errors to localized, non-enumerating messages.
+ * "User already registered" confirms an account exists (user enumeration), so
+ * it's replaced with a neutral hint; "Invalid login credentials" gets a
+ * translation plus a Google-provider hint (OAuth-only accounts have no
+ * password, and this is the error they hit). Unknown errors pass through.
+ */
+function mapAuthError(raw: string | undefined, t: (key: string) => string, fallback: string): string {
+  if (!raw) return fallback;
+  const msg = raw.toLowerCase();
+  if (msg.includes("already registered")) return t("auth.err.exists");
+  if (msg.includes("invalid login credentials")) return t("auth.err.invalidCreds");
+  return raw;
+}
+
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" className="size-4" aria-hidden>
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1Z" />
@@ -94,7 +109,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       if (isSignup) {
         const r = await signUpWithEmail(name, resolvedEmail, password);
         if (!r.ok) {
-          setError(r.error ?? "Sign-up failed");
+          setError(mapAuthError(r.error, t, t("auth.err.signupFailed")));
           setLoading(null);
           return;
         }
@@ -104,7 +119,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       }
       const r = await signInWithEmail(resolvedEmail, password);
       if (!r.ok) {
-        setError(r.error ?? "Sign-in failed");
+        setError(mapAuthError(r.error, t, t("auth.err.signinFailed")));
         setLoading(null);
         return;
       }

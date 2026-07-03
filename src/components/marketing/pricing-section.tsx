@@ -307,24 +307,10 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
       return;
     }
     setSelecting(tierId);
+    // Local/optimistic only. subscriptions is read-only for clients (RLS,
+    // 0005_secure_subscriptions.sql): the DB row is set exclusively by the
+    // payment webhook via the service-role key after a real checkout.
     setSubscription(tierId as Plan, true);
-    try {
-      const { isSupabaseConfigured } = await import("@/lib/supabase/config");
-      if (isSupabaseConfigured()) {
-        const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 8000));
-        await Promise.race([
-          (async () => {
-            const { savePlan } = await import("@/lib/supabase/data");
-            await savePlan(tierId as Plan, "active");
-            const { hydrateLocalFromProfile } = await import("@/lib/supabase/auth");
-            await hydrateLocalFromProfile();
-          })(),
-          timeout,
-        ]);
-      }
-    } catch {
-      /* proceed — the gate re-checks and the local store already reflects it */
-    }
     window.location.assign("/dashboard");
   };
 
