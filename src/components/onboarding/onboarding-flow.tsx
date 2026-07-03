@@ -243,13 +243,13 @@ export function OnboardingFlow() {
   const choosePlan = async (planId: Plan) => {
     if (navigating || choosingPlan) return;
     setChoosingPlan(planId);
+    // Local/optimistic only. subscriptions is read-only for clients (RLS,
+    // 0005_secure_subscriptions.sql): the DB row is set exclusively by the
+    // payment webhook via the service-role key after a real checkout.
     if (planId === "free") {
       setSubscription("free", false);
     } else {
       setSubscription(planId, true);
-      void import("@/lib/supabase/data")
-        .then(({ savePlan }) => savePlan(planId, "active"))
-        .catch(() => {});
     }
     await goToDashboard();
   };

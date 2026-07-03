@@ -345,16 +345,11 @@ function SubscriptionPanel({ t }: { t: TFunction }) {
   const switchPlan = async (p: Plan) => {
     if (p === ent.tier || busy) return;
     setBusy(p);
+    // Local/optimistic only. subscriptions is read-only for clients (RLS,
+    // 0005_secure_subscriptions.sql): the DB row is set exclusively by the
+    // payment webhook via the service-role key after a real checkout.
     if (p === "free") setSubscription("free", false);
     else setSubscription(p, true);
-    try {
-      if (isSupabaseConfigured()) {
-        const { savePlan } = await import("@/lib/supabase/data");
-        await savePlan(p, p === "free" ? "canceled" : "active");
-      }
-    } catch {
-      /* local store already reflects the change */
-    }
     setBusy(null);
   };
 
