@@ -158,14 +158,10 @@ export async function saveExcludeCountries(countries: string[]): Promise<void> {
     .upsert({ user_id: user.id, exclude_countries: countries }, { onConflict: "user_id" });
 }
 
-export async function savePlan(plan: Plan, status: SubscriptionStatus, provider = "mock"): Promise<void> {
-  if (!isSupabaseConfigured()) return;
-  const { supabase, user } = await uid();
-  if (!user) return;
-  await supabase
-    .from("subscriptions")
-    .upsert({ user_id: user.id, plan, status, provider }, { onConflict: "user_id" });
-}
+// NOTE: there is intentionally no savePlan() here anymore. subscriptions is
+// read-only for clients (0005_secure_subscriptions.sql); plan/status is
+// written exclusively by the Lemon Squeezy webhook via the service-role key
+// (src/app/api/webhooks/lemon-squeezy/route.ts).
 
 export async function saveStreak(count: number, lastVisit: string): Promise<void> {
   if (!isSupabaseConfigured()) return;

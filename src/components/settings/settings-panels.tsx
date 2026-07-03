@@ -24,7 +24,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { useUser, nameFromEmail, signOut, setSubscription, saveOnboarding, type Plan } from "@/lib/user-store";
+import { useUser, nameFromEmail, signOut, saveOnboarding, type Plan } from "@/lib/user-store";
+import { createCheckoutSession } from "@/lib/payments/lemonsqueezy";
 import { useEntitlements, type Tier } from "@/lib/entitlements";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getUniversityFacets } from "@/lib/supabase/universities";
@@ -340,17 +341,22 @@ const PLAN_META: { id: Plan; tier: Tier; name: string; price: string }[] = [
 
 function SubscriptionPanel({ t }: { t: TFunction }) {
   const ent = useEntitlements();
+  const { id: userId } = useUser();
   const [busy, setBusy] = useState<Plan | null>(null);
 
+  // Upgrades go through Lemon Squeezy checkout; the webhook (verified HMAC +
+  // service-role) is the only writer of subscriptions.plan/status. Downgrades/
+  // cancellation happen in Lemon Squeezy itself (receipt email / billing
+  // portal), so non-upgrade buttons are disabled rather than faking a switch.
   const switchPlan = async (p: Plan) => {
-    if (p === ent.tier || busy) return;
+    if (p === ent.tier || busy || p === "free" || !userId) return;
     setBusy(p);
-    // Local/optimistic only. subscriptions is read-only for clients (RLS,
-    // 0005_secure_subscriptions.sql): the DB row is set exclusively by the
-    // payment webhook via the service-role key after a real checkout.
-    if (p === "free") setSubscription("free", false);
-    else setSubscription(p, true);
-    setBusy(null);
+    try {
+      const { url } = await createCheckoutSession(userId, undefined, p === "max" ? "max" : "pro");
+      window.location.assign(url);
+    } catch {
+      setBusy(null);
+    }
   };
 
   const order: Record<Tier, number> = { free: 0, pro: 1, max: 2 };
@@ -399,7 +405,7 @@ function SubscriptionPanel({ t }: { t: TFunction }) {
                 variant={isCurrent ? "outline" : isUpgrade ? "gradient" : "outline"}
                 size="sm"
                 className="mt-3 w-full"
-                disabled={isCurrent || !!busy}
+                disabled={isCurrent || !!busy || !isUpgrade}
                 onClick={() => switchPlan(p.id)}
               >
                 {busy === p.id ? (

@@ -4,7 +4,8 @@ import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { RippleButton } from "@/components/ui/multi-type-ripple-buttons";
 import { getPricingTiers } from "@/lib/data/marketing";
-import { getUserState, setSubscription, type Plan } from "@/lib/user-store";
+import { getUserState } from "@/lib/user-store";
+import { createCheckoutSession } from "@/lib/payments/lemonsqueezy";
 import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -296,22 +297,24 @@ export function PricingSection({ withHeading = true }: { withHeading?: boolean }
 
   const onSelect = async (tierId: string) => {
     if (selecting) return;
-    const authed = getUserState().authenticated;
+    const { authenticated, id } = getUserState();
     if (tierId === "free") {
-      if (authed) setSubscription("free", false);
-      router.push(authed ? "/dashboard" : "/signup");
+      router.push(authenticated ? "/dashboard" : "/signup");
       return;
     }
-    if (!authed) {
+    if (!authenticated || !id) {
       router.push("/login");
       return;
     }
+    // Paid plans go through Lemon Squeezy checkout; the webhook (verified
+    // HMAC + service-role) is the only writer of subscriptions.plan/status.
     setSelecting(tierId);
-    // Local/optimistic only. subscriptions is read-only for clients (RLS,
-    // 0005_secure_subscriptions.sql): the DB row is set exclusively by the
-    // payment webhook via the service-role key after a real checkout.
-    setSubscription(tierId as Plan, true);
-    window.location.assign("/dashboard");
+    try {
+      const { url } = await createCheckoutSession(id, undefined, tierId === "max" ? "max" : "pro");
+      window.location.assign(url);
+    } catch {
+      setSelecting(null);
+    }
   };
 
   const cards: CardData[] = tiers.map((tier) => ({
