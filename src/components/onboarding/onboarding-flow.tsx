@@ -117,6 +117,10 @@ export function OnboardingFlow() {
   const [phase, setPhase] = useState<"form" | "generating" | "result" | "plan">("form");
   const [navigating, setNavigating] = useState(false);
   const [choosingPlan, setChoosingPlan] = useState<Plan | null>(null);
+  // TEMPORARY diagnostic surface — shows the raw Supabase error on screen so it's
+  // visible without opening devtools (Safari makes that awkward). Remove once
+  // onboarding_data writes are confirmed reliable.
+  const [saveError, setSaveError] = useState<string | null>(null);
   const persistPromiseRef = useRef<Promise<void> | null>(null);
   // University catalog + country facets for the picker steps, sourced from
   // Supabase (the data layer falls back to the bundled catalog internally).
@@ -213,16 +217,22 @@ export function OnboardingFlow() {
   const goToDashboard = async () => {
     if (navigating) return;
     setNavigating(true);
+    setSaveError(null);
     try {
       const mapped = toOnboarding(data);
       saveOnboarding(mapped);
       const timeout = new Promise((res) => setTimeout(res, 8000));
       await Promise.race([persistPromiseRef.current ?? persistOnboardingRemote(mapped), timeout]);
     } catch (err) {
-      // Surfaced for debugging (e.g. RLS blocking the onboarding_data upsert) —
-      // we still proceed so the proxy can re-gate the user back to /onboarding
-      // instead of leaving them stuck on a disabled button.
+      // Surfaced for debugging (e.g. RLS blocking the onboarding_data upsert, or
+      // a missing column if a migration hasn't been run against this DB yet).
+      const message = err instanceof Error ? err.message : String(err);
       console.error("[onboarding] failed to persist onboarding_data — completed may still be false", err);
+      // Stay on this screen instead of navigating away, so the message below
+      // is actually visible (a redirect would wipe it before it could be read).
+      setSaveError(message);
+      setNavigating(false);
+      return;
     }
     // Full navigation so onboarding's own redirect effect can't race us back.
     window.location.assign("/dashboard");
@@ -283,6 +293,13 @@ export function OnboardingFlow() {
           </button>
         )}
       </div>
+
+      {saveError && (
+        <div className="mt-4 rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <p className="font-semibold">Onboarding save failed (Supabase):</p>
+          <p className="mt-1 break-words font-mono text-xs">{saveError}</p>
+        </div>
+      )}
 
       {/* Progress */}
       <div className="mt-7">
